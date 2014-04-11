@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+  <style name="MyTheme" parent="android:Theme.Light">
+    <item name="android:editTextStyle">@style/MyEVAppearance</item>
+  </style>
+  <style name="MyEVAppearance" parent="android:Widget.EditText">
+    <item name="android:textStyle">italic</item>
+	<item name="android:background">@android:drawable/edit_text</item>
+  </style>
+</resources>

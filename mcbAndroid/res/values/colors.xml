@@ -1,0 +1,23 @@
+<resources>
+
+    <color name="grid_unlocked">#ffffffff</color>
+    <color name="grid_locked">#ffddbcbc</color>
+    
+    <color name="background">#ffffffff</color>
+    <color name="abackground">#ddffffff</color>
+    <color name="gbackground">#ffDDDDDD</color>
+    
+    <color name="selected_byother">#ffFFCC00</color>
+    
+    <color name="cluster">#ff009933</color>
+    <color name="cluster_selected">#ff00CC66</color>
+    <color name="cluster_hovered">#ff00EE88</color>
+    
+    <color name="postit">#ff0099CC</color>
+    <color name="postit_selected">#ff00CCFF</color>
+    
+    <color name="concept">#ffCCCCCC</color>
+    
+    <color name="autotrad">#ffCCCCCC</color>
+    
+</resources>

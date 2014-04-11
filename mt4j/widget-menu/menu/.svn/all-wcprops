@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/tatin-pic/!svn/ver/1315/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu
+END
+FileChooser.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/tatin-pic/!svn/ver/1315/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu/FileChooser.java
+END
+ListMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/tatin-pic/!svn/ver/1219/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu/ListMenu.java
+END
+MenuFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/tatin-pic/!svn/ver/1304/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu/MenuFactory.java
+END
+ValidateListMenu.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/tatin-pic/!svn/ver/296/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu/ValidateListMenu.java
+END
+OptionList.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/tatin-pic/!svn/ver/942/trunk/TatinPic/src/utc/tatinpic/gui/widgets/menu/OptionList.java
+END

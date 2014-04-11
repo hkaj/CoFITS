@@ -1,0 +1,98 @@
+<resources>
+
+    <string name="app_name">mcbAndroid</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_clear_model">Clear local model</string>
+    <string name="menu_disconnect_meeting">Disconnect from meeting</string>
+    <string name="menu_change_memorae">Select new organization/memory for memorae</string>
+    <string name="menu_about">About MCB</string>
+    <string name="title_activity_main">MultiCulturalBrainstorming</string>
+    
+    <string name="confirm">OK</string>
+    <string name="confirm_clear_local_model">Do you really want to remove all local data ?</string>
+    <string name="confirm_clear">Remove all</string>
+    <string name="confirm_exit_edit_description">Do you really want to quite editing ? Changes will be lost.</string>
+    <string name="confirm_exit_edit">Quite editing</string>
+    
+    <string name="agent_failure">Agent failure</string>
+    <string name="ams_failure">Got failure from AMS. Disconneting from meeting…</string>
+    <string name="no_meeting_found">No meeting were found..</string>
+    <string name="meeting_unsubscribed_title">Got subscribtion cancelation</string>
+    <string name="meeting_unsubscribed">The meeting has ended</string>
+    <string name="meeting_wait_title">Please wait</string>
+    <string name="meeting_wait_content">Retriving meeting list…</string>
+    
+    <string name="memorae_failure">Memorae failure</string>
+    <string name="memorae_wait_title">Please wait</string>
+    <string name="memorae_wait_login">Login in progress…</string>
+    <string name="memorae_wait_organization">Retriving organizations list…</string>
+    <string name="memorae_wait_memory">Retriving memories list…</string>
+    <string name="memorae_wait_concept">Loading concepts…</string>
+    <string name="memorae_no_organization">No organization found.</string>    
+	<string name="memorae_no_memory">No memory found.</string>    
+    
+    <string name="tags">Tags</string>
+    <string name="root">Root</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="filter">Filter by tag : </string>
+    
+    <string name="button_new">New</string>
+    <string name="button_remove">Remove</string>
+    <string name="button_local">Local</string>
+    <string name="button_memorae">Memorae</string>
+    <string name="button_meeting">Meeting</string>
+    
+    <string name="pick_meeting">Pick a meeting</string>
+    <string name="create_new_object">Create a new object</string>
+    <string name="create_cluster">Create a new cluster</string>
+    
+    <string name="pref_username">Username</string>
+    <string name="pref_username_summ">Full username (firstname and lastname)</string>
+    <string name="pref_username_alias">Alias</string>
+    <string name="pref_username_alias_summ">Short alias for username (one or two letters)</string>
+    <string name="pref_language">Language</string>
+    <string name="pref_language_summ">Default language</string>
+    
+    <string name="pref_jade_host">Host</string>
+    <string name="pref_jade_host_summ">Meeting address</string>
+    <string name="pref_jade_port">Port</string>
+    <string name="pref_jade_port_summ">Meeting port number</string>
+       
+    <string name="pref_memorae">Memorae</string>
+    <string name="pref_memorae_summ">Memorae settigns</string>
+    <string name="pref_memorae_enabled">Enable Memorae</string>
+    <string name="pref_memorae_host">Server URI</string>
+    <string name="pref_memorae_host_summ">URI of the memorae server</string>
+    <string name="pref_memorae_username">Username</string>
+    <string name="pref_memorae_username_summ">Username to use to log into memorae</string>
+    <string name="pref_memorae_password">Password</string>
+    <string name="pref_memorae_password_summ">Password to use to log into memorae</string>
+       
+    <string name="pref_translator">Translator</string>
+    <string name="pref_translator_summ">Auto-translation service</string>
+    <string name="pref_translator_bing">Use Bing translation</string>
+    <string name="pref_bing_client">Bing client key</string>
+    <string name="pref_bing_secret">Bing secret key</string>
+    
+	<string name="toast_rename_cluster">Renoming cluster…</string>
+	<string name="toast_transfer_to_local">Transferring object to local side…</string>
+	<string name="toast_transfer_to_meeting">Transferring object to the meeting…</string>
+	<string name="toast_transfer_to_memorae">Transferring object to memorae…</string>
+	<string name="toast_affiliate">Affiliating object to cluster…</string>    
+	<string name="toast_affiliate_loop">Not affiliated (would create loop structure)</string>    
+	<string name="toast_affiliate_already">Not affiliated (already affiliated)</string>    
+	<string name="toast_disaffiliate">Disaffiliating object from cluster…</string>    
+	<string name="toast_lockfailure">lock failed…</string>
+	<string name="toast_loginfailure">Login failed… Check preferences.</string>    
+				
+
+	<string name="ph_cluster_title">Cluster title (in $LANG$)</string>    
+	<string name="ph_postit_title">PostIt title (optional, in $LANG$)</string>    
+	<string name="ph_postit_content">PostIt content (in $LANG$)</string>    
+	<string name="ph_postit_tags">Tags (comma separated, in English)</string>    
+		
+	<string name="about">This is the Android application for the MulticulturalBrainstorming project.\nThe current version is :</string>    
+	<string name="version">1.4</string>    
+			
+</resources>
