@@ -1,0 +1,4 @@
+CoFITS
+======
+
+JADE and Android applications for file exchange with MT4j-based devices.
