@@ -1,9 +1,0 @@
-K 13
-svn:mergeinfo
-V 414
-/branches/tatin-browser/src/utc/tatinpic/model/menu/FileChooserModel.java:417-822
-/branches/tatin-chooser/src/utc/tatinpic/model/menu/FileChooserModel.java:1107-1219
-/branches/tatin-group/src/utc/tatinpic/model/menu/FileChooserModel.java:415-876
-/branches/tatin-planning/src/utc/tatinpic/model/menu/FileChooserModel.java:418-820
-/branches/tatin-spreadsheet/src/utc/tatinpic/model/menu/FileChooserModel.java:416-825
-END
