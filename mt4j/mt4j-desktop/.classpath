@@ -35,7 +35,6 @@
 	<classpathentry kind="lib" path="examples/advanced/physics/lib/jbox2d.jar"/>
 	<classpathentry kind="lib" path="examples/advanced/water/lib/waterScene.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mt4j-core"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/mt4j-core/lib/batik-css.jar"/>
 	<classpathentry kind="lib" path="/mt4j-core/lib/xml-apis-ext.jar"/>
 	<classpathentry kind="lib" path="lib/jogl/gluegen-rt.jar"/>
@@ -49,5 +48,10 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="mt4j-desktop"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/java3D"/>
+	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/j3dcore.jar"/>
+	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/j3dutils.jar"/>
+	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/vecmath.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
