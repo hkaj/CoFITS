@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ProjectModuleManager">
-    <modules />
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CoFITSAndroid.iml" filepath="$PROJECT_DIR$/CoFITSAndroid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cofits/cofits.iml" filepath="$PROJECT_DIR$/cofits/cofits.iml" />
+    </modules>
   </component>
 </project>
 
