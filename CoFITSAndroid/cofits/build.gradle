@@ -2,7 +2,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.0"
+    buildToolsVersion '19.0.0'
 
     defaultConfig {
         minSdkVersion 7
@@ -20,4 +20,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
+    compile files('libraries/libs/jackson-core-2.1.5')
+    compile files('libraries/libs/jackson-annotations-2.1.5')
+    compile files('libraries/libs/jackson-databind-2.1.5')
 }

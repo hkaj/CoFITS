@@ -5,4 +5,27 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Main Activity -->
+    <string name="loginCAS">Login with CAS</string>
+
+    <!-- Projects Activity -->
+    <string name="title_activity_project">ProjectActivity</string>
+    <string name="tab_project">Projects</string>
+
+    <!-- Sessions Activity -->
+    <string name="title_activity_session">SessionActivity</string>
+    <string name="tab_session">Sessions</string>
+
+    <!-- Files Activity -->
+    <string name="title_activity_files">FilesActivity</string>
+    <string name="tab_file">Files</string>
+    <string name="action_add">Add File</string>
+    <string name="title_activity_add_file">AddFileActivity</string>
+    <string name="title_activity_file_view">FileViewActivity</string>
+    <string name="download_button">Download</string>
+    <string name="title_activity_list_file">ListFileActivity</string>
+    <string name="title_activity_file_explore">FileExplore</string>
+    <string name="upload_button">Upload</string>
+    <string name="browse_button">Browse</string>
+
 </resources>

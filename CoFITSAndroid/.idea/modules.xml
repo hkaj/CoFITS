@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CoFITSAndroid.iml" filepath="$PROJECT_DIR$/CoFITSAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/cofits/cofits.iml" filepath="$PROJECT_DIR$/cofits/cofits.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/libs/libs.iml" filepath="$PROJECT_DIR$/libraries/libs/libs.iml" />
     </modules>
   </component>
 </project>
