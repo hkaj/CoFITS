@@ -2,6 +2,7 @@ package com.android.cofits;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
@@ -21,6 +22,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -188,59 +190,70 @@ public class AddFileActivity extends ActionBarActivity {
 
         switch (id) {
             case DIALOG_LOAD_FILE:
-                builder.setTitle("Choose your file");
+                builder.setTitle(getString(R.string.choose_file));
                 builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         chosenFile = fileList[which].file;
                         File sel = new File(path + "/" + chosenFile);
-                        if (sel.isDirectory()) {
-                            firstLvl = false;
 
-                            // Adds chosen directory to list
-                            str.add(chosenFile);
-                            fileList = null;
-                            path = new File(sel + "");
+                            if (sel.isDirectory()) {
+                                if (sel.canRead()){
+                                    firstLvl = false;
 
-                            loadFileList();
+                                    // Adds chosen directory to list
+                                    str.add(chosenFile);
+                                    fileList = null;
+                                    path = new File(sel + "");
 
-                            removeDialog(DIALOG_LOAD_FILE);
-                            showDialog(DIALOG_LOAD_FILE);
-                            Log.d(TAG, path.getAbsolutePath());
+                                    loadFileList();
 
-                        }
+                                    removeDialog(DIALOG_LOAD_FILE);
+                                    showDialog(DIALOG_LOAD_FILE);
+                                    Log.d(TAG, path.getAbsolutePath());
+                                }else{
+                                Context context = getApplicationContext();
+                                CharSequence text = "You can't access this folder. Please choose another one. ";
+                                int duration = Toast.LENGTH_SHORT;
 
-                        // Checks if 'up' was clicked
-                        else if (chosenFile.equalsIgnoreCase("up") && !sel.exists()) {
+                                Toast toast = Toast.makeText(context, text, duration);
+                                toast.show();
+                                }
 
-                            // present directory removed from list
-                            String s = str.remove(str.size() - 1);
-
-                            // path modified to exclude present directory
-                            path = new File(path.toString().substring(0,
-                                    path.toString().lastIndexOf(s)));
-                            fileList = null;
-
-                            // if there are no more directories in the list, then
-                            // its the first level
-                            if (str.isEmpty()) {
-                                firstLvl = true;
                             }
-                            loadFileList();
 
-                            removeDialog(DIALOG_LOAD_FILE);
-                            showDialog(DIALOG_LOAD_FILE);
-                            Log.d(TAG, path.getAbsolutePath());
+                            // Checks if 'up' was clicked
+                            else if (chosenFile.equalsIgnoreCase("up") && !sel.exists()) {
 
-                        }
-                        // File picked
-                        else {
-                            // Perform action with file picked
+                                // present directory removed from list
+                                String s = str.remove(str.size() - 1);
 
-                            EditText fileNameText = (EditText) findViewById(R.id.fileName);
-                            fileNameText.setText(chosenFile);
+                                // path modified to exclude present directory
+                                path = new File(path.toString().substring(0,
+                                        path.toString().lastIndexOf(s)));
+                                fileList = null;
 
-                        }
+                                // if there are no more directories in the list, then
+                                // its the first level
+                                if (str.isEmpty()) {
+                                    firstLvl = true;
+                                }
+                                loadFileList();
+
+                                removeDialog(DIALOG_LOAD_FILE);
+                                showDialog(DIALOG_LOAD_FILE);
+                                Log.d(TAG, path.getAbsolutePath());
+
+                            }
+                            // File picked
+                            else {
+                                // Perform action with file picked
+
+                                EditText fileNameText = (EditText) findViewById(R.id.fileName);
+                                fileNameText.setText(chosenFile);
+
+                            }
+
 
                     }
                 });

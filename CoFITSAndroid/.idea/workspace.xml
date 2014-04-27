@@ -15,11 +15,7 @@
     <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0729252f-a7dd-4cda-bcda-26ae2d18a55e" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/AddFileActivity.java" afterPath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/AddFileActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cofits/cofits.iml" afterPath="$PROJECT_DIR$/cofits/cofits.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-    </list>
+    <list default="true" id="0729252f-a7dd-4cda-bcda-26ae2d18a55e" name="Default" comment="" />
     <ignored path="CoFITSAndroid.iws" />
     <ignored path=".idea/workspace.xml" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -103,13 +99,32 @@
       <file leaf-file-name="AddFileActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/AddFileActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="39" column="14" selection-start="1153" selection-end="1153" vertical-scroll-proportion="0.6081081" vertical-offset="90" max-vertical-offset="3720">
+            <state line="216" column="63" selection-start="7314" selection-end="7314" vertical-scroll-proportion="0.8051948" vertical-offset="2480" max-vertical-offset="3885">
               <folding>
-                <element signature="e#2863#3252#0" expanded="true" />
-                <element signature="e#3237#3238#0" expanded="true" />
-                <element signature="e#6011#8259#0" expanded="true" />
-                <element signature="e#8240#8241#0" expanded="true" />
+                <element signature="e#2924#3313#0" expanded="true" />
+                <element signature="e#3298#3299#0" expanded="true" />
+                <element signature="e#6007#6038#0" expanded="true" />
+                <element signature="e#6085#9025#0" expanded="true" />
+                <element signature="e#9006#9007#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cofits.iml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cofits/cofits.iml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cofits/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="7" column="8" selection-start="120" selection-end="135" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="480">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1004,6 +1019,11 @@
     </configuration>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SliceManager">
+    <option name="analysisUIOptions">
+      <AnalysisUIOptions />
+    </option>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="0729252f-a7dd-4cda-bcda-26ae2d18a55e" name="Default" comment="" />
@@ -1034,7 +1054,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="22" width="1280" height="713" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998326" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1048,7 +1068,7 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998326" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998326" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.5361345" sideWeight="0.55088854" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2621849" sideWeight="0.55088854" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998326" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1190,14 +1210,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cofits/cofits.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1290">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cofits/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="8" selection-start="120" selection-end="135" vertical-scroll-proportion="0.0" vertical-offset="60" max-vertical-offset="480">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/AddFileActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="39" column="14" selection-start="1153" selection-end="1153" vertical-scroll-proportion="0.6081081" vertical-offset="90" max-vertical-offset="3720">
+        <state line="216" column="63" selection-start="7314" selection-end="7314" vertical-scroll-proportion="0.8051948" vertical-offset="2480" max-vertical-offset="3885">
           <folding>
-            <element signature="e#2863#3252#0" expanded="true" />
-            <element signature="e#3237#3238#0" expanded="true" />
-            <element signature="e#6011#8259#0" expanded="true" />
-            <element signature="e#8240#8241#0" expanded="true" />
+            <element signature="e#2924#3313#0" expanded="true" />
+            <element signature="e#3298#3299#0" expanded="true" />
+            <element signature="e#6007#6038#0" expanded="true" />
+            <element signature="e#6085#9025#0" expanded="true" />
+            <element signature="e#9006#9007#0" expanded="true" />
           </folding>
         </state>
       </provider>

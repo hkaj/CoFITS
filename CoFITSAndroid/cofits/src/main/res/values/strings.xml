@@ -27,5 +27,6 @@
     <string name="title_activity_file_explore">FileExplore</string>
     <string name="upload_button">Upload</string>
     <string name="browse_button">Browse</string>
+    <string name="choose_file">Choose your file</string>
 
 </resources>
