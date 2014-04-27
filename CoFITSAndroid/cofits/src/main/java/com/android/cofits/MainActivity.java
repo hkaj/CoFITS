@@ -1,5 +1,6 @@
 package com.android.cofits;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -17,6 +19,14 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Button goToProjects = (Button) findViewById(R.id.button2);
+        goToProjects.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ProjectsActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -48,6 +58,7 @@ public class MainActivity extends ActionBarActivity {
 
     public void onClickLogin(View view) {
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
