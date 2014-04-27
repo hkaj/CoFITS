@@ -32,7 +32,8 @@
         </activity>
         <activity
             android:name="com.android.cofits.AddFileActivity"
-            android:label="@string/title_activity_add_file" >
+            android:label="@string/title_activity_add_file"
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name="com.android.cofits.FileViewActivity"
@@ -44,7 +45,8 @@
         </activity>
         <activity
             android:name="com.android.cofits.FileExplore"
-            android:label="@string/title_activity_file_explore" >
+            android:label="@string/title_activity_file_explore"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

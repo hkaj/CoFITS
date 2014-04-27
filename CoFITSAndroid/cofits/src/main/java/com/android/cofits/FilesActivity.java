@@ -1,5 +1,6 @@
 package com.android.cofits;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
@@ -68,6 +70,14 @@ public class FilesActivity extends ActionBarActivity {
         spec.setContent(R.id.tab1);
         spec.setIndicator(getResources().getString(R.string.tab_file));
         tabHost.addTab(spec);
+
+        parametersListFiles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long myLong) {
+                //String selectedFromList = (String) (parametersListSessions.getItemAtPosition(myItemInt));
+                Intent intent = new Intent(FilesActivity.this, FileViewActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -85,7 +95,9 @@ public class FilesActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            Intent intent = new Intent(FilesActivity.this, AddFileActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);

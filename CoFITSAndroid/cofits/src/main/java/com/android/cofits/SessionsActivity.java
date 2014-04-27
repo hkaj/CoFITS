@@ -1,5 +1,6 @@
 package com.android.cofits;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
@@ -66,6 +68,14 @@ public class SessionsActivity extends ActionBarActivity {
         spec.setContent(R.id.tab1);
         spec.setIndicator(getResources().getString(R.string.tab_session));
         tabHost.addTab(spec);
+
+        parametersListSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long myLong) {
+                //String selectedFromList = (String) (parametersListSessions.getItemAtPosition(myItemInt));
+                Intent intent = new Intent(SessionsActivity.this, FilesActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
