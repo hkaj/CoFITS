@@ -6,6 +6,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mt4j-desktop"/>
 	<classpathentry kind="lib" path="/mt4j-desktop/lib/core.jar"/>
 	<classpathentry kind="lib" path="/mt4j-desktop/lib/mt4j-desktop.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/MT4j Commons"/>
+	<classpathentry kind="lib" path="lib/mt4j_commons.jar"/>
+	<classpathentry kind="lib" path="lib/pdf-renderer.jar"/>
+	<classpathentry kind="lib" path="lib/gsvideo/gstreamer-java.jar"/>
+	<classpathentry kind="lib" path="lib/gsvideo/gsvideo.jar"/>
+	<classpathentry kind="lib" path="lib/gsvideo/jna.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

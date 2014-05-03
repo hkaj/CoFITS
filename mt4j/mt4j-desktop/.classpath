@@ -49,9 +49,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/java3D"/>
-	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/j3dcore.jar"/>
-	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/j3dutils.jar"/>
-	<classpathentry kind="lib" path="/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/lib/ext/vecmath.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="extensions/lib/jbullet/j3dcore.jar"/>
+	<classpathentry kind="lib" path="extensions/lib/jbullet/j3dutils.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
