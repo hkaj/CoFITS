@@ -73,6 +73,7 @@ public class FileChooser extends ListMenu
 	 * @uml.property  name="cancelActionButton"
 	 * @uml.associationEnd  
 	 */
+	
 	private MTImageButton cancelActionButton;
 	/**
 	 * @uml.property  name="deleteButton"
@@ -122,6 +123,7 @@ public class FileChooser extends ListMenu
 		actionButton.setHeightXYGlobal(30);
 		cancelActionButton = createIconButton(savedPosition, "cancel.png", listener);
 		
+		
 		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
@@ -134,12 +136,11 @@ public class FileChooser extends ListMenu
 		deleteButton = createIconButton(bottomPosition.getPosition(), "delete-icon.png", listener);
 		bottomPosition.nextPosition(deleteButton);
 		
-		addChild(parentButton);
 		addChild(actionButton);
+		addChild(parentButton);
 	}
 	
 	public void displayDisabledBottomButtons() {
-		removeChild(parentButton);
 		removeChild(actionButton);
 		
 		addChild(cancelActionButton);
@@ -165,7 +166,6 @@ public class FileChooser extends ListMenu
 	}
 	
 	public void displayTopButtons() {
-		addChild(parentButton);
 		addChild(actionButton);
 	}
 	
@@ -232,7 +232,7 @@ public class FileChooser extends ListMenu
 						Object parent = getModel().getParentMenu(
 								FileChooser.this.getModel().getCurrentMenu());
 						System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
-						if (parent != null) {
+						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals("/home/chris/bsfile")) {
 							FileChooser.this.getModel().setCurrentMenu(parent);
 							updateList();
 						}
@@ -247,7 +247,9 @@ public class FileChooser extends ListMenu
 						
 					} else if (tapEvent.getTarget() == deleteButton) {
 						
-					} 
+					} else if (tapEvent.getTarget() == parentButton){
+
+					}
 				}
 			}
 

@@ -200,9 +200,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	}
 
 	public void updateList() {
-		list.removeAllListElements();
-		list.removeScrollBar();
-		emptyListCells();
+		emptyList();
 
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
@@ -235,6 +233,12 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		if (nbItems > 5) {
 			this.list.createScrollBar(this.applet, nbItems);
 		}
+	}
+
+	protected void emptyList() {
+		list.removeAllListElements();
+		list.removeScrollBar();
+		emptyListCells();
 	}
 
 	protected void setSelectionList(final FileChooser fc) {

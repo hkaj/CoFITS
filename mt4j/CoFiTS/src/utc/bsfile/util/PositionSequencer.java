@@ -1,5 +1,6 @@
 /**
- * 
+ * @class PositionSequencer
+ * Used to manage the position of consecutive components on GUI
  */
 package utc.bsfile.util;
 
