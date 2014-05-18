@@ -1,13 +1,10 @@
 package utc.bsfile.util;
 
-import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Set;
-
-import org.mt4j.util.MTColor;
 
 /**
  * Class used for managing the project properties
@@ -17,7 +14,7 @@ import org.mt4j.util.MTColor;
 
 public class PropertyManager {
 	
-	public static String CONF_FILENAME = "rsc/config/bsfile.properties";
+	public static String CONF_FILENAME = "rsc/config/cofits.properties";
 	public static String FILE_PATH = "file-path";
 	public static String ICONE_DIR = "icone-dir";
 	public static String MAIN_FONT = "main-font";
@@ -53,7 +50,7 @@ public class PropertyManager {
 		if (dir.startsWith("~")) {
 			dir = dir.substring(1);
 			dir = System.getProperty("user.home").concat(dir);
-			System.out.println("Directory of files" + dir);
+			System.out.println("Directory of files " + dir);
 		}
 		return dir;
 	}

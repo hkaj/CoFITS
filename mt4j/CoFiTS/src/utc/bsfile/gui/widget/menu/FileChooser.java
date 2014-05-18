@@ -21,7 +21,6 @@ import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.util.FileExtensionIconManager;
-import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PropertyManager;
 import utc.bsfile.util.PositionSequencer.Orientation;
@@ -232,10 +231,13 @@ public class FileChooser extends ListMenu
 						Object parent = getModel().getParentMenu(
 								FileChooser.this.getModel().getCurrentMenu());
 						System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
-						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals("/home/chris/bsfile")) {
+						
+						//We can go to parent only if we are under FILE_PATH property root
+						if (parent != null && !(((File) getModel().getCurrentMenu()).getAbsolutePath() + "/").equals(PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH))) {
 							FileChooser.this.getModel().setCurrentMenu(parent);
 							updateList();
 						}
+						
 					} else if (tapEvent.getTarget() == actionButton) {
 						setSelectionList(FileChooser.this);
 						displayDisabledBottomButtons();
@@ -247,9 +249,8 @@ public class FileChooser extends ListMenu
 						
 					} else if (tapEvent.getTarget() == deleteButton) {
 						
-					} else if (tapEvent.getTarget() == parentButton){
-
 					}
+						
 				}
 			}
 
