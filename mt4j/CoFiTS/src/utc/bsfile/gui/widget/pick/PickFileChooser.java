@@ -53,6 +53,9 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 				- getSpacing() - iconWidth, y + getSpacing()), getSpacing(),
 				Orientation.VERTICAL);
 
+		
+		
+		//Create the buttons on the left side for files filtering
 		pdfButton = createIconButton(position2.getPosition(),
 				"pdf-icon.png", listener);
 		position2.nextPosition(pdfButton);
@@ -68,6 +71,10 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		noFilterButton = createIconButton(position2.getPosition(),
 				"no-filter-icon.png", listener);
 		position2.nextPosition(noFilterButton);
+		
+		
+		
+		
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
@@ -99,7 +106,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
 		final File file = new File(choiceEvent.getChoice());
-
+		
 		if (FileExtensionFilter.IMG_FILTER.accept(file)) {
 			IMAGEModel img = new IMAGEModel(file.getAbsolutePath());
 			MTIMAGE image = new MTIMAGE(getRenderer(), img);
@@ -107,14 +114,14 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			image.setAnchor(PositionAnchor.CENTER);
 			image.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(image);
+			
 		} else if (FileExtensionFilter.PDF_FILTER.accept(file)) {
 			PDFModel pdf = new PDFModel(file.getAbsolutePath());
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(pdfWidget);
-			pdf.addPDFListener(pdfWidget);
-			
+	 		pdf.addPDFListener(pdfWidget);
 			
 		} else if (FileExtensionFilter.VIDEO_FILTER.accept(file)) {
 			MovieModel movie = new MovieModel(file.getAbsolutePath());

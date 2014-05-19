@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
@@ -184,16 +183,22 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this(applet, x, y, width, nbItem, choices.toArray());
 	}
 
-	protected MTImageButton createIconButton(Vector3D position,
-			String imageFilename, IGestureEventListener listener) {
-		MTImageButton imageButton = new MTImageButton(this.getRenderer(),
-				ImageManager.getInstance().load(imageFilename));
+	
+	
+	/**
+	 * @param position
+	 * @param imageFilename
+	 * @param listener
+	 * @return
+	 * Construct the button component for a file choice in the list menu 
+	 */
+	protected MTImageButton createIconButton(Vector3D position, String imageFilename, IGestureEventListener listener) {
+		MTImageButton imageButton = new MTImageButton(this.getRenderer(),ImageManager.getInstance().load(imageFilename));
 		imageButton.setAnchor(PositionAnchor.UPPER_LEFT);
 		imageButton.setWidthXYGlobal(iconWidth);
 		imageButton.setHeightXYGlobal(choiceViewHeight);
 		imageButton.setPositionGlobal(new Vector3D(position.x, position.y));
-		Theme.getTheme()
-				.applyStyle(Theme.TRANSPARENT_IMAGE_BUTTON, imageButton);
+		Theme.getTheme().applyStyle(Theme.TRANSPARENT_IMAGE_BUTTON, imageButton);
 		imageButton.addGestureListener(TapProcessor.class, listener);
 
 		return imageButton;
@@ -324,12 +329,16 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		}
 	}
 
+	
+	/**
+	 * @param choice
+	 * @return
+	 * Create the TextArea to show the name of the file 
+	 */
 	protected MTComponent makeChoiceView(Object choice) {
-		MTTextArea textArea = new MTTextArea(getRenderer(), getSpacing(), 0,
-				getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
+		MTTextArea textArea = new MTTextArea(getRenderer(), getSpacing(), 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),
-				sfont, 20, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 20, MTColor.BLACK, true));
 		textArea.setText(choice.toString());
 		textArea.setNoFill(true);
 		textArea.setNoStroke(true);
@@ -394,14 +403,19 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				Object choice = listCell.getUserData(CHOICE);
 
 				if (this.menuModel.hasChoices(choice)) {
+					//A folder had been tapped
 					this.menuModel.setCurrentMenu(choice);
 					updateList();
 				} else {
+					//A file had been tapped
 					for (ChoiceListener listener : ListMenu.this.listeners)
-						listener.choiceSelected(new ChoiceEvent(ListMenu.this,
-								choice));
-					if (ListMenu.this.mustBeDestroy())
-						ListMenu.this.destroy();
+						listener.choiceSelected(new ChoiceEvent(ListMenu.this, choice));
+					
+					//Destroy the list after opening a file
+					if (ListMenu.this.mustBeDestroy()){
+						getParent().removeChild(this);
+						//TODO Destroy the component
+					}
 				}
 			}
 		}

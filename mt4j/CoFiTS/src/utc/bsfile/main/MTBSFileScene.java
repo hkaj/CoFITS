@@ -25,11 +25,8 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
-import utc.bsfile.gui.widget.pdf.MTPDF;
-import utc.bsfile.gui.widget.pdf.PDFMenu;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
-import utc.bsfile.model.pdf.PDFModel;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
@@ -87,15 +84,6 @@ public class MTBSFileScene extends AbstractScene implements PropertyChangeListen
 		dragOnly.addGestureListener(DragProcessor.class, new DefaultDragAction());
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
 		this.getCanvas().addChild(dragOnly);
-		
-		
-//		MTPDF mtpdf = new MTPDF(mtApplication, new PDFModel("/home/chris/UV/IA04/Cours/C7-ia04-simulation.pdf"));
-//		PDFMenu pdfMenu = new PDFMenu(mtApplication,getCanvas(),10, 10, mtpdf, null);
-//		pdfMenu.setVisible(true);
-//		getCanvas().addChild(pdfMenu);
-		
-		
-		
 		
 		initManager();
 		addPickFileChooser();

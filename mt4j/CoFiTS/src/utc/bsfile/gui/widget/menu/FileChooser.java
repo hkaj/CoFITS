@@ -26,6 +26,7 @@ import utc.bsfile.util.PropertyManager;
 import utc.bsfile.util.PositionSequencer.Orientation;
 
 
+
 public class FileChooser extends ListMenu
 {
 	/**
@@ -189,6 +190,7 @@ public class FileChooser extends ListMenu
 		MTComponent component = new MTComponent(getRenderer());
 		File file = (File) choice;
 		try {
+			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
 					getSpacing(), 0, iconWidth, iconHeight);
 			PImage icon = FileExtensionIconManager.getInstance().getIcon(file);
@@ -197,6 +199,7 @@ public class FileChooser extends ListMenu
 				fileExtIcon.setNoStroke(true);
 				component.addChild(fileExtIcon);
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -219,6 +222,11 @@ public class FileChooser extends ListMenu
 		return (FileChooserModel) this.getModel();
 	}
 
+	
+	/**
+	 * Define the behavior for tapping on any button on fileChooser
+	 *
+	 */
 	protected class ButtonListener implements IGestureEventListener {
 		
 		public boolean processGestureEvent(MTGestureEvent ge) {
