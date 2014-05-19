@@ -70,7 +70,7 @@ public class MTCircularMenu extends MTEllipse {
 		this.setNoStroke(true);
 		
 		MTColor white = new MTColor(255,255,255);
-		this.font = FontManager.getInstance().createFont(this.pApplet, "arial", 18);
+		this.font = FontManager.getInstance().createFont(this.pApplet, "arial.ttf", 18);
 		this.font.setFillColor(white);
 	}
 	/**
