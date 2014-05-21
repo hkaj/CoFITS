@@ -413,8 +413,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					
 					//Destroy the list after opening a file
 					if (ListMenu.this.mustBeDestroy()){
-						getParent().removeChild(this);
-						//TODO Destroy the component
+						this.destroy();
 					}
 				}
 			}
