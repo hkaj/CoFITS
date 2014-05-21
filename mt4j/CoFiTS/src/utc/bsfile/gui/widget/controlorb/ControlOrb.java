@@ -77,7 +77,16 @@ public class ControlOrb extends MTEllipse {
 			}
 		});
 	}
-		
+	
+	//Getters & Setters
+	public String getLogin() {
+		return m_loginTextField.getText();
+	}
+	
+	
+	public void setLogin(String login) {
+		this.m_loginTextField.setText(login);
+	}
 	
 	
 	//Members
