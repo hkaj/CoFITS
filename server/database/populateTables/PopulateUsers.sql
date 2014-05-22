@@ -1,7 +1,8 @@
-INSERT INTO Users(login, lastname, firstname)
+INSERT INTO Users(login)
 VALUES
-('narichar','Richard','Nathan'),
-('cmoulin','Moulin','Claude'),
-('totosr04','To','to'),
-('titi','Ti','ti'),
-('teteia03','Te','te');
+('kajhaiss'),
+('achennan'),
+('cbellier'),
+('ssqualli'),
+('cmoulin'),
+('mdaragon');

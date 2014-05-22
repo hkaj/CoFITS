@@ -1,6 +1,6 @@
 CREATE TABLE Sessions
 (
-	name varchar(20) REFERENCES Projects(name),
+	project varchar(20) REFERENCES Projects(id),
 	date timestamp(0),
-	PRIMARY KEY(name, date) 
+	PRIMARY KEY(project, date) 
 );
