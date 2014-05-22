@@ -3,11 +3,6 @@ package utc.bsfile.gui.widget.controlorb;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
-import org.mt4j.input.inputProcessors.IGestureEventListener;
-import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -22,6 +17,10 @@ public class ControlOrb extends MTEllipse {
 
 	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, String login) {
 		this(mtApplication, centerPoint, RADIUS, RADIUS, login, null);
+	}
+	
+	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, String login, DefaultKeyboard keyboard) {
+		this(mtApplication, centerPoint, RADIUS, RADIUS, login, keyboard);
 	}
 	
 	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, float radiusX, float radiusY, String login, DefaultKeyboard keyboard) {
@@ -49,40 +48,24 @@ public class ControlOrb extends MTEllipse {
 		
 		addChild(m_loginTextField);
 		
-		setVisible(true);
-		
-		eventsListeningProcess();
-		
+		setVisible(true);		
+	}
+	
+	
+	/**
+	 * Method to use when the Orb is destroyed
+	 */
+	protected void closeOrb(){
+		if (m_keyboard != null)
+			m_keyboard.close();
 	}
 
-	protected void eventsListeningProcess() {
-		//Tap long on the orb
-		registerInputProcessor(new TapAndHoldProcessor(m_app,1000));
-		addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(m_app, this));
-		addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
-			public boolean processGestureEvent(MTGestureEvent ge) {
-				TapAndHoldEvent th = (TapAndHoldEvent)ge;
-				switch (th.getId()) {
-				case TapAndHoldEvent.GESTURE_STARTED:
-					break;
-				case TapAndHoldEvent.GESTURE_UPDATED:
-					break;
-				case TapAndHoldEvent.GESTURE_ENDED:
-					if (th.isHoldComplete()){
-						
-					}
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-		});
-	}
+	
 	
 	//Getters & Setters
 	public String getLogin() {return m_loginTextField.getText();}
 	public DefaultKeyboard getKeyboard() {return this.m_keyboard;}
+	public AbstractMTApplication getApplication() {return this.m_app;}
 	
 	public void setLogin(String login) {this.m_loginTextField.setText(login);}
 	public void setKeyboard(DefaultKeyboard keyboard){this.m_keyboard = keyboard;}

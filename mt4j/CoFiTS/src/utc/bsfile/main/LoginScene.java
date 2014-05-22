@@ -42,7 +42,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 				case TapAndHoldEvent.GESTURE_ENDED:
 					if (th.isHoldComplete()){
 						playKeyboard(th.getLocationOnScreen());
-						
 					}
 					break;
 				default:
@@ -51,22 +50,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 				return false;
 			}
 
-			private ValidateKeyboard playKeyboard(Vector3D locationOnScreen) {
-				//Construction
-				ValidateKeyboard keyboard = new ValidateKeyboard(getMTApplication(),"LAMBDA USER");
-				m_keyboards.add(keyboard);
-				
-				//Visibility and location
-				keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
-				keyboard.setVisible(true);
-				
-				//Listeners
-				keyboard.addValidateKBListener(LoginScene.this);
-				
-				getCanvas().addChild(keyboard);
-				
-				return keyboard;
-			}
+			
 		});
 	}
 
@@ -90,16 +74,94 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		}
 		
 	}
+	
+	//////////////////////////////////
+	//	Draw components on the Scene
+	//////////////////////////////////
+	
 
+	/**
+	 * @param locationOnScreen - Location where the Keyboard will be drawn
+	 * @return the new keyboard
+	 * Creates a new Keyboard and add it to the list of Keyboards
+	 */
+	protected ValidateKeyboard playKeyboard(Vector3D locationOnScreen){
+		return playKeyboard(locationOnScreen, null);
+	}
+	
+	
+	/**
+	 * @param locationOnScreen - Location where the Keyboard will be drawn
+	 * @param orb - The orb to be attached to the new keyboard
+	 * @return the new keyboard
+	 * Creates a new Keyboard and add it to the list of Keyboards
+	 */
+	protected ValidateKeyboard playKeyboard(Vector3D locationOnScreen, ControlOrb orb) {
+		//Construction
+		ValidateKeyboard keyboard = new ValidateKeyboard(getMTApplication(),"LAMBDA USER");
+		keyboard.setControlOrb(orb);
+		m_keyboards.add(keyboard);
+		
+		if (orb != null){
+			orb.setKeyboard(keyboard);
+		}
+		
+		//Visibility and location
+		keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
+		keyboard.setVisible(true);
+		
+		//Listeners
+		keyboard.addValidateKBListener(LoginScene.this);
+		
+		getCanvas().addChild(keyboard);
+		
+		return keyboard;
+	}
+	
+	
 	/**
 	 * @param orbLocation - Global location of the orb
 	 * @param keyboard - Keyboard to be attached to the new orb
 	 * @return the new orb
+	 * Creates an orb and add it to the list of orbs
 	 */
 	protected ControlOrb playOrb(Vector3D orbLocation, ValidateKeyboard keyboard) {
-		ControlOrb orb = playOrb(orbLocation);
-		orb.setKeyboard(keyboard);
-		keyboard.setControlOrb(orb);
+		final ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, "UNNAMED", keyboard);
+		
+		if (keyboard != null){
+			keyboard.setControlOrb(orb);
+		}
+				
+		m_orbs.add(orb);
+		getCanvas().addChild(orb);
+		
+		//Add Events Listening Process
+		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
+		//Tap long on the orb
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
+		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
+		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+			public boolean processGestureEvent(MTGestureEvent ge) {
+				TapAndHoldEvent th = (TapAndHoldEvent)ge;
+				switch (th.getId()) {
+				case TapAndHoldEvent.GESTURE_STARTED:
+					break;
+				case TapAndHoldEvent.GESTURE_UPDATED:
+					break;
+				case TapAndHoldEvent.GESTURE_ENDED:
+					if (th.isHoldComplete()){
+						//Create a keyboard if does not exist
+						if (orb.getKeyboard() == null){
+							playKeyboard(orb.getCenterPointGlobal(), orb);
+						}
+					}
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		});
 		
 		return orb;
 	}
@@ -111,16 +173,10 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 * Creates an orb and add it to the list of orbs
 	 */
 	protected ControlOrb playOrb(Vector3D orbLocation){
-		ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, "UNNAMED");
-		m_orbs.add(orb);
-		
-		//Gesture Listeners
-		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
-		
-		getCanvas().addChild(orb);
-		
-		return orb;
+		return playOrb(orbLocation, null);
 	}
+	
+	
 	
 	//Members
 	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();

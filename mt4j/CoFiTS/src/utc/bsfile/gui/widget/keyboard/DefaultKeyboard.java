@@ -616,6 +616,12 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 				}// switch
 			}// processanimation
 		});
+		
+		//Detach the orb
+		if (m_controlOrb != null){
+			m_controlOrb.setKeyboard(null);
+		}
+		
 		keybCloseAnim.start();
 	}
 
