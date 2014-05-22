@@ -7,12 +7,14 @@ import java.io.IOException;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
+import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -110,6 +112,18 @@ public class FileChooser extends ListMenu
 		super(applet, x, y, width, nbItem, new FileChooserModel(path, filter));
 
 		root = path.getAbsoluteFile();
+				
+		//---------------------------------------------------------------------------
+		IFont font = FontManager.getInstance().createFont(applet, "arial.ttf", 17);
+		this.pathField = new MTTextField(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight(), font);
+		if ( pathString.length() > 30 ) {
+			pathString = pathString.substring(0, 30) + "...";
+		}
+		pathField.setText(pathString);
+		pathField.setNoFill(true);
+		pathField.setNoStroke(true);
+		pathField.removeAllGestureEventListeners();
+		//---------------------------------------------------------------------------
 
 		this.applet = applet;
 		
@@ -124,13 +138,13 @@ public class FileChooser extends ListMenu
 		cancelActionButton = createIconButton(savedPosition, "cancel.png", listener);
 		
 		
-		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250), Orientation.HORIZONTAL);
+		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250 + getPathFieldHeight()), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
 		disabledDeleteButton = createIconButton(disabledBottomPosition.getPosition(), "disabledDelete-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledDeleteButton);
 		
-		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250), Orientation.HORIZONTAL);
+		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250 + getPathFieldHeight()), Orientation.HORIZONTAL);
 		shareButton = createIconButton(bottomPosition.getPosition(), "share-icon.png", listener);
 		bottomPosition.nextPosition(shareButton);
 		deleteButton = createIconButton(bottomPosition.getPosition(), "delete-icon.png", listener);
@@ -138,6 +152,7 @@ public class FileChooser extends ListMenu
 		
 		addChild(actionButton);
 		addChild(parentButton);
+		addChild(pathField);
 	}
 	
 	public void displayDisabledBottomButtons() {
@@ -236,14 +251,17 @@ public class FileChooser extends ListMenu
 
 				if (tapEvent.isTapped()) {
 					if (tapEvent.getTarget() == parentButton) {
-						Object parent = getModel().getParentMenu(
-								FileChooser.this.getModel().getCurrentMenu());
-						System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
+						Object parent = getModel().getParentMenu(FileChooser.this.getModel().getCurrentMenu());
+						//System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
 						
 						//We can go to parent only if we are under FILE_PATH property root
-						if (parent != null && !(((File) getModel().getCurrentMenu()).getAbsolutePath() + "/").equals(PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH))) {
+						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH))) {
 							FileChooser.this.getModel().setCurrentMenu(parent);
 							updateList();
+							//-----------------------------------------------------------------------
+							// Max : set the current path with the parent's path (update the path textField)
+							setPath((File)parent);
+							//-----------------------------------------------------------------------
 						}
 						
 					} else if (tapEvent.getTarget() == actionButton) {

@@ -9,6 +9,7 @@ import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
@@ -30,6 +31,7 @@ import utc.bsfile.util.PropertyManager;
 public class ListMenu extends MTRectangle implements IGestureEventListener {
 	private static final String CHOICE = "CHOICE";
 	private static int spacing = 5;
+	private static int pathFieldHeight = 40;
 	public static int choiceViewHeight = 40;
 	public static int iconWidth = 40;
 	public static int iconHeight = 40;
@@ -47,6 +49,10 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 
 	public static int getSpacing() {
 		return spacing;
+	}
+	
+	public static int getPathFieldHeight() {
+		return pathFieldHeight;
 	}
 
 	public static int getSpacingX2() {
@@ -164,8 +170,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this.backButton.setVisible(false);
 
 		this.list = new PickMTList(applet, x + getSpacing(), y
-				+ getSpacedIconHeight(), width - getSpacingX2(), height
-				- getSpacedIconHeight() * 2, 0);
+				+ getSpacedIconHeight() + getPathFieldHeight(), width - getSpacingX2(), height
+				- getSpacedIconHeight() * 2 - getPathFieldHeight(), 0);
 		Theme.getTheme().applyStyle(StyleID.STROKE_ONLY, list);
 		updateList();
 		addChild(this.list);
@@ -393,6 +399,27 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this.closeButton.setVisible(visible);
 		this.closeButton.setEnabled(visible);
 	}
+	
+	//-----------------------------------------------------------
+	protected String pathString = "\\server";
+	protected  MTTextField pathField;
+	//-----------------------------------------------------------
+	
+	protected void setPath(File choice) {
+		//-------------------------------------------------------------------------
+		// Max : update of the current path
+		if ( ((File)choice).getPath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH) )) {
+			pathString = "\\server\\";
+		} else {
+			System.out.println(((File)choice).getAbsolutePath());
+			pathString = "\\server" + ((File)choice).getAbsolutePath().substring(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH).length()); // cut the beginning of the path
+		}
+		if ( pathString.length() > 30 ) {
+			pathString = pathString.substring(0, 30) + "...";
+		}
+		if ( pathField != null ) pathField.setText( pathString );
+		//-------------------------------------------------------------------------
+	}
 
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		super.processGestureEvent(ge);
@@ -401,6 +428,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 			if (((TapEvent) ge).isTapped()) {
 				MTListCell listCell = (MTListCell) ge.getTarget();
 				Object choice = listCell.getUserData(CHOICE);
+				
+				// update the path field
+				setPath((File)choice);
 
 				if (this.menuModel.hasChoices(choice)) {
 					//A folder had been tapped
