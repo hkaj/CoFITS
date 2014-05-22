@@ -104,6 +104,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		if (orb != null){
 			orb.setKeyboard(keyboard);
+			keyboard.addTextInputListener(orb);
 		}
 		
 		//Visibility and location
@@ -130,6 +131,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		if (keyboard != null){
 			keyboard.setControlOrb(orb);
+			keyboard.addTextInputListener(orb);
 		}
 				
 		m_orbs.add(orb);

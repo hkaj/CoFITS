@@ -3,6 +3,7 @@ package utc.bsfile.gui.widget.controlorb;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.keyboard.ITextInputListener;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -11,7 +12,7 @@ import org.mt4j.util.math.Vector3D;
 import utc.bsfile.gui.widget.keyboard.DefaultKeyboard;
 import utc.bsfile.util.PropertyManager;
 
-public class ControlOrb extends MTEllipse {
+public class ControlOrb extends MTEllipse implements ITextInputListener {
 	
 	private static final float RADIUS = 50f;
 
@@ -50,6 +51,38 @@ public class ControlOrb extends MTEllipse {
 		
 		setVisible(true);		
 	}
+	
+	
+	///////////////////////////////////////////////////////////////
+	//	Implement InputTextListener method, listening to keyboard
+	///////////////////////////////////////////////////////////////
+	
+	@Override
+	public void appendCharByUnicode(String arg0) {
+		m_loginTextField.appendCharByUnicode(arg0);		
+	}
+
+	@Override
+	public void appendText(String arg0) {
+		m_loginTextField.appendText(arg0);		
+	}
+
+	@Override
+	public void clear() {
+		m_loginTextField.clear();		
+	}
+
+	@Override
+	public void removeLastCharacter() {
+		m_loginTextField.removeLastCharacter();
+	}
+
+	@Override
+	public void setText(String arg0) {
+		m_loginTextField.setText(arg0);		
+	}
+	
+	
 	
 	
 	/**
