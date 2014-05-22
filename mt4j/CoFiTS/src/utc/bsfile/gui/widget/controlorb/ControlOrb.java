@@ -13,6 +13,7 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
+import utc.bsfile.gui.widget.keyboard.DefaultKeyboard;
 import utc.bsfile.util.PropertyManager;
 
 public class ControlOrb extends MTEllipse {
@@ -20,12 +21,13 @@ public class ControlOrb extends MTEllipse {
 	private static final float RADIUS = 50f;
 
 	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, String login) {
-		this(mtApplication, centerPoint, RADIUS, RADIUS, login);
+		this(mtApplication, centerPoint, RADIUS, RADIUS, login, null);
 	}
 	
-	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, float radiusX, float radiusY, String login) {
+	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, float radiusX, float radiusY, String login, DefaultKeyboard keyboard) {
 		super(mtApplication, centerPoint, radiusX, radiusY);
 		m_app = mtApplication;
+		m_keyboard = keyboard;
 		
 		//Create login text
 		MTColor textColor = new MTColor(255, 255, 255); //white
@@ -79,19 +81,18 @@ public class ControlOrb extends MTEllipse {
 	}
 	
 	//Getters & Setters
-	public String getLogin() {
-		return m_loginTextField.getText();
-	}
+	public String getLogin() {return m_loginTextField.getText();}
+	public DefaultKeyboard getKeyboard() {return this.m_keyboard;}
 	
+	public void setLogin(String login) {this.m_loginTextField.setText(login);}
+	public void setKeyboard(DefaultKeyboard keyboard){this.m_keyboard = keyboard;}
 	
-	public void setLogin(String login) {
-		this.m_loginTextField.setText(login);
-	}
-	
+		
 	
 	//Members
 	private MTTextArea m_loginTextField;
 	private MTColor m_color;
 	private AbstractMTApplication m_app;
+	private DefaultKeyboard m_keyboard;
 
 }

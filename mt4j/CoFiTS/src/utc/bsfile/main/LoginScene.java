@@ -1,7 +1,7 @@
 package utc.bsfile.main;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -54,7 +54,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			private ValidateKeyboard playKeyboard(Vector3D locationOnScreen) {
 				//Construction
 				ValidateKeyboard keyboard = new ValidateKeyboard(getMTApplication(),"LAMBDA USER");
-				m_keyboardsAndOrbs.put(keyboard,null);
+				m_keyboards.add(keyboard);
 				
 				//Visibility and location
 				keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
@@ -69,15 +69,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			}
 		});
 	}
-	
-	//Members
-	private Map<ControlOrb, ValidateKeyboard> m_orbsAndKeyboards = new HashMap<ControlOrb, ValidateKeyboard>();
-	private Map<ValidateKeyboard, ControlOrb> m_keyboardsAndOrbs = new HashMap<ValidateKeyboard, ControlOrb>();
 
 	@Override
 	public void validate(ValidateKBEvent evt) {
 		ValidateKeyboard keyboard = evt.getValidateKB();
-		ControlOrb orb = m_keyboardsAndOrbs.get(keyboard);
+		ControlOrb orb = keyboard.getControlOrb();
 		
 		//Process the keyboard/orb relation
 		if (orb == null) {
@@ -101,9 +97,22 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 * @return the new orb
 	 */
 	protected ControlOrb playOrb(Vector3D orbLocation, ValidateKeyboard keyboard) {
+		ControlOrb orb = playOrb(orbLocation);
+		orb.setKeyboard(keyboard);
+		keyboard.setControlOrb(orb);
+		
+		return orb;
+	}
+	
+	
+	/**
+	 * @param orbLocation - Global location of the orb
+	 * @return the new orb
+	 * Creates an orb and add it to the list of orbs
+	 */
+	protected ControlOrb playOrb(Vector3D orbLocation){
 		ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, "UNNAMED");
-		m_orbsAndKeyboards.put(orb, keyboard);
-		m_keyboardsAndOrbs.put(keyboard, orb);
+		m_orbs.add(orb);
 		
 		//Gesture Listeners
 		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
@@ -112,6 +121,10 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		return orb;
 	}
+	
+	//Members
+	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
+	List<ValidateKeyboard> m_keyboards = new ArrayList<ValidateKeyboard>();
 
 }
 
