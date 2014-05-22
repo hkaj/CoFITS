@@ -1,7 +1,7 @@
-INSERT INTO Documents(name,type)
+INSERT INTO Documents(name,type, owner)
 VALUES
-('terminaux minitel','pdf'),
-('rapport écosystèmes numériques', 'Open Document'),
-('schema opml', 'xml/relaxNG'),
-('publication RFID','pdf'),
-('whitepaper tags RFID','pdf');
+('terminaux minitel','pdf', 'kajhaiss'),
+('publication RFID','pdf', 'ssqualli'),
+('whitepaper tags RFID','pdf', 'ssqualli'),
+('rapport écosystèmes numériques', 'Open Document', 'mdaragon'),
+('schema opml', 'xml/relaxNG', 'mdaragon');
