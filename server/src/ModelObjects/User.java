@@ -14,40 +14,25 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User extends ModelObject
 {
-	final private String login, lastName, firstName;
+	final private String login;
 
 	@JsonCreator
-	public User(@JsonProperty("login") String l, @JsonProperty("lastName")String ln, @JsonProperty("firstName")String fn)
+	public User(@JsonProperty("login") String l)
 	{
 		super();
 		this.login=l;
-		this.lastName = ln;
-		this.firstName = fn;
 	}
 	
 	public User(ResultSet r) throws SQLException
 	{
 		super();
 		this.login = r.getString("login");
-		this.firstName = r.getString("firstname");
-		this.lastName = r.getString("lastname");
 	}
 	@JsonIgnore
 	public String getLogin()
 	{
 		return this.login;
-	}
-	@JsonIgnore
-	public String getLastName()
-	{
-		return this.lastName;
-	}
-	@JsonIgnore
-	public String getFirstName()
-	{
-		return this.firstName;
-	}
-	
+	}	
 	
 	@Override @JsonIgnore
 	public String[] getKeyConditions()
@@ -65,7 +50,7 @@ public class User extends ModelObject
 	@Override
 	public String[] getValue()
 	{
-		final String[] res = {this.login, this.lastName, this.firstName};
+		final String[] res = {this.login};
 		return res;
 	}
 

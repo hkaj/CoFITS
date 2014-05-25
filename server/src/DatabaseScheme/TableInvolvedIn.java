@@ -28,7 +28,7 @@ public class TableInvolvedIn implements RelationTable
 	@Override
 	public ReferenceTable[] getRelativeTables()
 	{
-		final ReferenceTable[] res = {TableUsers.getInstance(), TableSessions.getInstance()};
+		final ReferenceTable[] res = {TableUsers.getInstance(), TableProjects.getInstance()};
 		return res;
 	}
 }

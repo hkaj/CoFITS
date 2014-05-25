@@ -30,7 +30,7 @@ public class TableMobilizedIn implements RelationTable
 	@Override
 	public ReferenceTable[] getRelativeTables()
 	{
-		final ReferenceTable[] res = {TableDocuments.getInstance(), TableSessions.getInstance()};
+		final ReferenceTable[] res = {TableDocuments.getInstance(), TableProjects.getInstance()};
 		return res;
 	}
 

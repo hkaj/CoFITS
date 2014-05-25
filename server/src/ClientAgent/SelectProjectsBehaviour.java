@@ -68,8 +68,10 @@ public class SelectProjectsBehaviour extends Behaviour {
 			res = mapper.readValue(answer.getContent(), ModelObject[].class);
 			for (ModelObject m : res) {
 				Project p = (Project) m;
+				System.out.println(p.getId());
 				System.out.println(p.getName());
 				System.out.println(p.getDescription());
+				System.out.println(p.getCreator());
 				System.out.println("---------------");
 			}
 			getDataStore().put("results", res);

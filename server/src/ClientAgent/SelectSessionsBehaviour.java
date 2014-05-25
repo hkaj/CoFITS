@@ -43,7 +43,7 @@ public class SelectSessionsBehaviour extends Behaviour {
 			else
 				System.out.println("null --> Results length = 0");
 			Project prj = (Project) m[p-1];
-			Predicate[] pds = {new Filter("name",prj.getName())};
+			Predicate[] pds = {new Filter("id",prj.getId())};
 			final SelectRequest request = new SelectRequest(objectTypes.session,pds);
 			final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 			message.addReceiver(dest);
