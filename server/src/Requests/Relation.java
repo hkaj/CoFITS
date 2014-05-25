@@ -2,7 +2,6 @@ package Requests;
 
 import DatabaseScheme.RelationTable;
 import ModelObjects.ModelObject;
-import SpecialisedRelations.FollowedBy;
 import SpecialisedRelations.InvolvedIn;
 import SpecialisedRelations.MobilizedIn;
 
@@ -15,8 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	    include = JsonTypeInfo.As.PROPERTY,
 	    property = "type")
 	@JsonSubTypes(
-			{@Type(value = FollowedBy.class, name = "FollowedBy") ,
-			@Type(value = InvolvedIn.class, name = "InvolvedIn") ,
+			{@Type(value = InvolvedIn.class, name = "InvolvedIn") ,
 			@Type(value = MobilizedIn.class, name = "MobilizeIn") ,
 			})
 public interface Relation extends Predicate

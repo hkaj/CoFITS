@@ -2,8 +2,8 @@ package DatabaseScheme;
 
 public class TableInvolvedIn implements RelationTable
 {
-	final private static String[] att ={"login","name","date"};
-	final private static String[] keyAtt = {"login","name","date"};
+	final private static String[] att ={"login","project","admin"};
+	final private static String[] keyAtt = {"login","project"};
 	final private static TableInvolvedIn instance = new TableInvolvedIn();
 	static public ReferenceTable getInstance(){return instance;};
 	
