@@ -19,11 +19,14 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.model.menu.DefaultMenuModel;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
+		
+		m_listOfUsers.setCellsEnabled(false);
 		
 		addLoginMenuProcess();
 	}
@@ -61,8 +64,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		ControlOrb orb = keyboard.getControlOrb();
 		
 		if (m_orbs.isEmpty()){
-			ListMenu listUsers = playListOfUsers(new Vector3D());
-			listUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + listUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));
+			playListOfUsers(new Vector3D());
+			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));			
 		}
 		
 		//Process the keyboard/orb relation
@@ -79,6 +82,15 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			
 		}
 		
+		//We need to set a new model in order to update the list.
+		//TODO Find a cleaner way (create new class different than ListMenu ?)
+		m_orbsStrings.clear();
+		for(ControlOrb orbs : m_orbs){
+			m_orbsStrings.add(orbs.getLogin());
+		}
+		
+		m_listOfUsers.setModel(new DefaultMenuModel(null,m_orbsStrings.toArray()));
+		m_listOfUsers.updateList();		
 	}
 	
 	//////////////////////////////////
@@ -140,7 +152,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			keyboard.addTextInputListener(orb);
 		}
 				
-		m_orbs.add(orb);
+		addOrb(orb);
 		getCanvas().addChild(orb);
 		
 		//Add Events Listening Process
@@ -185,20 +197,33 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	}
 	
 	
-	protected ListMenu playListOfUsers(Vector3D location){
-		Object[] objs = {};
-		ListMenu list = new ListMenu(getMTApplication(), (int) location.x, (int) location.y, 200, 5, objs);
-		list.setVisible(true);
-		getCanvas().addChild(list);
+	/**
+	 * @param location
+	 * @return the list of users
+	 * Creates a list that listens to the users' subscriptions
+	 */
+	protected void playListOfUsers(Vector3D location){		
+		m_listOfUsers.setPositionGlobal(location);
 		
-		return list;
+		m_listOfUsers.setVisible(true);
+		m_listOfUsers.setCloseVisible(false);
+		
+		getCanvas().addChild(m_listOfUsers);
 	}
 	
 	
 	
+	protected void addOrb(ControlOrb orb){
+		m_orbs.add(orb);
+		m_orbsStrings.add(orb.getLogin());
+	}
+	
+	
 	//Members
 	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
+	List<Object> m_orbsStrings = new ArrayList<Object>();
 	List<ValidateKeyboard> m_keyboards = new ArrayList<ValidateKeyboard>();
+	ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
 
 }
 
