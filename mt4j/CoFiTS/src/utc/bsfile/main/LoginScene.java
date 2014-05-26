@@ -18,6 +18,7 @@ import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
+import utc.bsfile.gui.widget.menu.ListMenu;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
@@ -58,6 +59,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	public void validate(ValidateKBEvent evt) {
 		ValidateKeyboard keyboard = evt.getValidateKB();
 		ControlOrb orb = keyboard.getControlOrb();
+		
+		if (m_orbs.isEmpty()){
+			ListMenu listUsers = playListOfUsers(new Vector3D());
+			listUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + listUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));
+		}
 		
 		//Process the keyboard/orb relation
 		if (orb == null) {
@@ -176,6 +182,16 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 */
 	protected ControlOrb playOrb(Vector3D orbLocation){
 		return playOrb(orbLocation, null);
+	}
+	
+	
+	protected ListMenu playListOfUsers(Vector3D location){
+		Object[] objs = {};
+		ListMenu list = new ListMenu(getMTApplication(), (int) location.x, (int) location.y, 200, 5, objs);
+		list.setVisible(true);
+		getCanvas().addChild(list);
+		
+		return list;
 	}
 	
 	
