@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -12,12 +13,16 @@ import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.util.MTColor;
+import org.mt4j.util.font.FontManager;
+import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
+import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
@@ -114,7 +119,20 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		//Listeners
 		keyboard.addValidateKBListener(LoginScene.this);
 		
+		//Add a text area to enter a message
+		MTColor textColor = new MTColor(255, 255, 255); //white
+		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
+		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, textColor);
+		MTTextField textEntry = new MTTextField(getMTApplication(), 0, 0, 400, 30, textFont);
+		
+		textEntry.setPositionRelativeToOther(textEntry, new Vector3D(keyboard.getWidthXY(TransformSpace.LOCAL) / 2, -5));
+		textEntry.setPickable(false);
+		textEntry.setVisible(true);
+		
+		
 		getCanvas().addChild(keyboard);
+		keyboard.addChild(textEntry);
+		keyboard.addTextInputListener(textEntry);
 		
 		return keyboard;
 	}
