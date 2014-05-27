@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
-import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -13,16 +12,13 @@ import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
-import org.mt4j.util.MTColor;
-import org.mt4j.util.font.FontManager;
-import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.gui.widget.keyboard.TextEntryValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
-import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
@@ -61,7 +57,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 
 	@Override
 	public void validate(ValidateKBEvent evt) {
-		ValidateKeyboard keyboard = evt.getValidateKB();
+		TextEntryValidateKeyboard keyboard = (TextEntryValidateKeyboard) evt.getValidateKB();
 		ControlOrb orb = keyboard.getControlOrb();
 		
 		//Process the keyboard/orb relation
@@ -74,7 +70,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		} else {
 			
 			//Update the login in the orb
-			orb.setLogin("UNNAMED UPDATED");
+			orb.setLogin(keyboard.getText());
 			
 		}
 		
@@ -103,36 +99,33 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 */
 	protected ValidateKeyboard playKeyboard(Vector3D locationOnScreen, ControlOrb orb) {
 		//Construction
-		ValidateKeyboard keyboard = new ValidateKeyboard(getMTApplication(),"LAMBDA USER");
-		keyboard.setControlOrb(orb);
-		m_keyboards.add(keyboard);
+		TextEntryValidateKeyboard keyboard;
 		
 		if (orb != null){
+			keyboard = new TextEntryValidateKeyboard(getMTApplication(), orb.getLogin());
 			orb.setKeyboard(keyboard);
-			keyboard.addTextInputListener(orb);
+			orb.sendToFront();
+		} else {
+			keyboard = new TextEntryValidateKeyboard(getMTApplication(), "");
 		}
+		
+		keyboard.setControlOrb(orb);
+		m_keyboards.add(keyboard);
 		
 		//Visibility and location
 		keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
 		keyboard.setVisible(true);
 		
 		//Listeners
-		keyboard.addValidateKBListener(LoginScene.this);
-		
-		//Add a text area to enter a message
-		MTColor textColor = new MTColor(255, 255, 255); //white
-		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
-		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, textColor);
-		MTTextField textEntry = new MTTextField(getMTApplication(), 0, 0, 400, 30, textFont);
-		
-		textEntry.setPositionRelativeToOther(textEntry, new Vector3D(keyboard.getWidthXY(TransformSpace.LOCAL) / 2, -5));
-		textEntry.setPickable(false);
-		textEntry.setVisible(true);
-		
+		keyboard.addValidateKBListener(LoginScene.this);		
 		
 		getCanvas().addChild(keyboard);
-		keyboard.addChild(textEntry);
-		keyboard.addTextInputListener(textEntry);
+		
+		//Improve the presentation
+		if (orb != null){
+			orb.sendToFront();
+		}
+			
 		
 		return keyboard;
 	}
@@ -144,12 +137,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 * @return the new orb
 	 * Creates an orb and add it to the list of orbs
 	 */
-	protected ControlOrb playOrb(Vector3D orbLocation, ValidateKeyboard keyboard) {
-		final ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, "UNNAMED", keyboard);
+	protected ControlOrb playOrb(Vector3D orbLocation, TextEntryValidateKeyboard keyboard) {
+		final ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, keyboard.getText(), keyboard);
 		
 		if (keyboard != null){
 			keyboard.setControlOrb(orb);
-			keyboard.addTextInputListener(orb);
 		}
 				
 		m_orbs.add(orb);
@@ -200,7 +192,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	//Members
 	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	List<ValidateKeyboard> m_keyboards = new ArrayList<ValidateKeyboard>();
+	List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
 
 }
 
