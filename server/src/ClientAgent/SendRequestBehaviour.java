@@ -1,5 +1,10 @@
 package ClientAgent;
 
+import jade.core.AID;
+import jade.core.Agent;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -10,7 +15,6 @@ import java.util.ArrayList;
 import Constants.RequestConstants;
 import ModelObjects.Document;
 import ModelObjects.Session;
-import ModelObjects.User;
 import Requests.AddRequest;
 import Requests.DownloadRequest;
 import Requests.LinkRequest;
@@ -18,12 +22,7 @@ import Requests.Predicate;
 import Requests.Relation;
 import Requests.SelectRequest;
 import Requests.UploadRequest;
-import SpecialisedRelations.FollowedBy;
 import SpecialisedRelations.MobilizedIn;
-import jade.core.AID;
-import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.lang.acl.ACLMessage;
 
 public class SendRequestBehaviour extends OneShotBehaviour
 {

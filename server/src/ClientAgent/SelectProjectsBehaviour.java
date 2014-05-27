@@ -1,20 +1,20 @@
 package ClientAgent;
 
-import java.io.IOException;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import Constants.RequestConstants;
-import Constants.RequestConstants.objectTypes;
-import ModelObjects.ModelObject;
-import ModelObjects.Project;
-import ModelObjects.Session;
-import Requests.SelectRequest;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.DataStore;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+
+import java.io.IOException;
+
+import Constants.RequestConstants;
+import Constants.RequestConstants.objectTypes;
+import ModelObjects.ModelObject;
+import ModelObjects.Project;
+import Requests.SelectRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class SelectProjectsBehaviour extends Behaviour {
 	int step = 0;

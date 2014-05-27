@@ -5,11 +5,9 @@ import java.sql.SQLException;
 
 import DatabaseScheme.ReferenceTable;
 import DatabaseScheme.TableUsers;
-import Requests.Predicate;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User extends ModelObject

@@ -3,6 +3,7 @@ package ModelObjects;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import utils.projectNameEncoder;
 import DatabaseScheme.ReferenceTable;
 import DatabaseScheme.TableProjects;
 
@@ -16,10 +17,10 @@ public class Project extends ModelObject
 	final static private String[] validProperties = {"id","name","description","creator"};
 	
 	@JsonCreator
-	public Project(@JsonProperty("id")String id, @JsonProperty("name")String name, @JsonProperty("description")String description, @JsonProperty("creator")String creator)
+	public Project(@JsonProperty("name")String name, @JsonProperty("description")String description, @JsonProperty("creator")String creator)
 	{
 		super();
-		this.id = id;
+		this.id = new projectNameEncoder().encode(name);
 		this.name = name;
 		this.description = description;
 		this.creator=creator;

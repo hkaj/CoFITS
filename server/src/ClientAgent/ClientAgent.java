@@ -1,23 +1,15 @@
 package ClientAgent;
 
-import java.util.ArrayList;
-
-import Constants.RequestConstants;
-import DocumentAgent.DocumentAgent;
-import ModelObjects.ModelObject;
-import ModelObjects.User;
-import Requests.Predicate;
-import Requests.SelectRequest;
-import SpecialisedRelations.FollowedBy;
 import jade.core.Agent;
-import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.DataStore;
-import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.lang.acl.ACLMessage;
+
+import java.util.ArrayList;
+
+import DocumentAgent.DocumentAgent;
 
 
 public class ClientAgent extends Agent

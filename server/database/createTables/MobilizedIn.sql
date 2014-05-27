@@ -1,7 +1,9 @@
 CREATE TABLE MobilizedIn
 (
 	document BIGSERIAL,
-	project varchar(20) REFERENCES Projects(id),
-	PRIMARY KEY (document, project),
-	FOREIGN KEY (document) REFERENCES Documents(id)
+	session_proj varchar(20),
+	session_date timestamp(0),
+	PRIMARY KEY (document, session_proj, session_date),
+	FOREIGN KEY (document) REFERENCES Documents(id),
+	FOREIGN KEY (session_proj, session_date) REFERENCES Sessions(project, date)
 );

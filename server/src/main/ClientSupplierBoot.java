@@ -32,6 +32,7 @@ public class ClientSupplierBoot {
 			System.out.println("Start?");
 			sc.nextLine();
 			l.get(0).start();
+			sc.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
