@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -12,6 +13,9 @@ import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.util.MTColor;
+import org.mt4j.util.font.FontManager;
+import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
@@ -19,11 +23,16 @@ import utc.bsfile.gui.widget.keyboard.TextEntryValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
+import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.model.menu.DefaultMenuModel;
+import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
+		
+		m_listOfUsers.setCellsEnabled(false);
 		
 		addLoginMenuProcess();
 	}
@@ -60,6 +69,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		TextEntryValidateKeyboard keyboard = (TextEntryValidateKeyboard) evt.getValidateKB();
 		ControlOrb orb = keyboard.getControlOrb();
 		
+		if (m_orbs.isEmpty()){
+			playListOfUsers(new Vector3D());
+			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));			
+		}
+		
 		//Process the keyboard/orb relation
 		if (orb == null) {
 			
@@ -74,6 +88,15 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			
 		}
 		
+		//We need to set a new model in order to update the list.
+		//TODO Find a cleaner way (create new class different than ListMenu ?)
+		m_orbsStrings.clear();
+		for(ControlOrb orbs : m_orbs){
+			m_orbsStrings.add(orbs.getLogin());
+		}
+		
+		m_listOfUsers.setModel(new DefaultMenuModel(null,m_orbsStrings.toArray()));
+		m_listOfUsers.updateList();		
 	}
 	
 	//////////////////////////////////
@@ -144,7 +167,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			keyboard.setControlOrb(orb);
 		}
 				
-		m_orbs.add(orb);
+		addOrb(orb);
 		getCanvas().addChild(orb);
 		
 		//Add Events Listening Process
@@ -189,10 +212,46 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	}
 	
 	
+	/**
+	 * @param location
+	 * @return the list of users
+	 * Creates a list that listens to the users' subscriptions
+	 */
+	protected void playListOfUsers(Vector3D location){		
+		m_listOfUsers.setPositionGlobal(location);
+		
+		m_listOfUsers.setVisible(true);
+		m_listOfUsers.setCloseVisible(false);
+		
+		//Add a title to the list Menu
+		MTColor textColor = new MTColor(255, 255, 255); //white
+		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
+		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, textColor);
+		MTTextField title = new MTTextField(getMTApplication(), 0, 0, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
+		
+		title.setNoStroke(true);
+		title.setNoFill(true);
+		title.setPickable(false);
+		title.setText("List of users");
+		
+		m_listOfUsers.addChild(title);
+		
+		getCanvas().addChild(m_listOfUsers);
+	}
+	
+	
+	
+	protected void addOrb(ControlOrb orb){
+		m_orbs.add(orb);
+		m_orbsStrings.add(orb.getLogin());
+	}
+	
 	
 	//Members
 	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
+	List<Object> m_orbsStrings = new ArrayList<Object>();
+	ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
 
 }
 
