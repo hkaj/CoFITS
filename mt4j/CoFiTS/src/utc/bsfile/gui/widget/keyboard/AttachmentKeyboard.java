@@ -3,8 +3,6 @@
  */
 package utc.bsfile.gui.widget.keyboard;
 
-import java.beans.PropertyChangeSupport;
-
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
@@ -41,7 +39,7 @@ public class AttachmentKeyboard extends DefaultKeyboard
 	
 	public void close()
 	{
-		//this.closeKeyboard();
+		this.closeKeyboard();
 		setVisible(false);
 
 	}
