@@ -6,6 +6,7 @@ import java.util.List;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -13,6 +14,8 @@ import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -25,6 +28,7 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.model.menu.DefaultMenuModel;
+import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
@@ -224,9 +228,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		m_listOfUsers.setCloseVisible(false);
 		
 		//Add a title to the list Menu
-		MTColor textColor = new MTColor(255, 255, 255); //white
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
-		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, textColor);
+		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, MTColor.WHITE);
 		MTTextField title = new MTTextField(getMTApplication(), 0, 0, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
 		
 		title.setNoStroke(true);
@@ -236,10 +239,39 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		m_listOfUsers.addChild(title);
 		
+		//Add a confirmation button
+		MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
+		
+		button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
+		button.setPickable(true);
+		
+		
+		button.addGestureListener(TapProcessor.class, new IGestureEventListener() {
+			@Override
+			public boolean processGestureEvent(MTGestureEvent evt) {
+				switch (evt.getId()) {
+				case TapEvent.GESTURE_ENDED :	
+					launchProjectChoiceScene();
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		});
+		
+		m_listOfUsers.addChild(button);
+		
 		getCanvas().addChild(m_listOfUsers);
 	}
 	
 	
+	
+	protected void launchProjectChoiceScene() {
+		// TODO
+		System.out.println("GO TO THE NEXT SCENE");
+	}
+
 	
 	protected void addOrb(ControlOrb orb){
 		m_orbs.add(orb);
