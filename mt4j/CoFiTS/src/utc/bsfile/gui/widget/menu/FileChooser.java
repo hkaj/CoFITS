@@ -7,12 +7,14 @@ import java.io.IOException;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
+import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -110,6 +112,18 @@ public class FileChooser extends ListMenu
 		super(applet, x, y, width, nbItem, new FileChooserModel(path, filter));
 
 		root = path.getAbsoluteFile();
+				
+		//---------------------------------------------------------------------------
+		IFont font = FontManager.getInstance().createFont(applet, "century-gothic", 17);
+		this.pathField = new MTTextField(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight(), font);
+		if ( pathString.length() > 30 ) {
+			pathString = pathString.substring(0, 30) + "...";
+		}
+		pathField.setText(pathString);
+		pathField.setNoFill(true);
+		pathField.setNoStroke(true);
+		pathField.removeAllGestureEventListeners();
+		//---------------------------------------------------------------------------
 
 		this.applet = applet;
 		
@@ -118,19 +132,21 @@ public class FileChooser extends ListMenu
 		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener); 
 		position.nextPosition(parentButton);
 		Vector3D savedPosition = position.getPosition();
-		actionButton = createIconButton(savedPosition, "action-icon.png", listener);
-		actionButton.setWidthXYGlobal(70);
-		actionButton.setHeightXYGlobal(30);
-		cancelActionButton = createIconButton(savedPosition, "cancel.png", listener);
+		actionButton = createIconButton(savedPosition, "action-icon-on.png", listener);
+		actionButton.setWidthXYGlobal(75);
+		actionButton.setHeightXYGlobal(35);
+		cancelActionButton = createIconButton(savedPosition, "action-icon-off.png", listener);
+		cancelActionButton.setWidthXYGlobal(75);
+		cancelActionButton.setHeightXYGlobal(35);
 		
 		
-		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250), Orientation.HORIZONTAL);
+		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
 		disabledDeleteButton = createIconButton(disabledBottomPosition.getPosition(), "disabledDelete-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledDeleteButton);
 		
-		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250), Orientation.HORIZONTAL);
+		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		shareButton = createIconButton(bottomPosition.getPosition(), "share-icon.png", listener);
 		bottomPosition.nextPosition(shareButton);
 		deleteButton = createIconButton(bottomPosition.getPosition(), "delete-icon.png", listener);
@@ -138,6 +154,7 @@ public class FileChooser extends ListMenu
 		
 		addChild(actionButton);
 		addChild(parentButton);
+		addChild(pathField);
 	}
 	
 	public void displayDisabledBottomButtons() {
@@ -192,7 +209,7 @@ public class FileChooser extends ListMenu
 		try {
 			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
-					getSpacing(), 0, iconWidth, iconHeight);
+					getSpacing(), 3, iconWidth, iconHeight);
 			PImage icon = FileExtensionIconManager.getInstance().getIcon(file);
 			if (icon != null) {
 				fileExtIcon.setTexture(icon);
@@ -209,9 +226,14 @@ public class FileChooser extends ListMenu
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),
-				sfont, 16, MTColor.BLACK, true));
-		textArea.setText(file.getName());
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), "century-gothic", 16, MTColor.BLACK, true));
+		
+		if ( file.getName().length() <= 20 ){
+			textArea.setText(file.getName());
+		} else {
+			textArea.setText(file.getName().substring(0, 20)+"...");
+		}
+		
 		Theme.getTheme().applyStyle(StyleID.TRANSPARENT, textArea);
 		component.addChild(textArea);
 
@@ -236,14 +258,17 @@ public class FileChooser extends ListMenu
 
 				if (tapEvent.isTapped()) {
 					if (tapEvent.getTarget() == parentButton) {
-						Object parent = getModel().getParentMenu(
-								FileChooser.this.getModel().getCurrentMenu());
-						System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
+						Object parent = getModel().getParentMenu(FileChooser.this.getModel().getCurrentMenu());
+						//System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
 						
 						//We can go to parent only if we are under FILE_PATH property root
-						if (parent != null && !(((File) getModel().getCurrentMenu()).getAbsolutePath() + "/").equals(PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH))) {
+						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH))) {
 							FileChooser.this.getModel().setCurrentMenu(parent);
 							updateList();
+							//-----------------------------------------------------------------------
+							// Max : set the current path with the parent's path (update the path textField)
+							setPath((File)parent);
+							//-----------------------------------------------------------------------
 						}
 						
 					} else if (tapEvent.getTarget() == actionButton) {

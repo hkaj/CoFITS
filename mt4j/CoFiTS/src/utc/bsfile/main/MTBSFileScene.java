@@ -25,6 +25,9 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
+import com.sun.opengl.impl.mipmap.Image;
+
+import processing.core.PImage;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
 import utc.bsfile.util.FileExtensionIconManager;
@@ -40,7 +43,8 @@ public class MTBSFileScene extends AbstractScene implements PropertyChangeListen
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
 		this.app = mtApplication;
-		this.setClearColor(new MTColor(126, 130, 168, 255));
+		//this.setClearColor(new MTColor(126, 130, 168, 255));
+		this.setClearColor(new MTColor(120, 120, 120, 255));
 		this.registerGlobalInputProcessor(new CursorTracer(app, this));
 
 		float verticalPad = 53;
@@ -61,7 +65,7 @@ public class MTBSFileScene extends AbstractScene implements PropertyChangeListen
 		backgroundPan.setFillColor(new MTColor(150, 150, 150));
 		backgroundPan.setNoFill(true);
 		backgroundPan.setNoStroke(true);
-		backgroundPan.setText("Pan anywhere on the background!");
+		//backgroundPan.setText("Pan anywhere on the background!");
 		backgroundPan.setPickable(false);
 		this.getCanvas().addChild(backgroundPan);
 		backgroundPan.setPositionGlobal(new Vector3D(app.width / 2f, app.height / 2f + 1 * verticalPad, 0));
@@ -83,7 +87,7 @@ public class MTBSFileScene extends AbstractScene implements PropertyChangeListen
 		dragOnly.registerInputProcessor(new DragProcessor(app));
 		dragOnly.addGestureListener(DragProcessor.class, new DefaultDragAction());
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
-		this.getCanvas().addChild(dragOnly);
+		//this.getCanvas().addChild(dragOnly);
 		
 		initManager();
 		addPickFileChooser();
