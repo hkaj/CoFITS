@@ -3,6 +3,8 @@ package utc.bsfile.gui.widget.controlorb;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.input.gestureAction.InertiaDragAction;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -52,6 +54,14 @@ public class ControlOrb extends MTEllipse {
 	}	
 	
 	
+	@Override
+	public void setDefaultGestureActions() {
+		super.setDefaultGestureActions();
+		
+		//Add Events Listening Process
+		addGestureListener(DragProcessor.class, new InertiaDragAction());
+	}
+
 	/**
 	 * Method to use when the Orb is destroyed
 	 */

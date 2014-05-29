@@ -83,6 +83,13 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	}
 	
 	
+	@Override
+	protected void close() {
+		// TODO Auto-generated method stub
+		super.close();
+	}
+	
+	
 	
 	//Members
 	

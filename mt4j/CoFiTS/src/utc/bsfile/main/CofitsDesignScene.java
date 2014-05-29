@@ -68,6 +68,14 @@ public abstract class CofitsDesignScene extends AbstractScene {
 	}
 	
 	
+	/**
+	 * Method to be called when the Scene instance will never be used again 
+	 */
+	protected void close(){
+		destroy();
+	}
+	
+	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	

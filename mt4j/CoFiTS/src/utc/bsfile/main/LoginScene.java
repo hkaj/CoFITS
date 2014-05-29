@@ -14,6 +14,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.Ta
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
+import org.mt4j.sceneManagement.transition.FadeTransition;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -31,6 +32,10 @@ import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
+	//Constants
+	private static final boolean DO_CLEAN_GESTURES = true;
+	
+	//Constructors
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
 		
@@ -263,9 +268,21 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	
 	
+	/**
+	 * Switch to the Project Choice Scene and Close the current one
+	 */
 	protected void launchProjectChoiceScene() {
-		// TODO
-		System.out.println("GO TO THE NEXT SCENE");
+		setTransition(new FadeTransition(getMTApplication(), 1700));	//Set a fade transition between the two scenes
+		//Save the current scene on the scene stack before changing
+		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		//Add the scene to the mt application
+		getMTApplication().addScene(projectChoiceScene);
+		
+		//Do the scene change
+		getMTApplication().changeScene(projectChoiceScene);
+		
+		//Close the scene
+		close();
 	}
 
 	
@@ -273,6 +290,18 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void addOrb(ControlOrb orb){
 		super.addOrb(orb);
 		m_orbsStrings.add(orb.getLogin());
+	}
+	
+	
+	@Override
+	protected void close() {
+		for (TextEntryValidateKeyboard keyboard : m_keyboards){
+			if (keyboard != null){
+				keyboard.destroy();
+			}
+		}
+		
+		super.close();
 	}
 	
 	
