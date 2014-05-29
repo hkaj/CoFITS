@@ -38,16 +38,19 @@ public class Theme {
 	public static Theme getTheme()  {
 		if (theme == null) {
 			StyleInfo defaultStyle = new StyleInfo();
-			defaultStyle.setFillColor(70, 200, 200, 80);
+			//defaultStyle.setFillColor(22, 149, 163, 255);
+			defaultStyle.setFillColor(34, 83, 120, 255); // file chooser color
 			defaultStyle.setStrokeColor(MTColor.BLACK);
 			defaultStyle.setDrawSmooth(false);
 			theme = new Theme(defaultStyle);
-			theme.addStyleFromFillColor(LABEL, new MTColor(40, 110, 110, 240));
-			theme.addStyleFromFillColor(OPAQUE_IMAGE_BUTTON, new MTColor(170, 240, 240, 255));
+			theme.addStyleFromFillColor(LABEL, new MTColor(40, 110, 110, 240)); // useless
+			theme.addStyleFromFillColor(OPAQUE_IMAGE_BUTTON, new MTColor(100, 100, 100, 255)); // useless
 			theme.addStyleFromFillColor(TRANSPARENT_IMAGE_BUTTON, MTColor.WHITE);
-			StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, new MTColor(140, 210, 210, 240));
+			
+			//StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, new MTColor(140, 210, 210, 240));
+			StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, new MTColor(22, 149, 163, 255)); // list element color
 			theme.addStyle(RW_TEXT_AREA, style);
-			theme.addStyleFromFillColor(RO_TEXT_AREA, new MTColor(70, 200, 200, 160));
+			theme.addStyleFromFillColor(RO_TEXT_AREA, new MTColor(70, 200, 200, 160)); // useless
 		}
 	    return theme;
     }
@@ -89,6 +92,7 @@ public class Theme {
 				defaultStyleInfo.getFillDrawMode(),
 				defaultStyleInfo.getLineStipple());
 		addStyle(StyleID.FILL_ONLY, fillStyle);
+
 	}
 	
 	public StyleInfo getStyle (String id)
