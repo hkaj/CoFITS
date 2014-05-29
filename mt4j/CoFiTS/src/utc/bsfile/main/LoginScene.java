@@ -7,11 +7,9 @@ import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
-import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
@@ -174,8 +172,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		addOrb(orb);
 		getCanvas().addChild(orb);
 		
-		//Add Events Listening Process
-		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
 		//Tap long on the orb
 		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
@@ -273,17 +269,17 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	}
 
 	
+	@Override
 	protected void addOrb(ControlOrb orb){
-		m_orbs.add(orb);
+		super.addOrb(orb);
 		m_orbsStrings.add(orb.getLogin());
 	}
 	
 	
 	//Members
-	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
-	List<Object> m_orbsStrings = new ArrayList<Object>();
-	ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
+	protected List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
+	protected List<Object> m_orbsStrings = new ArrayList<Object>();
+	protected ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
 
 }
 
