@@ -179,7 +179,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		updateList();
 		addChild(this.list);
 
-		this.listeners = new HashSet<ListMenu.ChoiceListener>();
+		this.listeners = new HashSet<ChoiceListener>();
 	}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
@@ -473,11 +473,5 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				ret = ((DefaultMenuModel) choice).getUserObject();
 			return ret;
 		}
-	}
-
-	public interface ChoiceListener {
-		public void choiceSelected(ChoiceEvent choiceEvent);
-
-		public void choiceCancelled(ChoiceEvent choiceEvent);
 	}
 }
