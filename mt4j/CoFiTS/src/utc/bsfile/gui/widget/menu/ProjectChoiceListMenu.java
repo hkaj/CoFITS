@@ -19,28 +19,14 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 			int nbItem, IMenuModel model) {
 		super(applet, x, y, width, nbItem, model);
 		
+		addChoiceListener(this);
+		
 		//Add a confirmation button
 		m_confirmButton = new MTImageButton(applet, ImageManager.getInstance().load("confirm-button.png"));
 		
 		m_confirmButton.setPositionRelativeToOther(this, new Vector3D(getWidthXY(TransformSpace.LOCAL) / 2, getHeightXY(TransformSpace.LOCAL) - 25));
 		m_confirmButton.setPickable(true);
 		m_confirmButton.setEnabled(false);
-		
-		
-		m_confirmButton.addGestureListener(TapProcessor.class, new IGestureEventListener() {
-			@Override
-			public boolean processGestureEvent(MTGestureEvent evt) {
-				switch (evt.getId()) {
-				case TapEvent.GESTURE_ENDED :	
-					//TODO
-					//Launch the MTBSScene
-					break;
-				default:
-					break;
-				}
-				return false;
-			}
-		});
 		
 		addChild(m_confirmButton);
 	}
@@ -60,6 +46,11 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	
 	public final TwoLinkedJsonNode getSelectedNode(){
 		return m_selectedNode;
+	}
+	
+	
+	public final MTImageButton getConfirmButton(){
+		return m_confirmButton;
 	}
 	
 

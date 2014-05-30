@@ -2,6 +2,7 @@ package utc.bsfile.main;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -22,15 +23,25 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
+import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeListener {
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name) {
-		super(mtApplication, name);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
+		this(mtApplication, name, orbs, false);
+	}
+	
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
+		super(mtApplication, name, orbs, doCleanGestures);
 
+		//Display the orbs
+		for (ControlOrb orb : m_orbs){
+			orb.setVisible(true);
+		}		
+		
 		float verticalPad = 53;
 
 		MTColor white = new MTColor(255, 255, 255);

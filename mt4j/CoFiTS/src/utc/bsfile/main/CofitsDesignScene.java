@@ -19,8 +19,26 @@ import utc.bsfile.util.ImageManager;
  */
 public abstract class CofitsDesignScene extends AbstractScene {
 
-	public CofitsDesignScene(AbstractMTApplication mtApplication, String name) {
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name){
+		this(mtApplication, name, new ArrayList<ControlOrb>(), false);
+	}
+	
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doClearOrbGestures) {
 		super(mtApplication, name);
+		
+		//Add the orbs to the list of Orbs
+		for (ControlOrb orb : orbs){
+			if (doClearOrbGestures){
+				clearAllGestures(orb);
+				orb.setDefaultGestureActions();
+			}
+			
+			orb.setEnabled(true);
+			orb.setVisible(true);
+			
+			addOrb(orb);
+			getCanvas().addChild(orb);
+		}
 		
 		
 		//Input Listener drawing a circle when touching with one finger
