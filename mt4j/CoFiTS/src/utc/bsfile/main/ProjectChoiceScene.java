@@ -1,5 +1,6 @@
 package utc.bsfile.main;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,9 @@ import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.Ta
 import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.gui.widget.menu.ProjectChoiceListMenu;
+import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
 
 public class ProjectChoiceScene extends CofitsDesignScene {
 
@@ -79,7 +83,12 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void playProjectAndSessionsList(Vector3D position, ControlOrb orb) {
 		//TODO
 		//Create the model from Json File
-		System.out.println("Create the model from JSON File");
+		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
+		ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
+		projectList.setMustBeDestroy(false);
+		
+		getCanvas().addChild(projectList);
+
 	}
 	
 	
@@ -87,6 +96,12 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void close() {
 		// TODO Auto-generated method stub
 		super.close();
+	}
+
+
+	public void launchMTBSFileScene() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
