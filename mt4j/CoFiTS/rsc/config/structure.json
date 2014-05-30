@@ -1,0 +1,43 @@
+{
+	"CoFiTS" :
+	{
+		"session_12_04_14" : 
+		{
+			"innov.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"utc.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
+			},
+			"nf28.png" :
+			{
+				"name" : "nf28.png",
+				"local" : false
+			}
+		},
+		"session_15_04_14" :
+		{
+			"nom_de_fichier_1" :
+			{
+				"name" : "nom_de_fichier_1",
+				"local" : true
+			},
+			"nom_de_fichier_1" :
+			{
+				"name" : "nom_de_fichier_2",
+				"local" : true
+			},
+			"nom_de_fichier_1" :
+			{
+				"name" : "nom_de_fichier_3",
+				"local" : true
+			}
+		}
+	}
+}
+			
+				
