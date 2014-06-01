@@ -21,14 +21,18 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"></TabWidget>
+                android:layout_height="wrap_content"
+                android:background="@drawable/tabhost_tab"
+                android:tabStripEnabled="false"/>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
+                android:layout_height="fill_parent"
+                android:background="#CEECF5">
 
-                <LinearLayout
+
+            <LinearLayout
                     android:id="@+id/tab1"
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
@@ -37,7 +41,9 @@
                     <ListView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/listView_files" />
+                        android:id="@+id/listView_files"
+                        android:choiceMode="singleChoice"
+                        android:background="@android:color/transparent"/>
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>

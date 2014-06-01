@@ -5,42 +5,99 @@
     android:layout_height="match_parent"
     tools:context="com.android.cofits.FileViewActivity"
     tools:ignore="MergeRootFrame"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="1"
+    android:windowSoftInputMode="adjustPan|stateVisible"
+    android:background="#CEECF5">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-        <EditText android:id="@+id/fileName"
-            android:layout_width="fill_parent"
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            android:editable="false"
-            android:layout_weight="1"/>
+            android:text="@string/add_file"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/addFileTextView"
+            android:textColor="#2E2E2E"
+            android:textSize="@dimen/abc_action_bar_title_text_size"
+            android:layout_marginTop="10dp"/>
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
+
             <Button android:id="@+id/browseButton"
                 android:layout_width="0dip"
-                android:text="@string/browse_button"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_weight="0.2"
+                android:background="@drawable/ic_action_search"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="5dp"/>
+
+            <EditText android:id="@+id/fileName"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:editable="false"
+                android:layout_weight="0.8"
+                android:hint="File name"
+                android:layout_marginRight="10dp"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+
+            <Button android:id="@+id/visualizeButton"
+                android:layout_width="0dip"
+                android:text="@string/visualize_button"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_weight="1"
-                android:onClick="onClickBrowse"/>
-            <Button android:id="@+id/uploadButton"
-                android:layout_width="0dip"
-                android:text="@string/upload_button"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_weight="1" />
+                android:background="@drawable/button_normal"
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"/>
+
         </LinearLayout>
-    </LinearLayout>
 
-    <WebView
-        android:layout_width="287dp"
-        android:layout_height="348dp"
-        android:id="@+id/fileWebView"
-        android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:windowSoftInputMode="adjustPan|stateVisible">
 
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:text="@string/cancel_add_file"
+                android:background="@drawable/button_normal"
+                android:id="@+id/eventCreatorCancelBtn"
+                android:textColor="@android:color/white"
+                android:layout_marginLeft="10dp"/>
+
+            <Button android:id="@+id/uploadButton"
+                android:text="@string/upload_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_normal"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"/>
+
+
+
+        </LinearLayout>
 </LinearLayout>

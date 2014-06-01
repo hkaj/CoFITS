@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 
 public class AddFileActivity extends ActionBarActivity {
-    Button buttonBrowse;
+    Button buttonBrowse, buttonVisualize;
 
     // Stores names of traversed directories
     ArrayList<String> str = new ArrayList<String>();
@@ -59,6 +59,22 @@ public class AddFileActivity extends ActionBarActivity {
                 onClickBrowse();
             }
         });
+
+        buttonVisualize = (Button) findViewById(R.id.visualizeButton);
+
+        buttonVisualize.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                onClickVisualize();
+            }
+        });
+    }
+
+    private void onClickVisualize() {
+
+        if(chosenFile != null){
+            File myFile = new File(path.toString()+"/"+chosenFile);
+            FileOpen.openFile(AddFileActivity.this.getBaseContext(), myFile);
+        }
     }
 
 
@@ -252,9 +268,6 @@ public class AddFileActivity extends ActionBarActivity {
 
                                 EditText fileNameText = (EditText) findViewById(R.id.fileName);
                                 fileNameText.setText(chosenFile);
-
-                                File myFile = new File(path.toString()+"/"+chosenFile);
-                                FileOpen.openFile(AddFileActivity.this.getBaseContext(), myFile);
 
                             }
 

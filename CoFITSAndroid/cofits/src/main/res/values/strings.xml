@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">CoFITSAndroid</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
     <!-- Main Activity -->
@@ -28,5 +27,8 @@
     <string name="upload_button">Upload</string>
     <string name="browse_button">Browse</string>
     <string name="choose_file">Choose your file</string>
+    <string name="visualize_button">Visualize</string>
+    <string name="add_file">Add a new local file:</string>
+    <string name="cancel_add_file">Cancel</string>
 
 </resources>

@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.android.cofits.MainActivity"
+    android:background="#CEECF5"
     tools:ignore="MergeRootFrame" >
 
     <Button
@@ -14,7 +15,10 @@
         android:onClick="onClickLogin"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="142dp" />
+        android:paddingTop="4dp"
+        android:layout_marginBottom="45dp"
+        android:background="@drawable/button_normal"
+        android:textColor="@android:color/white" />
 
     <Button
         android:layout_width="wrap_content"

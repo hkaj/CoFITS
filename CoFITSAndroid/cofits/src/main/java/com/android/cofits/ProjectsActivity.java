@@ -1,6 +1,7 @@
 package com.android.cofits;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,8 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +69,14 @@ public class ProjectsActivity extends ActionBarActivity {
         TabHost.TabSpec spec = tabHost.newTabSpec("tab_local");
         spec.setContent(R.id.tab1);
         spec.setIndicator(getResources().getString(R.string.tab_project));
+
         tabHost.addTab(spec);
+
+        for(int i=0;i<tabHost.getTabWidget().getChildCount();i++)
+        {
+            TextView tv = (TextView) tabHost.getTabWidget().getChildAt(i).findViewById(android.R.id.title);
+            tv.setTextColor(Color.parseColor("#ffffff"));
+        }
 
         parametersListProjects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> myAdapter, View myView, int myItemInt, long myLong) {
@@ -76,6 +86,7 @@ public class ProjectsActivity extends ActionBarActivity {
 
             }
         });
+
     }
 
 
