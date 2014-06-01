@@ -3,8 +3,6 @@
  */
 package utc.bsfile.gui.widget.keyboard;
 
-import java.beans.PropertyChangeSupport;
-
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
