@@ -37,9 +37,18 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	public static int iconWidth = 40;
 	public static int iconHeight = 40;
 	protected ArrayList<File> listCells = new ArrayList<File>();
+	protected boolean m_areCellsEnabled = true;
 
 	private int nbItems = 0;
 
+	public void setCellsEnabled(boolean isEnabled){
+		m_areCellsEnabled = isEnabled;
+	}
+	
+	public final boolean areCellsEnabled(){
+		return m_areCellsEnabled;
+	}
+	
 	public void emptyListCells() {
 		this.listCells.clear();
 	}
@@ -181,13 +190,13 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		updateList();
 		addChild(this.list);
 
-		this.listeners = new HashSet<ListMenu.ChoiceListener>();
 		list.setFillColor(new MTColor(22, 149, 163, 0)); // list background color
 		this.setNoStroke(true);
+		this.listeners = new HashSet<ChoiceListener>();
 	}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
-			Object... choices) {
+			Object[] choices) {
 		this(applet, x, y, width, nbItem, new DefaultMenuModel(null, choices));
 	}
 
@@ -430,35 +439,31 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		super.processGestureEvent(ge);
-
-		if (ge instanceof TapEvent) {
-			if (((TapEvent) ge).isTapped()) {
-				MTListCell listCell = (MTListCell) ge.getTarget();
-				Object choice = listCell.getUserData(CHOICE);
-				
-				// update the path field
-				setPath((File)choice);
-
-				if (this.menuModel.hasChoices(choice)) {
-					//A folder had been tapped
-					this.menuModel.setCurrentMenu(choice);
-					updateList();
-					
-					
-					
-				} else {
-					//A file had been tapped
-					for (ChoiceListener listener : ListMenu.this.listeners)
-						listener.choiceSelected(new ChoiceEvent(ListMenu.this, choice));
-					
-					//Destroy the list after opening a file
-					if (ListMenu.this.mustBeDestroy()){
-						getParent().removeChild(this);
-						//TODO Destroy the component
+		
+		if (m_areCellsEnabled){
+			if (ge instanceof TapEvent) {
+				if (((TapEvent) ge).isTapped()) {
+					MTListCell listCell = (MTListCell) ge.getTarget();
+					Object choice = listCell.getUserData(CHOICE);
+	
+					if (this.menuModel.hasChoices(choice)) {
+						//A folder had been tapped
+						this.menuModel.setCurrentMenu(choice);
+						updateList();
+					} else {
+						//A file had been tapped
+						for (ChoiceListener listener : ListMenu.this.listeners)
+							listener.choiceSelected(new ChoiceEvent(ListMenu.this, choice));
+						
+						//Destroy the list after opening a file
+						if (ListMenu.this.mustBeDestroy()){
+							this.destroy();
+						}
 					}
 				}
 			}
 		}
+		
 		return false;
 	}
 
@@ -502,11 +507,5 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				ret = ((DefaultMenuModel) choice).getUserObject();
 			return ret;
 		}
-	}
-
-	public interface ChoiceListener {
-		public void choiceSelected(ChoiceEvent choiceEvent);
-
-		public void choiceCancelled(ChoiceEvent choiceEvent);
 	}
 }

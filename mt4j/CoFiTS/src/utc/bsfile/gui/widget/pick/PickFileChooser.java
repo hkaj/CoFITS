@@ -12,11 +12,11 @@ import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
 import utc.bsfile.gui.widget.image.MTIMAGE;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.FileChooser;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;
-import utc.bsfile.gui.widget.menu.ListMenu.ChoiceListener;
 import utc.bsfile.gui.widget.metadata.MTMetadata;
 import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;

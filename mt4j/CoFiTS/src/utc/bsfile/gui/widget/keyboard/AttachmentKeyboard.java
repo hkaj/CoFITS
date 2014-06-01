@@ -39,7 +39,7 @@ public class AttachmentKeyboard extends DefaultKeyboard
 	
 	public void close()
 	{
-		//this.closeKeyboard();
+		this.closeKeyboard();
 		setVisible(false);
 
 	}
