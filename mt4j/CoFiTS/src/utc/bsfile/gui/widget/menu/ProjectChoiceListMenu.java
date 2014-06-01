@@ -2,10 +2,6 @@ package utc.bsfile.gui.widget.menu;
 
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
-import org.mt4j.input.inputProcessors.IGestureEventListener;
-import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -24,7 +20,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		//Add a confirmation button
 		m_confirmButton = new MTImageButton(applet, ImageManager.getInstance().load("confirm-button.png"));
 		
-		m_confirmButton.setPositionRelativeToOther(this, new Vector3D(getWidthXY(TransformSpace.LOCAL) / 2, getHeightXY(TransformSpace.LOCAL) - 25));
+		m_confirmButton.setPositionGlobal(new Vector3D(getPosition(TransformSpace.GLOBAL).x + getWidthXY(TransformSpace.LOCAL) / 2, getPosition(TransformSpace.GLOBAL).y + getHeightXY(TransformSpace.LOCAL) - 25));
 		m_confirmButton.setPickable(true);
 		m_confirmButton.setEnabled(false);
 		
