@@ -19,7 +19,7 @@ public class StartCofitsEntities extends MTApplication {
 	
 	@Override
 	public void startUp() {
-		
+
 		//Launching the Scene
 		LoginScene logScene = new LoginScene(this, "Logging scene");
 		

@@ -8,15 +8,14 @@ import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
-import org.mt4j.input.gestureAction.InertiaDragAction;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
+import org.mt4j.sceneManagement.transition.FadeTransition;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -34,6 +33,10 @@ import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
+	//Constants
+	private static final boolean DO_CLEAN_GESTURES = true;
+	
+	//Constructors
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
 		
@@ -175,8 +178,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		addOrb(orb);
 		getCanvas().addChild(orb);
 		
-		//Add Events Listening Process
-		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
 		//Tap long on the orb
 		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
@@ -268,14 +269,27 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	
 	
+	/**
+	 * Switch to the Project Choice Scene and Close the current one
+	 */
 	protected void launchProjectChoiceScene() {
-		// TODO
-		System.out.println("GO TO THE NEXT SCENE");
+		setTransition(new FadeTransition(getMTApplication(), 1700));	//Set a fade transition between the two scenes
+		//Save the current scene on the scene stack before changing
+		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		//Add the scene to the mt application
+		getMTApplication().addScene(projectChoiceScene);
+		
+		//Do the scene change
+		getMTApplication().changeScene(projectChoiceScene);
+		
+		//Close the scene
+		close();
 	}
 
 	
+	@Override
 	protected void addOrb(ControlOrb orb){
-		m_orbs.add(orb);
+		super.addOrb(orb);
 		m_orbsStrings.add(orb.getLogin());
 	}
 	
@@ -283,15 +297,24 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		System.out.println("Something changed");
+	}
 		
+
+	protected void close() {
+		for (TextEntryValidateKeyboard keyboard : m_keyboards){
+			if (keyboard != null){
+				keyboard.destroy();
+			}
+		}
+		
+		super.close();
 	}
 	
 	
 	//Members
-	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
-	List<Object> m_orbsStrings = new ArrayList<Object>();
-	ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
+	protected List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
+	protected List<Object> m_orbsStrings = new ArrayList<Object>();
+	protected ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
 
 }
 
