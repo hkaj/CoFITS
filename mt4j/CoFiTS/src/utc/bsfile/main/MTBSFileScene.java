@@ -17,6 +17,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -30,6 +31,10 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
+
+		//this.setClearColor(new MTColor(126, 130, 168, 255));
+		this.setClearColor(new MTColor(120, 120, 120, 255));
+		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
 		float verticalPad = 53;
 
@@ -45,6 +50,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		backgroundPan.setFillColor(new MTColor(150, 150, 150));
 		backgroundPan.setNoFill(true);
 		backgroundPan.setNoStroke(true);
+
 		backgroundPan.setText("CoFiTS");
 		backgroundPan.setPickable(false);
 		this.getCanvas().addChild(backgroundPan);
@@ -66,7 +72,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		dragOnly.registerInputProcessor(new DragProcessor(getMTApplication()));
 		dragOnly.addGestureListener(DragProcessor.class, new DefaultDragAction());
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
-		this.getCanvas().addChild(dragOnly);
+		//this.getCanvas().addChild(dragOnly);
 		
 		addPickFileChooser();
 	}
