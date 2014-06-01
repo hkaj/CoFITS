@@ -4,25 +4,24 @@ import java.beans.PropertyChangeSupport;
 
 import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.action.SelectPickAction;
+import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
 public class CofitsGuiAgent extends GuiAgent {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-	CofitsDesignScene scene;
-	PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	@Override
 	protected void setup() {
 		super.setup();
-		scene = (CofitsDesignScene) getArguments()[0];
-		pcs.addPropertyChangeListener(scene);
+		m_scene = (CofitsDesignScene) getArguments()[0];
+		m_pcs.addPropertyChangeListener(m_scene);
+		
 		addBehaviour(new LaunchPickBehaviour());
+		addBehaviour(new ReceiveMessageBehaviour(this));
+		
 	}
 
 	@Override
@@ -39,9 +38,23 @@ public class CofitsGuiAgent extends GuiAgent {
 
 		@Override
 		public void action() {
-			scene.getMTApplication().registerPreDrawAction(
-					new SelectPickAction(pcs));
+			m_scene.getMTApplication().registerPreDrawAction(
+					new SelectPickAction(m_pcs));
 		}
 
 	}
+	
+	//Getters & Setters
+	public final CofitsDesignScene getScene(){
+		return m_scene;
+	}
+	
+	public void setScene(CofitsDesignScene scene){
+		m_scene = scene;
+	}
+	
+	
+	//Members
+	private CofitsDesignScene m_scene;
+	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 }
