@@ -35,9 +35,15 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	private MTImageButton imageButton;
 	private MTImageButton htmlButton;
 	private MTImageButton noFilterButton;
+	
+	private MTImageButton pdfButton_activated;
+	private MTImageButton movieButton_activated;
+	private MTImageButton imageButton_activated;
+	private MTImageButton htmlButton_activated;
+	private MTImageButton noFilterButton_activated;
 
 	public PickFileChooser(PApplet applet) {
-		this(applet, 0, 0, 300, 5);
+		this(applet, 0, 0, 300, 7);
 	}
 
 	private PickFileChooser(PApplet applet, int x, int y, float width,
@@ -57,20 +63,31 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		
 		//Create the buttons on the left side for files filtering
 		pdfButton = createIconButton(position2.getPosition(),
-				"pdf-icon.png", listener);
+				"filter-pdf-icon.png", listener);
+		pdfButton_activated = createIconButton(position2.getPosition(),
+				"filter-pdf-icon-on.png", listener);
 		position2.nextPosition(pdfButton);
 		movieButton = createIconButton(position2.getPosition(),
-				"mpg-icon.png", listener);
+				"filter-mpg-icon.png", listener);
+		movieButton_activated = createIconButton(position2.getPosition(),
+				"filter-mpg-icon-on.png", listener);
 		position2.nextPosition(movieButton);
 		imageButton = createIconButton(position2.getPosition(),
-				"img-icon.png", listener);
+				"filter-img-icon.png", listener);
+		imageButton_activated = createIconButton(position2.getPosition(),
+				"filter-img-icon-on.png", listener);
 		position2.nextPosition(imageButton);
 		htmlButton = createIconButton(position2.getPosition(),
-				"html-icon.png", listener);
+				"filter-html-icon.png", listener);
+		htmlButton_activated = createIconButton(position2.getPosition(),
+				"filter-html-icon-on.png", listener);
 		position2.nextPosition(htmlButton);
 		noFilterButton = createIconButton(position2.getPosition(),
 				"no-filter-icon.png", listener);
+		noFilterButton_activated = createIconButton(position2.getPosition(),
+				"no-filter-icon-on.png", listener);
 		position2.nextPosition(noFilterButton);
+
 		
 		
 		
@@ -79,8 +96,10 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
 		// filterWindow.setFillColor(new MTColor(159, 182, 205, 200));
-		filterWindow.setFillColor(new MTColor(70, 200, 200, 80));
-		filterWindow.setStrokeColor(MTColor.BLACK);
+		//filterWindow.setFillColor(new MTColor(70, 200, 200, 80));
+		filterWindow.setFillColor(new MTColor(34, 83, 120, 255));
+		//filterWindow.setStrokeColor(MTColor.BLACK);
+		filterWindow.setNoStroke(true);
 		filterWindow.removeAllGestureEventListeners();
 		// filterWindow.setStrokeColor(MTColor.YELLOW);
 		// filterWindow.setPositionGlobal(new Vector3D(-iconWidth, iconHeight));
@@ -95,6 +114,8 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		filterWindow.addChild(imageButton);
 		filterWindow.addChild(htmlButton);
 		filterWindow.addChild(noFilterButton);
+		
+		setFilterIconON(FilterName.NO_FILTER);
 
 		addChild(filterWindow);
 	}
@@ -168,27 +189,105 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 						PickFileChooser.this.setModel(new FileChooserModel(
 								(File) currentMenu,
 								FileExtensionFilter.PDF_FILTER));
+						setFilterIconON(FilterName.PDF);
 					} else if (tapEvent.getTarget() == movieButton) {
 						PickFileChooser.this.setModel(new FileChooserModel(
 								(File) currentMenu,
 								FileExtensionFilter.VIDEO_FILTER));
+						setFilterIconON(FilterName.MPG);
 					} else if (tapEvent.getTarget() == imageButton) {
 						PickFileChooser.this.setModel(new FileChooserModel(
 								(File) currentMenu,
 								FileExtensionFilter.IMG_FILTER));
+						setFilterIconON(FilterName.IMG);
 					} else if (tapEvent.getTarget() == htmlButton) {
 						PickFileChooser.this.setModel(new FileChooserModel(
 								(File) currentMenu,
 								FileExtensionFilter.HTML_FILTER));
+						setFilterIconON(FilterName.HTML);
 					} else if (tapEvent.getTarget() == noFilterButton) {
 						PickFileChooser.this.setModel(new FileChooserModel(
 								(File) currentMenu,
 								FileExtensionFilter.NO_FILTER));
+						setFilterIconON(FilterName.NO_FILTER);
 					}
 				}
 			}
 
 			return false;
+		}
+	}
+	
+	enum FilterName {
+		NO_FILTER,
+		PDF,
+		IMG,
+		MPG,
+		HTML
+	}
+	
+	private void setFilterIconON(FilterName f) {
+		switch (f) {
+			case NO_FILTER :
+				filterWindow.addChild(noFilterButton_activated);
+				filterWindow.removeChild(noFilterButton);
+				filterWindow.addChild(pdfButton);
+				filterWindow.removeChild(pdfButton_activated);
+				filterWindow.addChild(movieButton);
+				filterWindow.removeChild(movieButton_activated);
+				filterWindow.addChild(imageButton);
+				filterWindow.removeChild(imageButton_activated);
+				filterWindow.addChild(htmlButton);
+				filterWindow.removeChild(htmlButton_activated);
+				break;
+			case PDF :
+				filterWindow.addChild(pdfButton_activated);
+				filterWindow.removeChild(pdfButton);
+				filterWindow.addChild(noFilterButton);
+				filterWindow.removeChild(noFilterButton_activated);
+				filterWindow.addChild(movieButton);
+				filterWindow.removeChild(movieButton_activated);
+				filterWindow.addChild(imageButton);
+				filterWindow.removeChild(imageButton_activated);
+				filterWindow.addChild(htmlButton);
+				filterWindow.removeChild(htmlButton_activated);
+				break;
+			case IMG :
+				filterWindow.addChild(imageButton_activated);
+				filterWindow.removeChild(imageButton);
+				filterWindow.addChild(pdfButton);
+				filterWindow.removeChild(pdfButton_activated);
+				filterWindow.addChild(movieButton);
+				filterWindow.removeChild(movieButton_activated);
+				filterWindow.addChild(noFilterButton);
+				filterWindow.removeChild(noFilterButton_activated);
+				filterWindow.addChild(htmlButton);
+				filterWindow.removeChild(htmlButton_activated);
+				break;
+			case MPG :
+				filterWindow.addChild(movieButton_activated);
+				filterWindow.removeChild(movieButton);
+				filterWindow.addChild(pdfButton);
+				filterWindow.removeChild(pdfButton_activated);
+				filterWindow.addChild(noFilterButton);
+				filterWindow.removeChild(noFilterButton_activated);
+				filterWindow.addChild(imageButton);
+				filterWindow.removeChild(imageButton_activated);
+				filterWindow.addChild(htmlButton);
+				filterWindow.removeChild(htmlButton_activated);
+				break;
+			case HTML :
+				filterWindow.addChild(htmlButton_activated);
+				filterWindow.removeChild(htmlButton);
+				filterWindow.addChild(pdfButton);
+				filterWindow.removeChild(pdfButton_activated);
+				filterWindow.addChild(movieButton);
+				filterWindow.removeChild(movieButton_activated);
+				filterWindow.addChild(imageButton);
+				filterWindow.removeChild(imageButton_activated);
+				filterWindow.addChild(noFilterButton);
+				filterWindow.removeChild(noFilterButton_activated);
+				break;
 		}
 	}
 

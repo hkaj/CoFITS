@@ -114,7 +114,7 @@ public class FileChooser extends ListMenu
 		root = path.getAbsoluteFile();
 				
 		//---------------------------------------------------------------------------
-		IFont font = FontManager.getInstance().createFont(applet, "arial.ttf", 17);
+		IFont font = FontManager.getInstance().createFont(applet, "century-gothic", 17);
 		this.pathField = new MTTextField(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight(), font);
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 30) + "...";
@@ -132,19 +132,21 @@ public class FileChooser extends ListMenu
 		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener); 
 		position.nextPosition(parentButton);
 		Vector3D savedPosition = position.getPosition();
-		actionButton = createIconButton(savedPosition, "action-icon.png", listener);
-		actionButton.setWidthXYGlobal(70);
-		actionButton.setHeightXYGlobal(30);
-		cancelActionButton = createIconButton(savedPosition, "cancel.png", listener);
+		actionButton = createIconButton(savedPosition, "action-icon-on.png", listener);
+		actionButton.setWidthXYGlobal(75);
+		actionButton.setHeightXYGlobal(35);
+		cancelActionButton = createIconButton(savedPosition, "action-icon-off.png", listener);
+		cancelActionButton.setWidthXYGlobal(75);
+		cancelActionButton.setHeightXYGlobal(35);
 		
 		
-		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250 + getPathFieldHeight()), Orientation.HORIZONTAL);
+		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
 		disabledDeleteButton = createIconButton(disabledBottomPosition.getPosition(), "disabledDelete-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledDeleteButton);
 		
-		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + 250 + getPathFieldHeight()), Orientation.HORIZONTAL);
+		PositionSequencer bottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		shareButton = createIconButton(bottomPosition.getPosition(), "share-icon.png", listener);
 		bottomPosition.nextPosition(shareButton);
 		deleteButton = createIconButton(bottomPosition.getPosition(), "delete-icon.png", listener);
@@ -207,7 +209,7 @@ public class FileChooser extends ListMenu
 		try {
 			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
-					getSpacing(), 0, iconWidth, iconHeight);
+					getSpacing(), 3, iconWidth, iconHeight);
 			PImage icon = FileExtensionIconManager.getInstance().getIcon(file);
 			if (icon != null) {
 				fileExtIcon.setTexture(icon);
@@ -224,9 +226,14 @@ public class FileChooser extends ListMenu
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),
-				sfont, 16, MTColor.BLACK, true));
-		textArea.setText(file.getName());
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), "century-gothic", 16, MTColor.BLACK, true));
+		
+		if ( file.getName().length() <= 20 ){
+			textArea.setText(file.getName());
+		} else {
+			textArea.setText(file.getName().substring(0, 20)+"...");
+		}
+		
 		Theme.getTheme().applyStyle(StyleID.TRANSPARENT, textArea);
 		component.addChild(textArea);
 
