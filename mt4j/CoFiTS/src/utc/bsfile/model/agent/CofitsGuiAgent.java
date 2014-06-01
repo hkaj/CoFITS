@@ -2,26 +2,25 @@ package utc.bsfile.model.agent;
 
 import java.beans.PropertyChangeSupport;
 
-import utc.bsfile.main.MTBSFileScene;
-import utc.bsfile.model.Constants;
+import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.action.SelectPickAction;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
-public class BSFileGuiAgent extends GuiAgent {
+public class CofitsGuiAgent extends GuiAgent {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	MTBSFileScene scene;
+	CofitsDesignScene scene;
 	PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
 	@Override
 	protected void setup() {
 		super.setup();
-		scene = (MTBSFileScene) getArguments()[0];
+		scene = (CofitsDesignScene) getArguments()[0];
 		pcs.addPropertyChangeListener(scene);
 		addBehaviour(new LaunchPickBehaviour());
 	}
