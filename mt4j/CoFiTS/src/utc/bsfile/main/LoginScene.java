@@ -1,5 +1,6 @@
 package utc.bsfile.main;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -276,6 +277,13 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void addOrb(ControlOrb orb){
 		m_orbs.add(orb);
 		m_orbsStrings.add(orb.getLogin());
+	}
+	
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("Something changed");
+		
 	}
 	
 	

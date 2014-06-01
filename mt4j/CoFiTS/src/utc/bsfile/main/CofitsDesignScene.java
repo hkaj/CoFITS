@@ -1,5 +1,7 @@
 package utc.bsfile.main;
 
+import java.beans.PropertyChangeListener;
+
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.MTComponent;
 import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
@@ -13,7 +15,7 @@ import utc.bsfile.util.ImageManager;
  * Abstract class for defining the design of every Scene in CoFiTS application
  *
  */
-public abstract class CofitsDesignScene extends AbstractScene {
+public abstract class CofitsDesignScene extends AbstractScene implements PropertyChangeListener{
 
 	public CofitsDesignScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
