@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: JadeAndroid">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libraries/libs/JadeAndroid.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

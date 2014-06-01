@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 
+
 public class AddFileActivity extends ActionBarActivity {
     Button buttonBrowse;
 
@@ -63,7 +64,7 @@ public class AddFileActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.add_file, menu);
         return true;
@@ -251,6 +252,9 @@ public class AddFileActivity extends ActionBarActivity {
 
                                 EditText fileNameText = (EditText) findViewById(R.id.fileName);
                                 fileNameText.setText(chosenFile);
+
+                                File myFile = new File(path.toString()+"/"+chosenFile);
+                                FileOpen.openFile(AddFileActivity.this.getBaseContext(), myFile);
 
                             }
 
