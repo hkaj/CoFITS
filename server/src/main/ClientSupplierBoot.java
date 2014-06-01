@@ -28,11 +28,11 @@ public class ClientSupplierBoot {
 			AgentController cl = cc.createNewAgent("ClientAgent",
 					"ClientAgent.ClientAgent",new Object[]{l});
 			cl.start();
-			Scanner sc = new Scanner(System.in);
-			System.out.println("Start?");
-			sc.nextLine();
-			l.get(0).start();
-			sc.close();
+//			Scanner sc = new Scanner(System.in);
+//			System.out.println("Start?");
+//			sc.nextLine();
+//			l.get(0).start();
+//			sc.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
