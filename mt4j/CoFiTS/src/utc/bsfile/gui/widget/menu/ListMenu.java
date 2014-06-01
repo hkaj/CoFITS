@@ -34,9 +34,18 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	public static int iconWidth = 40;
 	public static int iconHeight = 40;
 	protected ArrayList<File> listCells = new ArrayList<File>();
+	protected boolean m_areCellsEnabled = true;
 
 	private int nbItems = 0;
 
+	public void setCellsEnabled(boolean isEnabled){
+		m_areCellsEnabled = isEnabled;
+	}
+	
+	public final boolean areCellsEnabled(){
+		return m_areCellsEnabled;
+	}
+	
 	public void emptyListCells() {
 		this.listCells.clear();
 	}
@@ -174,7 +183,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
-			Object... choices) {
+			Object[] choices) {
 		this(applet, x, y, width, nbItem, new DefaultMenuModel(null, choices));
 	}
 
@@ -418,6 +427,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				}
 			}
 		}
+		
 		return false;
 	}
 

@@ -32,7 +32,7 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 		this.setName(login);
 		vlisteners = new HashSet<ValidateKBListener>();
 		Vector3D validateButtonPosition = new Vector3D(x + width - (iconWidth + spacing), y + iconHeight + 2 * spacing);
-		this.validateButton = createIconButton(validateButtonPosition, "IMG:/start-flag-icon.png", new IGestureEventListener() {
+		this.validateButton = createIconButton(validateButtonPosition, "checked-icon.png", new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge)
 			{
 				if (ge instanceof TapEvent)
@@ -54,6 +54,7 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 		addChild(this.validateButton);
 		setVisible(false);
 	}
+	
 	protected MTImageButton createIconButton(Vector3D position, String imageFilename, IGestureEventListener listener)
 	{
 		MTImageButton imageButton = new MTImageButton(this.getRenderer(), ImageManager.getInstance().load(imageFilename));
@@ -66,9 +67,15 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 
 		return imageButton;
 	}
+	
+	
 	public void addValidateKBListener (ValidateKBListener listener) {
 		vlisteners.add(listener);
 	}
+	
+	
+	
+	
 	public class ValidateKBEvent	{
 		/**
 		 * @uml.property  name="listMenu"
@@ -84,6 +91,8 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 			return vKB;
 		}
 	}
+	
+	
 	public interface ValidateKBListener {
 		public void validate(ValidateKBEvent evt);
 	}	
