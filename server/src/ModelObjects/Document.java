@@ -18,7 +18,7 @@ public class Document extends ModelObject
 {
 	final Integer id;
 	final String name,type;
-	final static private String[] validProperties = {"name","usedDuring","UsedIn","followedBy"};
+	final static private String[] validProperties = {"name","usedDuring","UsedIn","ownedBy"};
 
 	@JsonCreator
 	public Document(@JsonProperty("id")Integer id, @JsonProperty("name")String name, @JsonProperty("type")String type)

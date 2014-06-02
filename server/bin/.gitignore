@@ -1,11 +1,2 @@
 /ClientAgent
-/Constants
-/DatabaseScheme
-/DocumentAgent
-/GestionRequetes
-/ModelObjects
-/Requests
-/SpecialisedRelations
-/Tests
 /main
-/properties

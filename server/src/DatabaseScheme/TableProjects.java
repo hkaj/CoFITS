@@ -3,8 +3,8 @@ package DatabaseScheme;
 public class TableProjects implements ReferenceTable
 {
 
-	final private static String[] att ={"name","description"};
-	final private static String[] keyAtt = {"name"};
+	final private static String[] att ={"id","name","description","creator"};
+	final private static String[] keyAtt = {"id"};
 	final private static TableProjects instance = new TableProjects();
 	static public ReferenceTable getInstance(){return instance;};
 	

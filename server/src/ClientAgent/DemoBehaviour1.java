@@ -46,6 +46,7 @@ public final class DemoBehaviour1 extends Behaviour
 		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);
 		message.setContent(request.toJSON());
+		System.out.println("createSession message: " + message);
 		this.myAgent.send(message);
 	}
 	
@@ -55,6 +56,7 @@ public final class DemoBehaviour1 extends Behaviour
 		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);
 		message.setContent(request.toJSON());
+		System.out.println("insertDocument message: " + message);
 		this.myAgent.send(message);
 	}
 
@@ -65,7 +67,9 @@ public final class DemoBehaviour1 extends Behaviour
 		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);
 		message.setContent(request.toJSON());
+		System.out.println("selectDocument message: " + message);
 		this.myAgent.send(message);
+		System.out.println("waiting for the response...");
 		final ACLMessage answer = this.myAgent.blockingReceive();
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
