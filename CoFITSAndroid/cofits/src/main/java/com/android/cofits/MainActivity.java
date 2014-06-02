@@ -99,8 +99,8 @@ public class MainActivity extends ActionBarActivity {
                     clientAgent = null;
                     agentName = email;
                     profile = new Properties();
-                    profile.setProperty("host", "127.0.0.1");
-                    profile.setProperty("port", "1098");
+                    profile.setProperty("host", "172.25.25.0");
+                    profile.setProperty("port", "2000");
                     start();
                 } catch (Exception ex) {
                     logger.log(Level.SEVERE, "Unexpected exception connecting to the server!");
