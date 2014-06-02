@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import java.util.logging.Level;
+
 import jade.android.AgentContainerHandler;
 import jade.android.AgentHandler;
 import jade.android.AndroidHelper;
@@ -21,6 +23,7 @@ import jade.core.Profile;
 import jade.core.ProfileException;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.util.Logger;
 import jade.util.leap.Properties;
 import jade.wrapper.AgentContainer;
 import jade.wrapper.AgentController;
@@ -29,6 +32,8 @@ import jade.wrapper.StaleProxyException;
  * Created by Sanaa on 5/29/14.
  */
 public class MainContainer extends Activity{
+
+    private Logger logger = Logger.getJADELogger(this.getClass().getName());
 
     private ServiceConnection serviceConnection;
     private MicroRuntimeServiceBinder microRuntimeServiceBinder;
@@ -42,6 +47,16 @@ public class MainContainer extends Activity{
         startJade(nickname, "172.29.38.140", "2000" );
 
     }
+    private RuntimeCallback<AgentController> agentStartupCallback = new RuntimeCallback<AgentController>() {
+        @Override
+        public void onSuccess(AgentController agent) {
+        }
+
+        @Override
+        public void onFailure(Throwable throwable) {
+            logger.log(Level.INFO, "Nickname already in use!");
+        }
+    };
 
     public void startJade(final String nickname, final String host,
                           final String port) {
@@ -68,7 +83,7 @@ public class MainContainer extends Activity{
                                                IBinder service) {
                     microRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
                     System.out.println("Gateway successfully bound to MicroRuntimeService");
-                    startContainer(nickname, profile);
+                    startContainer(nickname, profile,agentStartupCallback);
                 };
 
                 public void onServiceDisconnected(ComponentName className) {
@@ -82,72 +97,33 @@ public class MainContainer extends Activity{
                     Context.BIND_AUTO_CREATE);
         } else {
             System.out.println( "MicroRumtimeGateway already binded to service");
-            startContainer(nickname, profile);
+            startContainer(nickname, profile,agentStartupCallback);
         }
     }
 
-    private void startContainer(final String nickname, final Properties profile) {}/*{
-
+    private void startContainer(final String nickname, Properties profile,
+                                final RuntimeCallback<AgentController> agentStartupCallback) {
         if (!MicroRuntime.isRunning()) {
-            final RuntimeService runtimeService = new RuntimeService();
-            runtimeService.createMainAgentContainer(new RuntimeCallback<AgentContainerHandler>() {
-
-                @Override
-                public void onSuccess(AgentContainerHandler arg0) {
-                    System.out.println("Successfully start of the container...");
-                    runtimeService.createNewAgent(arg0, "CreatorAgent", CreatorAgent.class.getName(), null, new RuntimeCallback<AgentHandler>() {
+            microRuntimeServiceBinder.startAgentContainer(profile,
+                    new RuntimeCallback<Void>() {
                         @Override
-                        public void onSuccess(AgentHandler agentHandler) {
-                            runtimeService.startAgent(agentHandler, new RuntimeCallback<Void>() {
-
-                                @Override
-                                public void onFailure(Throwable arg0) {
-                                    System.err.println( "Failed to start the CreatorAgent...");
-                                }
-
-                                @Override
-                                public void onSuccess(Void arg0) {
-                                    System.out.println("Successfully start of the CreatorAgent...");
-                                }
-                            });
-
+                        public void onSuccess(Void thisIsNull) {
+                            logger.log(Level.INFO, "Successfully start of the container...");
+                            startAgent(nickname, agentStartupCallback);
                         }
 
                         @Override
                         public void onFailure(Throwable throwable) {
-                            System.err.println( "Failed to start the CreatorAgent...");
-                        } });
-
-
-
-                    microRuntimeServiceBinder.startAgentContainer(profile,
-                            new RuntimeCallback<Void>() {
-                                @Override
-                                public void onSuccess(Void thisIsNull) {
-                                    System.out.println("Successfully start of the container...");
-
-                                    startAgent(nickname);
-                                }
-
-                                @Override
-                                public void onFailure(Throwable throwable) {
-                                    System.err.println( "Failed to start the container...");
-                                }
-                            });
-
-                }
-
-                @Override
-                public void onFailure(Throwable arg0) {
-                }
-            });
-
+                            logger.log(Level.SEVERE, "Failed to start the container...");
+                        }
+                    });
         } else {
-            startAgent(nickname);
+            startAgent(nickname, agentStartupCallback);
         }
-    }*/
+    }
 
-    private void startAgent(final String nickname) {
+    private void startAgent(final String nickname,
+                            final RuntimeCallback<AgentController> agentStartupCallback) {
         microRuntimeServiceBinder.startAgent(nickname,
                 ClientAgent.class.getName(),
                 new Object[] { this },
