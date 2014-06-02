@@ -48,6 +48,9 @@
             android:label="@string/title_activity_file_explore"
             android:screenOrientation="portrait">
         </activity>
+
+        <service android:name="jade.android.MicroRuntimeService" />
+
     </application>
 
 </manifest>

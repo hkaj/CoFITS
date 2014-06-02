@@ -50,10 +50,10 @@ public class MainActivity extends ActionBarActivity {
     private String email = "";
     private String pwd = "";
 
-    static final int CHAT_REQUEST = 0;
-    static final int SETTINGS_REQUEST = 1;
+    private String agentName;
+    private Properties profile;
 
-    private MyReceiver myReceiver;
+    private static ClientAgent clientAgent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +61,6 @@ public class MainActivity extends ActionBarActivity {
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        myReceiver = new MyReceiver();
-
-        IntentFilter loginFilter = new IntentFilter();
-        loginFilter.addAction("cofits.LOGIN_SUCCESS");
-        registerReceiver(myReceiver, loginFilter);
-
-        IntentFilter loginFailFilter = new IntentFilter();
-        loginFailFilter.addAction("cofits.LOGIN_FAIL");
-        registerReceiver(myReceiver, loginFailFilter);
 
         setContentView(R.layout.activity_main);
 
@@ -106,12 +96,12 @@ public class MainActivity extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "utilisateur ", Toast.LENGTH_SHORT).show();
 
                 try {
-                    SharedPreferences settings = getSharedPreferences(
-                            "jadeMainPrefsFile", 0);
-                    String host = settings.getString("defaultHost", "");
-                    String port = settings.getString("defaultPort", "");
-                    Log.d("gg", host + ":" + port + "...");
-                    startJade(emailText.getText().toString(), host, port, agentStartupCallback);
+                    clientAgent = null;
+                    agentName = email;
+                    profile = new Properties();
+                    profile.setProperty("host", "127.0.0.1");
+                    profile.setProperty("port", "1098");
+                    start();
                 } catch (Exception ex) {
                     logger.log(Level.SEVERE, "Unexpected exception connecting to the server!");
                 }
@@ -135,135 +125,106 @@ public class MainActivity extends ActionBarActivity {
             logger.log(Level.INFO, "Email already in use!");
         }
     };
-
-    public void startJade(final String nickname, final String host,
-                          final String port,
-                          final RuntimeCallback<AgentController> agentStartupCallback) {
-
-        final Properties profile = new Properties();
-        profile.setProperty(Profile.MAIN_HOST, host);
-        profile.setProperty(Profile.MAIN_PORT, port);
-        profile.setProperty(Profile.MAIN, Boolean.TRUE.toString());
-        profile.setProperty(Profile.JVM, Profile.ANDROID);
-
-        if (AndroidHelper.isEmulator()) {
-            // Emulator: this is needed to work with emulated devices
-            profile.setProperty(Profile.LOCAL_HOST, AndroidHelper.LOOPBACK);
-        } else {
-            profile.setProperty(Profile.LOCAL_HOST,
-                    AndroidHelper.getLocalIPAddress());
-        }
-        // Emulator: this is not really needed on a real device
-        profile.setProperty(Profile.LOCAL_PORT, "2000");
-
-        Log.d("profile", profile.getProperty(Profile.LOCAL_HOST));
-        if (microRuntimeServiceBinder == null) {
-            serviceConnection = new ServiceConnection() {
-                public void onServiceConnected(ComponentName className,
-                                               IBinder service) {
-                    microRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
-                    logger.log(Level.INFO, "Gateway successfully bound to MicroRuntimeService");
-                    startContainer(nickname, profile,agentStartupCallback);
-                };
-
-                public void onServiceDisconnected(ComponentName className) {
-                    microRuntimeServiceBinder = null;
-                    logger.log(Level.INFO, "Gateway unbound from MicroRuntimeService");
-                }
+    private void start() {
+        serviceConnection = new ServiceConnection() {
+            public void onServiceConnected(ComponentName className,
+                                           IBinder service) {
+                microRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
+                Log.v("jade_android", "Gateway successfully bound to MicroRuntimeService");
+                startContainer();
             };
-            logger.log(Level.INFO, "Binding Gateway to MicroRuntimeService...");
-            bindService(new Intent(getApplicationContext(),
-                    MicroRuntimeService.class), serviceConnection,
-                    Context.BIND_AUTO_CREATE);
-        } else {
-            logger.log(Level.INFO, "MicroRumtimeGateway already binded to service");
-            startContainer(nickname, profile,agentStartupCallback);
-        }
+
+            public void onServiceDisconnected(ComponentName className) {
+                microRuntimeServiceBinder = null;
+                Log.v("jade_android", "Gateway unbound from MicroRuntimeService");
+            }
+        };
+        Log.v("jade_android", "Binding Gateway to MicroRuntimeService...");
+        bindService(new Intent(getApplicationContext(),
+                MicroRuntimeService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
     }
 
-    private void startContainer(final String nickname, Properties profile,
-                                final RuntimeCallback<AgentController> agentStartupCallback) {
+    private void startContainer() {
         if (!MicroRuntime.isRunning()) {
             microRuntimeServiceBinder.startAgentContainer(profile,
                     new RuntimeCallback<Void>() {
                         @Override
                         public void onSuccess(Void thisIsNull) {
-                            logger.log(Level.INFO, "Successfully start of the container...");
-                            startAgent(nickname, agentStartupCallback);
+                            Log.v("jade_android", "Successfully start of the container...");
+                            startAgent();
                         }
 
                         @Override
                         public void onFailure(Throwable throwable) {
-                            logger.log(Level.SEVERE, "Failed to start the container...");
+                            Log.v("jade_android", "Failed to start the container..." + throwable.getMessage());
                         }
                     });
         } else {
-            startAgent(nickname, agentStartupCallback);
+            startAgent();
         }
     }
 
-    private void startAgent(final String nickname,
-                            final RuntimeCallback<AgentController> agentStartupCallback) {
-        microRuntimeServiceBinder.startAgent(nickname,
+    private void startAgent() {
+        microRuntimeServiceBinder.startAgent(agentName,
                 ClientAgent.class.getName(),
                 new Object[] { getApplicationContext() },
                 new RuntimeCallback<Void>() {
                     @Override
                     public void onSuccess(Void thisIsNull) {
-                        logger.log(Level.INFO, "Successfully start of the "
+                        Log.v("jade_android", "Successfully start of the "
                                 + ClientAgent.class.getName() + "...");
-                        try {
-                            agentStartupCallback.onSuccess(MicroRuntime.getAgent(nickname));
-                        } catch (ControllerException e) {
-                            // Should never happen
-                            agentStartupCallback.onFailure(e);
-                        }
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        logger.log(Level.SEVERE, "Failed to start the "
+                        Log.v("jade_android", "Failed to start the "
                                 + ClientAgent.class.getName() + "...");
-                        agentStartupCallback.onFailure(throwable);
                     }
                 });
     }
 
-    private class MyReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            logger.log(Level.INFO, "Received intent " + action);
-            if (action.equalsIgnoreCase("cofits.LOGIN_SUCCESS")) {
-                ShowDialog("Login succeeded!");
-                //login();
-                Log.d("MainActivity", "Login succeeded!");
-            }
-            if (action.equalsIgnoreCase("cofits.LOGIN_FAIL")) {
-                ShowDialog("Login failed");
-                if (MicroRuntime.isRunning()) {
-                    try {
-                        MicroRuntime.killAgent("Conn-" + email);
-                        //MicroRuntime.detach();
-                    } catch (NotFoundException e) {
-                        e.printStackTrace();
-                    }
+    public void stop() {
+        if (clientAgent != null) {
+            //clientAgent.logOut();
+        }
+        Log.v("jade_android", "stopping jade runtime manager");
+        if (microRuntimeServiceBinder == null) {
+            Log.v("jade_android", "no runtime");
+        } else {
+            microRuntimeServiceBinder.stopAgentContainer(new RuntimeCallback<Void>() {
+                @Override
+                public void onSuccess(Void thisIsNull) {
+                    Log.v("jade_android", "jade runtime manager now stopped");
+                    clientAgent = null;
                 }
-            }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+
+                    Log.v("jade_android","Failed to stop the "
+                            + ClientAgent.class.getName()
+                            + "..." + throwable.getMessage());
+                }
+            });
+        }
+        if (serviceConnection == null) {
+            Log.v("jade_android", "no service connection");
+        }else {
+            serviceConnection = null;
         }
     }
 
-    public void ShowDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setMessage(message).setCancelable(false)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alert = builder.create();
-        alert.show();
+    public ClientAgent getAndroidAgent() {
+        if (clientAgent == null && microRuntimeServiceBinder != null){
+            start();
+        }
+        return clientAgent;
+    }
+
+    public void setAndroidAgent(ClientAgent clientAgent) {
+        MainActivity.clientAgent = clientAgent;
+
     }
 
     @Override
