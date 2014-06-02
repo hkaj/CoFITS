@@ -15,6 +15,8 @@ import org.mt4j.components.bounds.BoundsArbitraryPlanarPolygon;
 import org.mt4j.components.interfaces.IMTComponent3D;
 import org.mt4j.components.visibleComponents.font.VectorFontCharacter;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
+import org.mt4j.components.visibleComponents.shapes.GeometryInfo;
+import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.shapes.MTRoundRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
@@ -42,6 +44,7 @@ import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.KeyInfoFactory.KeyInfo;
 
@@ -177,11 +180,17 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 
 		// /*
 		// TODO load button only once!
-		keybCloseSvg = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "keybClose.svg");
+		keybCloseSvg = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybClose-on.svg");
 		// Transform
 		//this.addChild(keybCloseSvg);
-		keybCloseSvg.scale(0.8f*(width/700), 0.8f*(width/700), 1, new Vector3D(0, 0, 0));
-		keybCloseSvg.translate(new Vector3D(640*(width/700), 5*(width/700), 0));
+		//keybCloseSvg.scale(0.8f*(width/700), 0.8f*(width/700), 1, new Vector3D(0, 0, 0));
+		//keybCloseSvg.translate(new Vector3D(640*(width/700), 5*(width/700), 0));
+		
+		// new close button modifications
+		int closeButtonSize = 40;
+		int spacing = 10;
+		keybCloseSvg.setSizeXYGlobal(closeButtonSize, closeButtonSize);
+		keybCloseSvg.setPositionGlobal(new Vector3D(x + width - (closeButtonSize/2 + spacing), y + closeButtonSize/2 + spacing ));
 		keybCloseSvg.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
 		
 		/* Problem with close button:
@@ -190,7 +199,7 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		 * therefor no "tapped" event is triggered
 		 * Don't know this is all of a sudden happening... -AJ
 		 */
-		keybCloseSvg.removeAllGestureEventListeners();
+		//keybCloseSvg.removeAllGestureEventListeners();
 		keybCloseSvg.addGestureListener(TapProcessor.class, new IGestureEventListener()
 		{
 			@Override
@@ -315,6 +324,8 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		// Draw this component and its children above
 		// everything previously drawn and avoid z-fighting
 		this.setDepthBufferDisabled(true);
+		this.setFillColor(Theme.ITEM_BACKGROUND_COLOR);
+		this.setNoStroke(true);
 	}
 
 	private KeyInfo[] getKeysLayout(float width, float height)

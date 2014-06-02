@@ -8,6 +8,7 @@ import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.Theme;
 import utc.bsfile.util.PropertyManager;
 
 /**
@@ -35,13 +36,17 @@ public class TextEntryValidateKeyboard extends ValidateKeyboard {
 	private void init(PApplet pApplet) {
 		//Add a text area to enter a message
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
-		IFont textFont = FontManager.getInstance().createFont(pApplet, textFontStr, 15, MTColor.BLACK);
-		m_textEntry = new MTTextField(pApplet, 0, 0, 400, 30, textFont);
+		IFont textFont = FontManager.getInstance().createFont(pApplet, textFontStr, 32, MTColor.BLACK);
+		m_textEntry = new MTTextField(pApplet, 0, 0, 400, 40, textFont);
 		
-		m_textEntry.setPositionRelativeToOther(m_textEntry, new Vector3D(getWidthXY(TransformSpace.LOCAL) / 2, -5));
+		m_textEntry.setPositionRelativeToOther(m_textEntry, new Vector3D(getWidthXY(TransformSpace.LOCAL) / 2, -30));
 		m_textEntry.setPickable(false);
 		m_textEntry.setVisible(true);
 		m_textEntry.setText(getName());
+		
+		m_textEntry.setFillColor(Theme.ITEM_COLOR);
+		m_textEntry.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR);
+		m_textEntry.setStrokeWeight(3);
 		
 		addChild(m_textEntry);
 		addTextInputListener(m_textEntry);

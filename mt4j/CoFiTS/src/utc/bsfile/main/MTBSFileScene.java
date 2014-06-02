@@ -22,7 +22,6 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
-import com.sun.opengl.impl.mipmap.Image;
 import processing.core.PImage;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
@@ -83,18 +82,18 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
 		//this.getCanvas().addChild(dragOnly);
 		
-		addPickFileChooser();
+		for (ControlOrb cOrb : orbs ) {
+			processInputForOrb(cOrb);
+		}
+		
+		//addPickFileChooser();
 	}
 	
-	
-	/**
-	 * Defines the process in order to create a FileChooser on the screen
-	 */
-	private void addPickFileChooser() {
-		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
-	
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+	protected void processInputForOrb(final ControlOrb orb) {
+		//Tap long on the orb
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),500));
+		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
+		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
 				TapAndHoldEvent th = (TapAndHoldEvent)ge;
 				switch (th.getId()) {
@@ -104,7 +103,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 					break;
 				case TapAndHoldEvent.GESTURE_ENDED:
 					if (th.isHoldComplete()){
-						playPickFileChooser(th.getLocationOnScreen());
+						playPickFileChooser(orb.getCenterPointGlobal());
 					}
 					break;
 				default:
@@ -112,9 +111,37 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 				}
 				return false;
 			}
-		});
-		
+		});		
 	}
+	
+	
+	/**
+	 * Defines the process in order to create a FileChooser on the screen
+	 */
+//	private void addPickFileChooser() {
+//		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
+//	
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+//			public boolean processGestureEvent(MTGestureEvent ge) {
+//				TapAndHoldEvent th = (TapAndHoldEvent)ge;
+//				switch (th.getId()) {
+//				case TapAndHoldEvent.GESTURE_STARTED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_UPDATED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_ENDED:
+//					if (th.isHoldComplete()){
+//						playPickFileChooser(th.getLocationOnScreen());
+//					}
+//					break;
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+//	}
 	
 	
 	

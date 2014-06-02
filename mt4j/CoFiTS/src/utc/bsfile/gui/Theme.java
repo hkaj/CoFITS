@@ -20,6 +20,12 @@ public class Theme {
 	public static String LIST_CHOICE = "LIST_CHOICE";
 	public static String RW_TEXT_AREA = "RW_TEXT_AREA";
 	public static String RO_TEXT_AREA = "RO_TEXT_AREA";
+	public static MTColor ITEM_BACKGROUND_COLOR; // dark
+	public static MTColor ITEM_COLOR; // normal
+	public static MTColor ITEM_LIGHT_COLOR; // light
+	public static MTColor ACTIVE_COLOR;
+	public static MTColor BACKGROUND_COLOR;
+	
 	public enum StyleID
 	{
 		DEFAULT,
@@ -37,9 +43,16 @@ public class Theme {
 
 	public static Theme getTheme()  {
 		if (theme == null) {
+			
+			ITEM_BACKGROUND_COLOR = new MTColor(34, 83, 120, 255); // dark
+			ITEM_COLOR = new MTColor(22, 149, 163, 255); // normal
+			ITEM_LIGHT_COLOR = new MTColor(44, 220, 220, 255); // light
+			ACTIVE_COLOR = new MTColor(235, 127, 0, 255); // orange
+			BACKGROUND_COLOR = new MTColor(50, 50, 50, 255); // dark grey
+			
 			StyleInfo defaultStyle = new StyleInfo();
 			//defaultStyle.setFillColor(22, 149, 163, 255);
-			defaultStyle.setFillColor(34, 83, 120, 255); // file chooser color
+			defaultStyle.setFillColor(ITEM_BACKGROUND_COLOR); // file chooser color
 			defaultStyle.setStrokeColor(MTColor.BLACK);
 			defaultStyle.setDrawSmooth(false);
 			theme = new Theme(defaultStyle);
@@ -48,9 +61,10 @@ public class Theme {
 			theme.addStyleFromFillColor(TRANSPARENT_IMAGE_BUTTON, MTColor.WHITE);
 			
 			//StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, new MTColor(140, 210, 210, 240));
-			StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, new MTColor(22, 149, 163, 255)); // list element color
+			StyleInfo style = theme.addStyleFromFillColor(LIST_CHOICE, Theme.ITEM_LIGHT_COLOR); // list element color
 			theme.addStyle(RW_TEXT_AREA, style);
 			theme.addStyleFromFillColor(RO_TEXT_AREA, new MTColor(70, 200, 200, 160)); // useless
+			
 		}
 	    return theme;
     }

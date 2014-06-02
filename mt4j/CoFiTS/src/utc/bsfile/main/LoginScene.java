@@ -7,6 +7,7 @@ import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
@@ -15,6 +16,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.Ta
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.sceneManagement.transition.FadeTransition;
+import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -34,11 +36,12 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 
 	//Constants
 	private static final boolean DO_CLEAN_GESTURES = true;
+	AbstractMTApplication applet;
 	
 	//Constructors
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
-		
+		applet = mtApplication;
 		m_listOfUsers.setCellsEnabled(false);
 		
 		addLoginMenuProcess();
@@ -155,8 +158,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		if (orb != null){
 			orb.sendToFront();
 		}
-			
-		
 		return keyboard;
 	}
 	
@@ -178,7 +179,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		getCanvas().addChild(orb);
 		
 		//Tap long on the orb
-		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
 		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
@@ -231,7 +232,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		//Add a title to the list Menu
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
 		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, MTColor.WHITE);
-		MTTextField title = new MTTextField(getMTApplication(), 0, 0, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
+		MTTextField title = new MTTextField(getMTApplication(), 2, 8, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
 		
 		title.setNoStroke(true);
 		title.setNoFill(true);
@@ -241,9 +242,13 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		m_listOfUsers.addChild(title);
 		
 		//Add a confirmation button
-		MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
+		//MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
+		MTSvgButton button = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
+		int buttonSize = 40;
+		button.setSizeXYGlobal(buttonSize, buttonSize);
+		button.setPositionGlobal(new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 30));
 		
-		button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
+		//button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
 		button.setPickable(true);
 		
 		

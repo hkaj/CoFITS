@@ -52,7 +52,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 
 	protected void processInputForOrb(final ControlOrb orb) {
 		//Tap long on the orb
-		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
 		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
@@ -108,7 +108,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	
 	
 	protected void launchProjectChoiceScene() {
-		setTransition(new FadeTransition(getMTApplication(), 1700));	//Set a fade transition between the two scenes
+		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
 		MTBSFileScene projectChoiceScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application

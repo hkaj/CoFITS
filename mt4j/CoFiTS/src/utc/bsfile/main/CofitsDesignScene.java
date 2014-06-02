@@ -9,6 +9,7 @@ import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
+import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
@@ -43,7 +44,8 @@ public abstract class CofitsDesignScene extends AbstractScene {
 		
 		//Input Listener drawing a circle when touching with one finger
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
-		this.setClearColor(new MTColor(126, 130, 168, 255));
+		//this.setClearColor(new MTColor(126, 130, 168, 255));
+		this.setClearColor(new MTColor(50, 50, 50, 255));
 	
 		initManager();
 	}
