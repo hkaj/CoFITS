@@ -20,9 +20,9 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    compile files('/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/JadeAndroid.jar')
-    compile files('/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-annotations-2.0.6.jar')
-    compile files('/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-core-2.0.6.jar')
-    compile files('/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-databind-2.0.6.jar')
-    compile files('/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/json-simple-1.1.1.jar')
+    compile files('/home/antho/Documents/CoFITS/CoFITSAndroid/libraries/libs/JadeAndroid.jar')
+    compile files('/home/antho/Documents/CoFITS/CoFITSAndroid/libraries/libs/jackson-annotations-2.0.6.jar')
+    compile files('/home/antho/Documents/CoFITS/CoFITSAndroid/libraries/libs/jackson-core-2.0.6.jar')
+    compile files('/home/antho/Documents/CoFITS/CoFITSAndroid/libraries/libs/jackson-databind-2.0.6.jar')
+    compile files('/home/antho/Documents/CoFITS/CoFITSAndroid/libraries/libs/json-simple-1.1.1.jar')
 }
