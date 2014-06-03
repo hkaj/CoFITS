@@ -16,6 +16,10 @@ public class ReceiveMessageBehaviour extends CyclicBehaviour {
 		
 		if (messageReceived != null){
 			
+			if (messageReceived.getPerformative() == ACLMessage.INFORM){
+				myAgent.addBehaviour(new UpdateProjectsStructure(myAgent, messageReceived));
+			}
+			
 		} else {
 			block();
 		}

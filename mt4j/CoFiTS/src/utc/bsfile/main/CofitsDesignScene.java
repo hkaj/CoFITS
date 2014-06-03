@@ -5,7 +5,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.MTComponent;
 import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
@@ -13,6 +12,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
 
@@ -47,6 +47,8 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		//Input Listener drawing a circle when touching with one finger
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 		this.setClearColor(new MTColor(126, 130, 168, 255));
+		
+		//TODO construct the node somewhere
 	
 		initManager();
 	}
@@ -96,8 +98,21 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		destroy();
 	}
 	
+	//Getters & Setters
+	public TwoLinkedJsonNode getProjectsArchitectureTree() {
+		return m_projectsArchitectureTree;
+	}
+	
+
+	public void setProjectsArchitectureTree(
+			TwoLinkedJsonNode m_projectsArchitectureTree) {
+		this.m_projectsArchitectureTree = m_projectsArchitectureTree;
+	}
+	
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
+	TwoLinkedJsonNode m_projectsArchitectureTree;
+	
 	
 }
