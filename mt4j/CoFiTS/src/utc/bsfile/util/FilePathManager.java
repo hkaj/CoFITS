@@ -1,6 +1,9 @@
 package utc.bsfile.util;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class FilePathManager {
 
@@ -102,5 +105,33 @@ public class FilePathManager {
 			System.err.println("Failed to rename file : " + oldPathFile.getAbsolutePath() + " to : " + newPathFile.getAbsolutePath());
 		}
 		
+	}
+	
+	
+	public void createTextFile(String path, String content){
+		createTextFile(new File(path), content);
+	}
+	
+	
+	/**
+	 * @param filePath - The path where to create the file
+	 * @param content - Text content of the new file
+	 * Create a new text file and write some content in it
+	 */
+	public void createTextFile(File filePath, String content){
+		try { 
+			//If file does not exists, create it			
+			if (!filePath.exists()) {
+				filePath.createNewFile();
+			}
+ 
+			FileWriter fw = new FileWriter(filePath.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(content);
+			bw.close();
+ 
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
