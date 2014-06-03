@@ -1,6 +1,7 @@
 package utc.bsfile.main;
 
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -96,23 +97,24 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	 */
 	protected void close(){
 		destroy();
+	}	
+	
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("projectsArchitectureRootNode changed")){
+			setProjectsArchitectureRootNode((TwoLinkedJsonNode)evt.getNewValue());
+		}
 	}
 	
 	//Getters & Setters
-	public TwoLinkedJsonNode getProjectsArchitectureTree() {
-		return m_projectsArchitectureTree;
-	}
-	
-
-	public void setProjectsArchitectureTree(
-			TwoLinkedJsonNode m_projectsArchitectureTree) {
-		this.m_projectsArchitectureTree = m_projectsArchitectureTree;
-	}
+	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
+	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node;}
 	
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	TwoLinkedJsonNode m_projectsArchitectureTree;
+	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	
 	
 }
