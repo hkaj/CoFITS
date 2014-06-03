@@ -10,11 +10,11 @@ import java.util.List;
 import javax.swing.tree.TreeNode;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TwoLinkedJsonNode implements TreeNode {
 
 	//Static methods
-	
 	
 	/**
 	 * @param jsonNode - The root jsonNode encapsulated
@@ -43,7 +43,7 @@ public class TwoLinkedJsonNode implements TreeNode {
 				String field = it.next();
 				if (field != null){
 					TwoLinkedJsonNode child = getTwoLinkedTreeFromJsonNode(jsonNode.get(field), node,  field);
-					node.addChild(child);
+					node.addChild(child, false);
 				}
 			}
 		}
@@ -65,13 +65,21 @@ public class TwoLinkedJsonNode implements TreeNode {
 	}
 	
 	
-	//Methods
-	public void addChild(TwoLinkedJsonNode node){
+	//Methods	
+	public void addChild(TwoLinkedJsonNode node, boolean doEraseIfJsonNodeChildExists){
 		m_children.add(node);
+		if (m_current.get(node.getName()) == null || doEraseIfJsonNodeChildExists) {
+			ObjectNode objectNode = (ObjectNode) m_current;
+			objectNode.put(node.getName(), node.getCurrent());
+		}
+		node.setParent(this);
 	}
-	
-	public void addChildren(Collection<TwoLinkedJsonNode> nodes){
-		m_children.addAll(nodes);
+
+
+	public void addChildren(Collection<TwoLinkedJsonNode> nodes, boolean doEraseIfJsonNodeChildExists){
+		for (TwoLinkedJsonNode node : nodes){
+			addChild(node, doEraseIfJsonNodeChildExists);
+		}
 	}
 
 	//Implements TreeNode interface
@@ -85,15 +93,6 @@ public class TwoLinkedJsonNode implements TreeNode {
 	@Override
 	public int getChildCount() {
 		return m_children.size();
-	}
-
-	@Override
-	public TreeNode getParent() {
-		return m_parent;
-	}
-	
-	public JsonNode getParentJsonNode() {
-		return m_parent.getCurrent();
 	}
 
 	@Override
@@ -134,6 +133,48 @@ public class TwoLinkedJsonNode implements TreeNode {
 	@Override
 	public String toString() {
 		return m_name;
+	}	
+	
+	/**
+	 * @return A Json string representing the JsonNode Tree
+	 * WARNING : You should not have used a addChild method with doErase to false unless you managed JsonNode child before
+	 * Otherwise, the json file might not be what you're expecting 
+	 */
+	public String treeToString(){
+		return m_current.toString();
+	}
+	
+	
+	/**
+	 * While TwoLinkedJsonNode is double linked, we need to free the references
+	 * in order to allow the Garbage Collector to destroy the JsonNodes
+	 */
+	public void releaseTree() {
+		
+		for (TwoLinkedJsonNode child : m_children){
+			child.releaseTree();
+		}
+		
+		m_children.clear();		
+	}
+	
+	
+	//Getters & Setters
+	public String getName(){
+		return m_name;
+	}
+	
+	@Override
+	public TreeNode getParent() {
+		return m_parent;
+	}
+	
+	public void setParent(TwoLinkedJsonNode twoLinkedJsonNode) {
+		m_parent = twoLinkedJsonNode;		
+	}
+	
+	public JsonNode getParentJsonNode() {
+		return m_parent.getCurrent();
 	}
 
 	//Members
