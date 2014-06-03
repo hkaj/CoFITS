@@ -13,55 +13,42 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TwoLinkedJsonNode implements TreeNode {
-
-	//Static methods
 	
 	/**
-	 * @param jsonNode - The root jsonNode encapsulated
-	 * @param name - The name of the root node
-	 * @return The root of a new double linked tree with JsonNode encapsulated
-	 * Creates a new double linked tree from a JsonNode.
+	 * Construct the tree from JsonNode encapsulated using its children to construct the TwoLinked children nodes
 	 */
-	public static TwoLinkedJsonNode getTwoLinkedTreeFromJsonNode(JsonNode jsonNode, String name){
-		return getTwoLinkedTreeFromJsonNode(jsonNode, null, name);
-	}
-	
-	
-	/**
-	 * @param jsonNode - A jsonNode
-	 * @param parent - The jsonNode parent in the tree
-	 * @param name - The name of the node
-	 * @return A node of a double linked tree with JsonNode encapsulated
-	 * Creates a new node for a double linked tree encapsulating JsonNode. Attach children of jsonNode recursively
-	 */
-	protected static TwoLinkedJsonNode getTwoLinkedTreeFromJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name){
-		TwoLinkedJsonNode node = new TwoLinkedJsonNode(jsonNode, parent, name);
+	public void constructTree(){
+		releaseTree();
 		
-		if (jsonNode.isObject()) {
-			Iterator<String> it = jsonNode.fieldNames();
+		if (m_current.isObject()) {
+			Iterator<String> it = m_current.fieldNames();
 			while (it.hasNext()){
 				String field = it.next();
 				if (field != null){
-					TwoLinkedJsonNode child = getTwoLinkedTreeFromJsonNode(jsonNode.get(field), node,  field);
-					node.addChild(child, false);
+					TwoLinkedJsonNode child = new TwoLinkedJsonNode(m_current.get(field), this, field, true);
+					addChild(child, false);
 				}
 			}
 		}
-		
-		return node;
 	}
+	
 	
 	//Constructors
 	public TwoLinkedJsonNode(JsonNode jsonNode, String name){
-		this(jsonNode, null, name);
+		this(jsonNode, name, false);
 	}
 	
-	public TwoLinkedJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name) {
-		
+	public TwoLinkedJsonNode(JsonNode jsonNode, String name, boolean doConstructTree){
+		this(jsonNode, null, name, doConstructTree);
+	}
+	
+	public TwoLinkedJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name, boolean doConstructTree) {
 		m_parent = parent;
 		m_current = jsonNode;
 		m_name = name;
 		
+		if (doConstructTree)
+			constructTree();
 	}
 	
 	
