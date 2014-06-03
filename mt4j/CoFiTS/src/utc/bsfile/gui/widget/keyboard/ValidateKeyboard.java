@@ -19,8 +19,7 @@ import utc.bsfile.util.ImageManager;
 public class ValidateKeyboard extends AttachmentKeyboard {
 	public static String NAME = "Validate mt-keyboard";
 	public static int choiceViewHeight = 40;
-	private  int iconWidth = 40;
-	private  int iconHeight = 40;
+	private  int iconSize = 40;
 	private  int spacing = 10;
 	private int validateButtonWidth = 70;
 	//private MTImageButton validateButton;
@@ -58,23 +57,6 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 				return false;
 			}
 		});
-//		this.validateButton = createIconButton(validateButtonPosition, "checked-icon.png", new IGestureEventListener() {
-//			public boolean processGestureEvent(MTGestureEvent ge)
-//			{
-//				if (ge instanceof TapEvent)
-//				{
-//					TapEvent tapEvent = (TapEvent) ge;
-//
-//					if (tapEvent.isTapped() && tapEvent.getTarget() == validateButton) {
-//						ValidateKBEvent evt = new ValidateKBEvent(ValidateKeyboard.this);
-//						for (ValidateKBListener listener : vlisteners)
-//						  listener.validate(evt);
-//					}
-//				}
-//
-//				return false;
-//			}
-//		});
 		
 		//this.validateButton.setNoStroke(true);
 		addChild(this.validateButton);
@@ -85,7 +67,7 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 	{
 		MTImageButton imageButton = new MTImageButton(this.getRenderer(), ImageManager.getInstance().load(imageFilename));
 		imageButton.setAnchor(PositionAnchor.UPPER_LEFT);
-		imageButton.setWidthXYGlobal(iconWidth);
+		imageButton.setWidthXYGlobal(iconSize);
 		imageButton.setHeightXYGlobal(choiceViewHeight);
 		imageButton.setPositionGlobal(new Vector3D(position.x, position.y));
 		Theme.getTheme().applyStyle("TRANSPARENT_IMAGE_BUTTON", imageButton);

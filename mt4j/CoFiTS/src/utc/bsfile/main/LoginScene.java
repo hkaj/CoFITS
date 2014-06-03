@@ -95,6 +95,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			
 			//Update the login in the orb
 			orb.setLogin(keyboard.getText());
+			orb.centerLoginString();
 			
 		}
 		
@@ -243,16 +244,16 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		//Add a confirmation button
 		//MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
-		MTSvgButton button = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
+		MTSvgButton validateButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
 		int buttonSize = 40;
-		button.setSizeXYGlobal(buttonSize, buttonSize);
-		button.setPositionGlobal(new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 30));
+		validateButton.setSizeXYGlobal(buttonSize, buttonSize);
+		validateButton.setPositionGlobal(new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 30));
 		
 		//button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
-		button.setPickable(true);
+		validateButton.setPickable(true);
 		
 		
-		button.addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		validateButton.addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
@@ -266,7 +267,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			}
 		});
 		
-		m_listOfUsers.addChild(button);
+		m_listOfUsers.addChild(validateButton);
 		
 		getCanvas().addChild(m_listOfUsers);
 	}
@@ -277,7 +278,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 * Switch to the Project Choice Scene and Close the current one
 	 */
 	protected void launchProjectChoiceScene() {
-		setTransition(new FadeTransition(getMTApplication(), 1700));	//Set a fade transition between the two scenes
+		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
 		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application

@@ -3,7 +3,9 @@ package utc.bsfile.gui.widget.controlorb;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.input.IMTInputEventListener;
 import org.mt4j.input.gestureAction.InertiaDragAction;
+import org.mt4j.input.inputData.MTInputEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -40,6 +42,7 @@ public class ControlOrb extends MTEllipse {
 		m_loginTextField.setNoStroke(true);
 		m_loginTextField.setPickable(false);
 		m_loginTextField.setText(login);
+		centerLoginString();
 		
 		//Set the main color
 		m_color = MTColor.randomColor();
@@ -63,6 +66,10 @@ public class ControlOrb extends MTEllipse {
 		
 		//Add Events Listening Process
 		addGestureListener(DragProcessor.class, new InertiaDragAction());
+	}
+	
+	public void centerLoginString() {
+		m_loginTextField.setPositionRelativeToOther(this, new Vector3D(0, 0));
 	}
 
 	/**

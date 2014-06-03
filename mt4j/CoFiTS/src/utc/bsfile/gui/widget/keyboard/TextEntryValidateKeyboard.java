@@ -37,7 +37,7 @@ public class TextEntryValidateKeyboard extends ValidateKeyboard {
 		//Add a text area to enter a message
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
 		IFont textFont = FontManager.getInstance().createFont(pApplet, textFontStr, 32, MTColor.BLACK);
-		m_textEntry = new MTTextField(pApplet, 0, 0, 400, 40, textFont);
+		m_textEntry = new MTTextField(pApplet, 0, 0, 400, 45, textFont);
 		
 		m_textEntry.setPositionRelativeToOther(m_textEntry, new Vector3D(getWidthXY(TransformSpace.LOCAL) / 2, -30));
 		m_textEntry.setPickable(false);
