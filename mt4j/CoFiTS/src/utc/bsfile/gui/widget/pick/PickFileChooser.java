@@ -46,7 +46,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		this(applet, 0, 0, 300, 7);
 	}
 
-	private PickFileChooser(PApplet applet, int x, int y, float width,
+	public PickFileChooser(PApplet applet, int x, int y, float width,
 			int nbItem) {
 		super(applet, x, y, width, nbItem, PropertyManager.getInstance()
 				.getDirProperty(PropertyManager.FILE_PATH), FileExtensionFilter.NO_FILTER);

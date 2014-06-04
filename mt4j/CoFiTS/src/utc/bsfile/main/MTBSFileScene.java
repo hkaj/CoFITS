@@ -22,7 +22,7 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
-import processing.core.PImage;
+
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
@@ -39,6 +39,12 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		//this.registerGlobalInputProcessor(new CursorTracer(app, this));
 
+		// set orbs orientables for the present scene
+		for (ControlOrb orb : orbs) {
+			orb.setApplication(mtApplication);
+			orb.addOrientationListener(orb);
+		}
+		
 		//Display the orbs
 		for (ControlOrb orb : m_orbs){
 			orb.setVisible(true);
@@ -151,8 +157,9 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		m_pick = new PickFileChooser(getMTApplication());
-		location.translate(new Vector3D(-100,0));
+		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
+		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
 		getCanvas().addChild(m_pick);
 	}
 

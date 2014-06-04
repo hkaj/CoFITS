@@ -22,7 +22,6 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 	private  int iconSize = 40;
 	private  int spacing = 10;
 	private int validateButtonWidth = 70;
-	//private MTImageButton validateButton;
 	private MTSvgButton validateButton;
 	private HashSet<ValidateKBListener> vlisteners;
 	
@@ -58,7 +57,6 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 			}
 		});
 		
-		//this.validateButton.setNoStroke(true);
 		addChild(this.validateButton);
 		setVisible(false);
 	}

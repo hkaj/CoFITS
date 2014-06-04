@@ -1,11 +1,13 @@
 package utc.bsfile.gui.widget.controlorb;
 
 import org.mt4j.AbstractMTApplication;
+import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.input.IMTInputEventListener;
 import org.mt4j.input.gestureAction.InertiaDragAction;
-import org.mt4j.input.inputData.MTInputEvent;
+import org.mt4j.input.inputProcessors.IGestureEventListener;
+import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -27,7 +29,7 @@ public class ControlOrb extends MTEllipse {
 		this(mtApplication, centerPoint, RADIUS, RADIUS, login, keyboard);
 	}
 	
-	public ControlOrb(AbstractMTApplication mtApplication, Vector3D centerPoint, float radiusX, float radiusY, String login, DefaultKeyboard keyboard) {
+	public ControlOrb(AbstractMTApplication mtApplication, final Vector3D centerPoint, float radiusX, float radiusY, String login, DefaultKeyboard keyboard) {
 		super(mtApplication, centerPoint, radiusX, radiusY);
 		m_app = mtApplication;
 		m_keyboard = keyboard;
@@ -56,8 +58,96 @@ public class ControlOrb extends MTEllipse {
 		
 		addChild(m_loginTextField);
 		
+		addOrientationListener(this);
+		updateOrientation(centerPoint.x, centerPoint.y);
+		
 		setVisible(true);
-	}	
+	}
+
+	// ORIENTATION -------------------------------------------------------
+	
+	private float angle = 0;
+	
+	public void updateOrientation(float x, float y) {
+		float width = getApplication().width;
+		float height = getApplication().height;
+		
+		float leftDistance =  x;
+		float rightDistance = width - x;
+		float topDistance = y;
+		float bottomDistance = height - y;
+		
+		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 90);
+		}
+		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 180);
+		}
+		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 270);
+		}
+		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+			setAngle(new Vector3D(x, y), 0);
+		}
+	}
+	
+	public void updateOrientation() {
+		float width = getApplication().width;
+		float height = getApplication().height;
+		
+		float leftDistance =  getCenterPointGlobal().x;
+		float rightDistance = width - getCenterPointGlobal().x;
+		float topDistance = getCenterPointGlobal().y;
+		float bottomDistance = height - getCenterPointGlobal().y;	
+		
+		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 90);
+		}
+		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 180);
+		}
+		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 270);
+		}
+		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+			setAngle(getCenterPointGlobal(), 0);
+		}
+	}
+	
+	protected void setAngle(Vector3D centerPoint, float newAngle) {
+		rotateZGlobal(centerPoint, -angle);
+		rotateZGlobal(centerPoint, newAngle);
+		angle = newAngle;
+	}
+
+	public void addOrientationListener(MTComponent component) {
+		
+		component.addGestureListener(DragProcessor.class, new IGestureEventListener() {
+		
+		@Override
+		public boolean processGestureEvent(MTGestureEvent ge) {
+			String device = PropertyManager.getInstance().getProperty(PropertyManager.DEVICE);
+			if (device.equals("table")){
+				
+				 DragEvent th = (DragEvent) ge;
+                 switch (th.getId()) {
+                 case DragEvent.GESTURE_STARTED:
+                               break;
+                 case DragEvent.GESTURE_UPDATED:
+		     					updateOrientation();
+                               break;
+                 case DragEvent.GESTURE_ENDED:
+                               break;
+                 default:
+                               break;
+                 }
+			}
+			return false;
+		}
+		});
+	}
+	
+	//--------------------------------------------------------------------
 	
 	
 	@Override
@@ -80,6 +170,7 @@ public class ControlOrb extends MTEllipse {
 			m_keyboard.close();
 	}
 
+
 	
 	
 	//Getters & Setters
@@ -89,6 +180,7 @@ public class ControlOrb extends MTEllipse {
 	
 	public void setLogin(String login) {this.m_loginTextField.setText(login);}
 	public void setKeyboard(DefaultKeyboard keyboard){this.m_keyboard = keyboard;}
+	public void setApplication(AbstractMTApplication app){this.m_app = app;}
 	
 		
 	

@@ -60,4 +60,5 @@ public class TextEntryValidateKeyboard extends ValidateKeyboard {
 	
 	//Members
 	MTTextField m_textEntry;
+	
 }

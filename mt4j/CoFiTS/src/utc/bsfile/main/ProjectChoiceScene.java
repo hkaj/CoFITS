@@ -33,6 +33,12 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	public ProjectChoiceScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doClearOrbGestures) {
 		super(mtApplication, name, orbs, doClearOrbGestures);
 		
+		// set orbs orientables for the present scene
+		for (ControlOrb orb : orbs) {
+			orb.setApplication(mtApplication);
+			orb.addOrientationListener(orb);
+		}
+		
 		//Manage the admin Orb
 		if (!m_orbs.isEmpty()){
 			ControlOrb adminOrb = m_orbs.get(0);

@@ -6,11 +6,12 @@ import java.util.List;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
-import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.rotateProcessor.RotateProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.scaleProcessor.ScaleProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
@@ -29,7 +30,6 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.model.menu.DefaultMenuModel;
-import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
@@ -81,7 +81,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		if (m_orbs.isEmpty()){
 			playListOfUsers(new Vector3D());
-			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));			
+			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));
+			m_listOfUsers.updateOrientation();
 		}
 		
 		//Process the keyboard/orb relation
@@ -89,7 +90,9 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			
 			//Create a new orb
 			orb = playOrb(new Vector3D(), keyboard);
-			orb.setPositionRelativeToOther(keyboard, new Vector3D(0,-10));
+			orb.setPositionRelativeToOther(keyboard, new Vector3D( 40, keyboard.getHeightXY(TransformSpace.LOCAL) - 40));
+			keyboard.getColoredEllipse().setFillColor(orb.getFillColor());
+			orb.updateOrientation();
 			
 		} else {
 			
@@ -148,11 +151,35 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		//Visibility and location
 		keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
+		keyboard.updateOrientation(locationOnScreen.x, locationOnScreen.y);
+		
+		switch (keyboard.getOrientation()) { // for right handed
+			case BOTTOM :
+				keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+				break;
+			case LEFT :
+				//locationOnScreen.y -= keyboard.getWidth();
+				keyboard.translate(new Vector3D(0, - keyboard.getWidth()), TransformSpace.GLOBAL);
+				break;
+			case TOP :
+				//locationOnScreen.x += keyboard.getWidth();
+				keyboard.translate(new Vector3D(keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+				break;
+			case RIGHT :
+				//locationOnScreen.y += keyboard.getWidth();
+				keyboard.translate(new Vector3D(0, keyboard.getWidth()), TransformSpace.GLOBAL);
+				break;
+			default :
+				System.out.println("NO KEYBOARD ORIENTATION");
+				break;
+		}
+		
 		keyboard.setVisible(true);
 		
 		//Listeners
-		keyboard.addValidateKBListener(LoginScene.this);		
+		keyboard.addValidateKBListener(LoginScene.this);
 		
+		//keyboard.updateOrientation(locationOnScreen.x, locationOnScreen.y);
 		getCanvas().addChild(keyboard);
 		
 		//Improve the presentation
@@ -181,6 +208,9 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		//Tap long on the orb
 		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
+		orb.removeAllGestureEventListeners(ScaleProcessor.class);
+		orb.removeAllGestureEventListeners(RotateProcessor.class);
+		
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
 		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
@@ -227,7 +257,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void playListOfUsers(Vector3D location){		
 		m_listOfUsers.setPositionGlobal(location);
 		
-		m_listOfUsers.setVisible(true);
 		m_listOfUsers.setCloseVisible(false);
 		
 		//Add a title to the list Menu
@@ -269,6 +298,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		m_listOfUsers.addChild(validateButton);
 		
+		m_listOfUsers.setVisible(true);
 		getCanvas().addChild(m_listOfUsers);
 	}
 	
