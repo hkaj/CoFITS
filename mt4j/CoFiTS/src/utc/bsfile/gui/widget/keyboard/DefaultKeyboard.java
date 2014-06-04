@@ -24,6 +24,7 @@ import org.mt4j.components.visibleComponents.widgets.keyboard.ITextInputListener
 import org.mt4j.components.visibleComponents.widgets.keyboard.MTKey;
 import org.mt4j.input.IKeyListener;
 import org.mt4j.input.gestureAction.DefaultDragAction;
+import org.mt4j.input.gestureAction.DefaultSvgButtonClickAction;
 import org.mt4j.input.inputData.InputCursor;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;

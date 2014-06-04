@@ -7,14 +7,12 @@ import java.io.IOException;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
-import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -24,8 +22,8 @@ import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.PositionSequencer;
-import utc.bsfile.util.PropertyManager;
 import utc.bsfile.util.PositionSequencer.Orientation;
+import utc.bsfile.util.PropertyManager;
 
 
 

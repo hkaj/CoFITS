@@ -134,6 +134,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			image.setWidthXYGlobal(200);
 			image.setAnchor(PositionAnchor.CENTER);
 			image.setPositionGlobal(getCenterPointGlobal());
+			image.updateOrientation();
 			getParent().addChild(image);
 			
 		} else if (FileExtensionFilter.PDF_FILTER.accept(file)) {
@@ -141,6 +142,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
+			pdfWidget.updateOrientation();
 			getParent().addChild(pdfWidget);
 	 		pdf.addPDFListener(pdfWidget);
 			

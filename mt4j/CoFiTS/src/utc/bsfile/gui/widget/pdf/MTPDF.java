@@ -2,12 +2,15 @@ package utc.bsfile.gui.widget.pdf;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.MTApplication;
+import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.flickProcessor.FlickEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.flickProcessor.FlickEvent.FlickDirection;
 import org.mt4j.input.inputProcessors.componentProcessors.flickProcessor.FlickProcessor;
@@ -25,6 +28,7 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import utc.bsfile.gui.widget.pdf.PDFListener;
 import utc.bsfile.model.pdf.PDFModel;
+import utc.bsfile.util.PropertyManager;
 
 public class MTPDF extends MTRectangle implements PDFListener {
 	private static int LARGE_MOVE = 5;
@@ -94,9 +98,92 @@ public class MTPDF extends MTRectangle implements PDFListener {
 			this.setTexture(img);
 			setGestureClassic();
 			createGestureArea();
+			addOrientationListener(this);
 		}
-
 	}
+	
+	float angle = 0;
+	
+	public void updateOrientation(float x, float y) {
+		float width = pApplet.width;
+		float height = pApplet.height;
+		
+		float leftDistance =  x;
+		float rightDistance = width - x;
+		float topDistance = y;
+		float bottomDistance = height - y;	
+		
+		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 90);
+		}
+		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 180);
+		}
+		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+			setAngle(new Vector3D(x, y), 270);
+		}
+		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+			setAngle(new Vector3D(x, y), 0);
+		}
+	}
+	
+	public void updateOrientation() {
+		float width = pApplet.width;
+		float height = pApplet.height;
+		
+		float leftDistance =  getCenterPointGlobal().x;
+		float rightDistance = width - getCenterPointGlobal().x;
+		float topDistance = getCenterPointGlobal().y;
+		float bottomDistance = height - getCenterPointGlobal().y;	
+		
+		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 90);
+		}
+		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 180);
+		}
+		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+			setAngle(getCenterPointGlobal(), 270);
+		}
+		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+			setAngle(getCenterPointGlobal(), 0);
+		}
+	}
+	
+	protected void setAngle(Vector3D centerPoint, float newAngle) {
+		rotateZGlobal(centerPoint, -angle);
+		rotateZGlobal(centerPoint, newAngle);
+		angle = newAngle;
+	}
+
+	public void addOrientationListener(MTComponent component) {
+		
+		component.addGestureListener(DragProcessor.class, new IGestureEventListener() {
+		
+		@Override
+		public boolean processGestureEvent(MTGestureEvent ge) {
+			String device = PropertyManager.getInstance().getProperty(PropertyManager.DEVICE);
+			if (device.equals("table")){
+				
+				 DragEvent th = (DragEvent) ge;
+                 switch (th.getId()) {
+                 case DragEvent.GESTURE_STARTED:
+                               break;
+                 case DragEvent.GESTURE_UPDATED:
+                	 updateOrientation(th.getDragCursor().getPosition().x, th.getDragCursor().getPosition().y);
+                               break;
+                 case DragEvent.GESTURE_ENDED:
+                               break;
+                 default:
+                               break;
+                 }
+			}
+			return false;
+		}
+		});
+	}
+	
+	//--------------------------------------------------------------------
 
 	public void createGestureArea() {
 		NavigationFlickController ctrlFlick = new NavigationFlickController();
