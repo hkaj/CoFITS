@@ -2,6 +2,8 @@ package utc.bsfile.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -119,19 +121,100 @@ public class FilePathManager {
 	 * Create a new text file and write some content in it
 	 */
 	public void createTextFile(File filePath, String content){
-		try { 
 			//If file does not exists, create it			
-			if (!filePath.exists()) {
-				filePath.createNewFile();
+			if (filePath.exists()) {
+				System.err.println("The file : " + filePath.getAbsolutePath() + " already exists");
+			} else {
+				try {
+					filePath.createNewFile();
+				} catch (IOException e) {
+					System.err.println("Unabled to create file : " + filePath.getAbsolutePath());
+					e.printStackTrace();
+				}
 			}
  
-			FileWriter fw = new FileWriter(filePath.getAbsoluteFile());
-			BufferedWriter bw = new BufferedWriter(fw);
-			bw.write(content);
-			bw.close();
- 
-		} catch (IOException e) {
-			e.printStackTrace();
+			
+	}
+	
+	
+	public void appendTextFile(String filename, String content){
+		appendTextFile(new File(filename), content);
+	}
+	
+	
+	/**
+	 * @param filePath - The file to append text to
+	 * @param content - text to be appended to file
+	 * Append text to a file
+	 */
+	public void appendTextFile(File filePath, String content){
+		if (filePath.exists()){
+			System.err.println("File : " + filePath.getAbsolutePath() + " does not exist");
+		} else {
+			try { 
+				FileWriter fw = new FileWriter(filePath.getAbsoluteFile());
+				BufferedWriter bw = new BufferedWriter(fw);
+				bw.write(content);
+				bw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	public void createBinaryFile(String filename, byte[] content){
+		createBinaryFile(new File(filename), content);
+	}
+	
+	/**
+	 * @param filePath - The path where to create the file
+	 * @param content - Binary content of the new file
+	 * Create a new binary file and write some content in it
+	 */
+	public void createBinaryFile(File filePath, byte[] content){
+		//If file does not exists, create it			
+		if (filePath.exists()) {
+			System.err.println("The file : " + filePath.getAbsolutePath() + " already exists");
+		} else {
+			try {
+				filePath.createNewFile();
+			} catch (IOException e) {
+				System.err.println("Unabled to create File : " + filePath.getAbsolutePath());
+				e.printStackTrace();
+			}
+			
+			appendBinaryFile(filePath, content);
+		}
+	}
+	
+	
+	public void appendBinaryFile(String filename, byte[] content){
+		appendBinaryFile(new File(filename), content);
+	}
+	
+	/**
+	 * @param filePath - The file to append content to
+	 * @param content - content to be appended to file
+	 * Append binary content to a file
+	 */
+	public void appendBinaryFile(File filePath, byte[] content){
+		
+		if(!filePath.exists()){
+			System.err.println("File : " + filePath.getAbsolutePath() + " does not exist");
+		} else {
+			FileOutputStream outputStream = null;
+			try {
+				outputStream = new FileOutputStream(filePath, true);
+				outputStream.write(content);
+				outputStream.close();
+			} catch (FileNotFoundException e) {
+				System.err.println("Unabled to open file : " + filePath.getAbsolutePath());
+				e.printStackTrace();
+			} catch (IOException e) {
+				System.err.println("Unabled to write into/close file : " + filePath.getAbsolutePath());
+				e.printStackTrace();
+			}
 		}
 	}
 }
