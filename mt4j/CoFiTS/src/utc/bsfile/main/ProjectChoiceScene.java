@@ -147,6 +147,12 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);		
+	}
+
+
+	@Override
+	protected void processFileDownloaded(String filename) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -13,6 +13,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
@@ -104,17 +105,22 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals("projectsArchitectureRootNode changed")){
 			setProjectsArchitectureRootNode((TwoLinkedJsonNode)evt.getNewValue());
+		} else if (evt.getPropertyName().equals("File Received")){
+			processFileDownloaded((String)evt.getNewValue());
 		}
 	}
 	
+	protected abstract void processFileDownloaded(String filename);
+
 	//Getters & Setters
 	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
 	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node;}
+	public final CofitsGuiAgent getAgent(){return m_agent;}
 	
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
-	
+	protected CofitsGuiAgent m_agent = null;
 	
 }

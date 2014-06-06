@@ -3,6 +3,7 @@ package utc.bsfile.model.agent.behaviours;
 import java.util.Vector;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import utc.bsfile.model.agent.CofitsGuiAgent;
 import jade.core.Agent;
 import jade.core.behaviours.SequentialBehaviour;
 import jade.lang.acl.ACLMessage;
@@ -15,6 +16,7 @@ public class ReceiveFile extends SequentialBehaviour {
 		//TODO set nb part expected
 		m_partsReceivedBehaviours = new Vector<ReceivePartOfFile>();
 		m_newMessages = queue;
+		m_agent = (CofitsGuiAgent) a;
 	}
 	
 	
@@ -59,10 +61,22 @@ public class ReceiveFile extends SequentialBehaviour {
 		notify();
 	}
 
+	@Override
+	public int onEnd() {
+		m_agent.receiveFileBehaviourEnd(this);
+		return super.onEnd();
+	}
+	
+	
+	//Getters & Setters
+	public final String getConversationId(){return m_initialMessage.getConversationId();}
+	public final String getFilename(){return "";}	//TODO Set the right filename
+	
 	//Members
 	private ACLMessage m_initialMessage;
 	private int m_nbPartReceived = 0;
 	private int m_nbPartExpected;
 	private Vector<ReceivePartOfFile> m_partsReceivedBehaviours;
 	private LinkedBlockingQueue<ACLMessage> m_newMessages = new LinkedBlockingQueue<ACLMessage>();
+	private CofitsGuiAgent m_agent;
 }

@@ -10,7 +10,9 @@ import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.action.SelectPickAction;
 import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
+import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import jade.core.NotFoundException;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.gui.GuiAgent;
@@ -20,6 +22,7 @@ import jade.lang.acl.ACLMessage;
 public class CofitsGuiAgent extends GuiAgent {
 	
 	private static final long serialVersionUID = 1L;
+	public static final int DOWNLOAD_FILE = 1;
 
 	@Override
 	protected void setup() {
@@ -27,14 +30,19 @@ public class CofitsGuiAgent extends GuiAgent {
 		CofitsDesignScene scene = (CofitsDesignScene) getArguments()[0];
 		addPropertyChangeListener(scene);
 		
+		firePropertyChange("Agent Created", null, this);
+		
 		addBehaviour(new LaunchPickBehaviour(scene));
 		addBehaviour(new ReceiveMessageBehaviour(this));
 		
 	}
 
 	@Override
-	protected void onGuiEvent(GuiEvent arg0) {
-
+	protected void onGuiEvent(GuiEvent evt) {
+		if (evt.getType() == DOWNLOAD_FILE){
+			int fileId = (Integer) evt.getParameter(0);
+			addBehaviour(new RequestDownloadFile(this, fileId));
+		}
 	}
 
 	private class LaunchPickBehaviour extends OneShotBehaviour {
@@ -117,6 +125,28 @@ public class CofitsGuiAgent extends GuiAgent {
 			putBack(message);
 		}
 		
+	}
+	
+	
+	/**
+	 * @param receiveFile - ReceiveFile behaviour which ends
+	 * Remove every reference of the behaviour and interrupt its thread.
+	 */
+	public void receiveFileBehaviourEnd(ReceiveFile receiveFile) {
+		String conversationId = receiveFile.getConversationId();
+		m_receiveFileBehaviours.remove(conversationId);
+		m_receiveFileMessagesQueues.remove(conversationId);
+		
+		firePropertyChange("File Received", null, receiveFile.getFilename());
+		
+		//Interrupt the thread
+		//TODO Check whether this step is needed or not
+		try {
+			m_threadedBehaviourFactory.interrupt(receiveFile);
+		} catch (NotFoundException e) {
+			System.err.println("Unabled to interrupt receive file thread with conversation id : " + conversationId);
+			e.printStackTrace();
+		}
 	}
 	
 	

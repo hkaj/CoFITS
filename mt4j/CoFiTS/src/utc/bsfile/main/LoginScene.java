@@ -296,6 +296,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		System.out.println("Something changed");
 	}
 		
@@ -308,6 +309,12 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		}
 		
 		super.close();
+	}
+	
+	
+	@Override
+	protected void processFileDownloaded(String filename) {
+		// TODO Auto-generated method stub		
 	}
 	
 	
