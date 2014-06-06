@@ -12,6 +12,7 @@ import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
@@ -83,8 +84,11 @@ public class CofitsGuiAgent extends GuiAgent {
 		if (m_receiveFileBehaviours.get(conversationId) == null){
 			LinkedBlockingQueue<ACLMessage> newQueue = new LinkedBlockingQueue<ACLMessage>();
 			ReceiveFile newReceiveFileBehav = new ReceiveFile(this, message, newQueue);
+			
+			newReceiveFileBehav = (ReceiveFile) m_threadedBehaviourFactory.wrap(newReceiveFileBehav); 
 			m_receiveFileBehaviours.put(conversationId, newReceiveFileBehav);
 			m_receiveFileMessagesQueues.put(conversationId, newQueue);
+			newReceiveFileBehav.initSequentialBehaviour();
 		} else {
 			System.err.println("Behaviour with the conversation id : " + conversationId + " already exists");
 		}
@@ -105,7 +109,9 @@ public class CofitsGuiAgent extends GuiAgent {
 				System.err.println("Unabled to add new message in queue of conversation id receive file behaviour : " + conversationId);
 				e.printStackTrace();
 			}
-			//TODO wake the thread up
+
+			//Wake up the behaviour
+			m_receiveFileBehaviours.get(conversationId).notifySelf();
 		} else {
 			System.err.println("Agreement message might have not been received yet for conversation id : " + conversationId);
 			putBack(message);
@@ -127,6 +133,7 @@ public class CofitsGuiAgent extends GuiAgent {
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	private Map<String, ReceiveFile> m_receiveFileBehaviours = new HashMap<String, ReceiveFile>();
-	private Map<String, LinkedBlockingQueue<ACLMessage> > m_receiveFileMessagesQueues = new HashMap<String, LinkedBlockingQueue<ACLMessage> >();  
+	private Map<String, LinkedBlockingQueue<ACLMessage> > m_receiveFileMessagesQueues = new HashMap<String, LinkedBlockingQueue<ACLMessage> >();
+	private ThreadedBehaviourFactory m_threadedBehaviourFactory = new ThreadedBehaviourFactory();
 
 }

@@ -15,14 +15,18 @@ public class ReceiveFile extends SequentialBehaviour {
 		//TODO set nb part expected
 		m_partsReceivedBehaviours = new Vector<ReceivePartOfFile>();
 		m_newMessages = queue;
-		
-		initSequentialBehaviour();
 	}
 	
 	
-	private void initSequentialBehaviour() {
+	public synchronized void initSequentialBehaviour() {
 		while (m_nbPartReceived < m_nbPartExpected){
-			//TODO wait for agent to add new messages in new Messages
+			//Wait for agent to add new messages in new messages queue
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				System.err.println("Unabled to wait in the Thread managing conversation with id : " + m_initialMessage.getConversationId());
+				e.printStackTrace();
+			}
 			
 			//The thread had been activated, a new message is available
 			ACLMessage message = m_newMessages.poll();
@@ -50,6 +54,10 @@ public class ReceiveFile extends SequentialBehaviour {
 		myAgent.addBehaviour(this);
 	}
 
+	
+	public synchronized void notifySelf(){
+		notify();
+	}
 
 	//Members
 	private ACLMessage m_initialMessage;
