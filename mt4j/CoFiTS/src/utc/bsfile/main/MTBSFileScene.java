@@ -164,7 +164,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			fileChooser.createFileViewer(file);
 		} else {
 			String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
-			int fileId = 0;	//TODO Find the ID
+			int fileId = m_files.get(filename).getId();
 			fileChooser.addFileToOpen(filename);
 			
 			//Send a gui event to the agent

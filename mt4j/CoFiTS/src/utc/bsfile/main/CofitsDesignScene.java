@@ -3,8 +3,13 @@ package utc.bsfile.main;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.MTComponent;
@@ -13,6 +18,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
@@ -112,15 +118,48 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	
 	protected abstract void processFileDownloaded(String filename);
 
+	
+	/**
+	 * Generate a map to easily have the link between id and filename for a file
+	 */
+	private void generateFilesMap() {
+		//TODO Find another place to do that
+		m_files.clear();
+		
+		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
+			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
+				for (TwoLinkedJsonNode fileNodes : sessionNodes.getChildren()){
+					String filename = fileNodes.getName();
+					int id = fileNodes.getCurrent().path("id").asInt();
+					boolean isLocal = fileNodes.getCurrent().path("local").asBoolean();
+					
+					Date lastModified = null;
+					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+					try {
+						lastModified = formatter.parse(fileNodes.getCurrent().path("last_modified").asText());
+					} catch (ParseException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					m_files.put(filename, new CofitsFile(id, filename, lastModified, isLocal));
+				}
+			}
+		}
+	}
+	
 	//Getters & Setters
 	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
-	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node;}
+	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node; generateFilesMap();}
+
 	public final CofitsGuiAgent getAgent(){return m_agent;}
-	
+	public final Map<String,CofitsFile> getFiles(){return m_files;}
+	public final CofitsFile getFile(String filename){return m_files.get(filename);}
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	protected CofitsGuiAgent m_agent = null;
+	protected Map<String,CofitsFile> m_files = new HashMap<String,CofitsFile>();
 	
 }
