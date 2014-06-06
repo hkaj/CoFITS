@@ -12,9 +12,14 @@ import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import jade.core.AID;
 import jade.core.NotFoundException;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 import jade.lang.acl.ACLMessage;
@@ -147,6 +152,29 @@ public class CofitsGuiAgent extends GuiAgent {
 			System.err.println("Unabled to interrupt receive file thread with conversation id : " + conversationId);
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * @return The server AID
+	 * Search for the server AID in DFAgent
+	 */
+	public AID searchServer() {
+		DFAgentDescription template = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		DFAgentDescription[] result = null;
+		
+		sd.setType("ReceiverAgent");
+		sd.setName("receiver");
+		template.addServices(sd);
+		
+		try {
+			result = DFService.search(this, template);
+		}catch (FIPAException e) {
+			e.printStackTrace();
+		}
+		
+		return result[0].getName();
 	}
 	
 	
