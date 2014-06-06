@@ -9,11 +9,12 @@ import jade.lang.acl.ACLMessage;
 
 public class ReceiveFile extends SequentialBehaviour {
 
-	public ReceiveFile(Agent a, ACLMessage message) {
+	public ReceiveFile(Agent a, ACLMessage message, LinkedBlockingQueue<ACLMessage> queue) {
 		super(a);
 		m_initialMessage = message;
 		//TODO set nb part expected
 		m_partsReceivedBehaviours = new Vector<ReceivePartOfFile>();
+		m_newMessages = queue;
 		
 		initSequentialBehaviour();
 	}
