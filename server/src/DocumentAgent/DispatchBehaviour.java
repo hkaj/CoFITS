@@ -33,7 +33,7 @@ public class DispatchBehaviour extends CyclicBehaviour
 		if (message != null)
 		{
 			final String content =  message.getContent();
-//			System.out.println("DispatchBehaviour : "+ content);
+			System.out.println("DispatchBehaviour : "+ content);
 			final ObjectMapper mapper = new ObjectMapper();
 			mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 			BaseRequest req;

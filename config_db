@@ -1,0 +1,32 @@
+su postgres
+
+psql
+
+CREATE USER documentagent superuser;
+ALTER USER documentAgent WITH PASSWORD 'cofits';
+ALTER USER postgres WITH PASSWORD 'cofits';
+
+nano /etc/postgres/9.3/main/pg_hba.conf
+
+Replace:
+local	all	all			peer
+By:
+local	all	all			md5
+
+Add at the end:
+host	all		all		0.0.0.0/0 	md5
+
+nano /etc/postgresql/9.3/main/postgresql.conf
+
+Replace:
+#listen_addresses='localhost'
+By:
+listen_addresses='*'
+
+/etc/init.d/postgresql restart
+
+Once the server has restarted, try to log in with postgres user:
+
+psql -U postgres (you just set the password to cofits)
+If that works try again with documentAgent this time:
+psql -U postgres -d postgres (the password is also cofits)

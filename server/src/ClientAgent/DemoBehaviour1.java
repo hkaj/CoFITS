@@ -71,6 +71,7 @@ public final class DemoBehaviour1 extends Behaviour
 		this.myAgent.send(message);
 		System.out.println("waiting for the response...");
 		final ACLMessage answer = this.myAgent.blockingReceive();
+		System.out.println("Response : " + answer.getContent());
 		final ObjectMapper mapper = new ObjectMapper();
 		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
 		
