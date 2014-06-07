@@ -6,8 +6,14 @@ import java.beans.PropertyChangeSupport;
 import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.action.SelectPickAction;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
+import utc.bsfile.model.agent.behaviours.RequestProjectsStructure;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.domain.DFService;
+import jade.domain.FIPAException;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.gui.GuiAgent;
 import jade.gui.GuiEvent;
 
@@ -23,6 +29,7 @@ public class CofitsGuiAgent extends GuiAgent {
 		
 		addBehaviour(new LaunchPickBehaviour(scene));
 		addBehaviour(new ReceiveMessageBehaviour(this));
+		addBehaviour(new RequestProjectsStructure(this));
 		
 	}
 
@@ -67,6 +74,29 @@ public class CofitsGuiAgent extends GuiAgent {
 	public void firePropertyChange(String propertyName, Object oldValue, Object newValue){
 		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
 	}
+	
+	
+	/**
+	 +	 * @return The server AID
+	 +	 * Search for the server AID in DFAgent
+	 +	 */
+	 public AID searchServer() {
+	 	DFAgentDescription template = new DFAgentDescription();
+	 	ServiceDescription sd = new ServiceDescription();
+	 	DFAgentDescription[] result = null;
+	 	
+	 	sd.setType("ReceiverAgent");
+	 	sd.setName("receiver");
+	 	template.addServices(sd);
+	 	
+	 	try {
+	 		result = DFService.search(this, template);
+	 	}catch (FIPAException e) {
+	 		e.printStackTrace();
+	 	}
+	 	
+	 	return result[0].getName();
+	 }
 	
 	
 	//Getters & Setters
