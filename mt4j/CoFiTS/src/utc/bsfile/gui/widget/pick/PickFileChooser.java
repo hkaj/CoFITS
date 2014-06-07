@@ -1,8 +1,6 @@
 package utc.bsfile.gui.widget.pick;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
@@ -176,8 +174,6 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			metaWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(metaWidget);
 		}
-		
-		m_filesToOpen.remove(filepath.getAbsolutePath());
 	}
 
 	@Override
@@ -297,13 +293,5 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 				break;
 		}
 	}
-	
-	
-	//Getters & Setters
-	public final Set<String> getFilesToOpen(){return m_filesToOpen;}
-	public void addFileToOpen(String filename) {m_filesToOpen.add(filename);}
-	
-	//Members
-	private Set<String> m_filesToOpen = new HashSet<String>();
 
 }

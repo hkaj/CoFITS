@@ -4,7 +4,9 @@ import jade.gui.GuiEvent;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -149,12 +151,14 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	@Override
 	protected void processFileDownloaded(String filename) {
-				
+		File file = new File(filename);
+		if(m_filesToOpen.containsKey(file.getAbsolutePath())){
+			m_filesToOpen.get(file.getAbsolutePath()).createFileViewer(file);
+			m_filesToOpen.remove(file.getAbsolutePath());
+		}
 	}
 	
-	//Members
-	AbstractShape m_pick;
-
+	
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
 		final File file = new File(choiceEvent.getChoice());
@@ -165,7 +169,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		} else {
 			String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
 			int fileId = m_files.get(filename).getId();
-			fileChooser.addFileToOpen(filename);
+			addFileToOpen(filename, fileChooser);
 			
 			//Send a gui event to the agent
 			GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
@@ -184,5 +188,15 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		// TODO Auto-generated method stub
 		
 	} 
+	
+	
+	//Getters & Setters
+	public final Map<String, PickFileChooser> getFilesToOpen(){return m_filesToOpen;}
+	public void addFileToOpen(String filename, PickFileChooser fileChooser) {m_filesToOpen.put(filename, fileChooser);}
+	
+	
+	//Members
+	AbstractShape m_pick;
+	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
 
 }
