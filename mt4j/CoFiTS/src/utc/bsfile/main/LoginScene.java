@@ -314,7 +314,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	@Override
 	protected void processFileDownloaded(String filename) {
-		// TODO Auto-generated method stub		
+		super.processFileDownloaded(filename);	
 	}
 	
 	

@@ -1,6 +1,5 @@
 package utc.bsfile.gui.widget.menu;
 
-import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;

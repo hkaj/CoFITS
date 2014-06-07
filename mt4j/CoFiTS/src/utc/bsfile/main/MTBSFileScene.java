@@ -151,6 +151,8 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	@Override
 	protected void processFileDownloaded(String filename) {
+		super.processFileDownloaded(filename);
+		
 		File file = new File(filename);
 		if(m_filesToOpen.containsKey(file.getAbsolutePath())){
 			m_filesToOpen.get(file.getAbsolutePath()).createFileViewer(file);
@@ -162,12 +164,12 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
 		final File file = new File(choiceEvent.getChoice());
+		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
 		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
 		
-		if (file.exists()){	
+		if (m_files.get(filename).isLocal()){	
 			fileChooser.createFileViewer(file);
 		} else {
-			String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
 			int fileId = m_files.get(filename).getId();
 			addFileToOpen(filename, fileChooser);
 			

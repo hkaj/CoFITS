@@ -3,10 +3,7 @@ package utc.bsfile.main;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +113,9 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		}
 	}
 	
-	protected abstract void processFileDownloaded(String filename);
+	protected void processFileDownloaded(String filename){
+		m_files.get(filename).setLocal(true);
+	}
 
 	
 	/**
@@ -128,21 +127,8 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		
 		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
 			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
-				for (TwoLinkedJsonNode fileNodes : sessionNodes.getChildren()){
-					String filename = fileNodes.getName();
-					int id = fileNodes.getCurrent().path("id").asInt();
-					boolean isLocal = fileNodes.getCurrent().path("local").asBoolean();
-					
-					Date lastModified = null;
-					SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-					try {
-						lastModified = formatter.parse(fileNodes.getCurrent().path("last_modified").asText());
-					} catch (ParseException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
-					m_files.put(filename, new CofitsFile(id, filename, lastModified, isLocal));
+				for (TwoLinkedJsonNode fileNode : sessionNodes.getChildren()){	
+					m_files.put(fileNode.getName(), new CofitsFile(fileNode));
 				}
 			}
 		}
@@ -160,6 +146,6 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	protected CofitsGuiAgent m_agent = null;
-	protected Map<String,CofitsFile> m_files = new HashMap<String,CofitsFile>();
+	protected Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
 	
 }

@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.HashMap;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
