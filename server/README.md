@@ -10,13 +10,13 @@ $ psql
 **Creation de l'agent du serveur**
 ```sql
 CREATE USER documentagent superuser;
-ALTER USER documentAgent WITH PASSWORD 'cofits';
+ALTER USER documentagent WITH PASSWORD 'cofits';
 ALTER USER postgres WITH PASSWORD 'cofits';
 ```
 
 **Configuration du serveur postgresql**
 
-Commencons par configurer les modalites de connexion.
+Configurer les modalites de connexion :
 
 ```bash
 nano /etc/postgres/9.3/main/pg_hba.conf
@@ -24,11 +24,11 @@ nano /etc/postgres/9.3/main/pg_hba.conf
 
 Remplacer :
 ```
-local	all	all			peer
+local	all   all			peer
 ```
 par :
 ```
-local	all	all			md5
+local	all   all			md5
 ```
 
 Et ajouter a la fin du fichier :
@@ -36,7 +36,7 @@ Et ajouter a la fin du fichier :
 host	all		all		0.0.0.0/0 	md5
 ```
 
-Puis configurons le serveur pour ecouter sur toutes ses interfaces :
+Puis configurer le serveur pour ecouter sur toutes ses interfaces :
 
 ```
 nano /etc/postgresql/9.3/main/postgresql.conf
@@ -51,12 +51,12 @@ Par :
 listen_addresses='*'
 ```
 
-Et enfin on redemarre le serveur :
+Et enfin redemarrer le serveur :
 ```
 /etc/init.d/postgresql restart
 ```
 
-Une fois que le serveur a redemarre, essayons de se connecter avec postgres :
+Une fois que le serveur a redemarre, essayons de se connecter avec l'utilisateur postgres :
 
 ```
 cd server/database
