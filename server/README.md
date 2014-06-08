@@ -97,3 +97,4 @@ Un diagramme des tables est disponible dans le dossier **about**.
 ## TODO:
 
 - Retourner des messages d'erreurs au lieu de rien en cas d'erreur serveur.
+- Ameliorer le stockage des documents dans le file system du serveur.
