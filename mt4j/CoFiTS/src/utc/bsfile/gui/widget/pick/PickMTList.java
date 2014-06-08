@@ -239,12 +239,13 @@ public class PickMTList extends MTClipRectangle {
 	 * ScrollBar
 	 */
 	public void createScrollBar(PApplet applet, int nbItems) {
-		scrollBar = new MTRectangle(applet, 10, 200);
-		scrollBar.setPositionRelativeToParent(new Vector3D(290, 150));
+		int height = 465;
+		scrollBar = new MTRectangle(applet, 10, height);
+		scrollBar.setPositionRelativeToParent(new Vector3D(285, 150));
 		scrollBar.setFillColor(new MTColor(140, 210, 210, 240));
 		scrollBar.setStrokeColor(MTColor.BLACK);
 
-		float buttonHeight = (5*200)/nbItems;
+		float buttonHeight = (7*height)/nbItems;
 		if (buttonHeight < 10) {
 			buttonHeight = 10;
 		}

@@ -42,6 +42,7 @@ import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.KeyInfoFactory.KeyInfo;
 
 /**
@@ -615,6 +616,12 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 				}// switch
 			}// processanimation
 		});
+		
+		//Detach the orb
+		if (m_controlOrb != null){
+			m_controlOrb.setKeyboard(null);
+		}
+		
 		keybCloseAnim.start();
 	}
 
@@ -835,5 +842,13 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		}
 	}
 	
+	//Getters & Setters
+	public ControlOrb getControlOrb() {return m_controlOrb;}
+	public long getLastPressed() {return lastPressed;}
+	
+	public void setControlOrb(ControlOrb orb) {this.m_controlOrb = orb;}
+	
+	//Members
+	private ControlOrb m_controlOrb;
 
 }

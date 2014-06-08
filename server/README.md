@@ -2,36 +2,91 @@
 
 Les instructions suivantes supposent que postgresql est installe sur le serveur et qu'elles sont lancees par l'utilisateur **postgres**.
 
-Configuration pour accès extérieur :
-
-http://www.cyberciti.biz/tips/postgres-allow-remote-access-tcp-connection.html
-
-Configuration pour utilisateur de modification :
-
-http://www.postgresql.org/docs/9.0/static/sql-grant.html
-
-Commencer par lancer psql depuis le dossier database, tout simplement :
+Commencer par lancer psql, tout simplement :
 ```bash
-$ cd database
 $ psql
 ```
 
 **Creation de l'agent du serveur**
 ```sql
-CREATE User documentAgent;
-ALTER USER documentagent WITH PASSWORD '1234' ;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO documentAgent;
-GRANT INSERT ON ALL TABLES IN SCHEMA public TO documentAgent;
-GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO documentagent;
+CREATE USER documentagent superuser;
+ALTER USER documentagent WITH PASSWORD 'cofits';
+ALTER USER postgres WITH PASSWORD 'cofits';
 ```
+
+**Configuration du serveur postgresql**
+
+Configurer les modalites de connexion :
+
+```bash
+nano /etc/postgres/9.3/main/pg_hba.conf
+```
+
+Remplacer :
+```
+local	all   all			peer
+```
+par :
+```
+local	all   all			md5
+```
+
+Et ajouter a la fin du fichier :
+```
+host	all		all		0.0.0.0/0 	md5
+```
+
+Puis configurer le serveur pour ecouter sur toutes ses interfaces :
+
+```
+nano /etc/postgresql/9.3/main/postgresql.conf
+```
+
+Remplacer :
+```
+#listen_addresses='localhost'
+```
+Par :
+```
+listen_addresses='*'
+```
+
+Et enfin redemarrer le serveur :
+```
+/etc/init.d/postgresql restart
+```
+
+Une fois que le serveur a redemarre, essayons de se connecter avec l'utilisateur postgres :
+
+```
+cd server/database
+psql -U postgres
+```
+
+Profitons-en pour creer la DB :
 
 **Creation et remplissage des tables (avec des donnees d'exemple)**
 ```sql
 \i create_db.sql
 \i populate_db.sql
+\q
 ```
 
-**Suppression des tables**
+Verifions ensuite que documentagent fonctionne egalement :
+
+```
+psql -U documentagent -d postgres
+```
+
+Enfin on peut tenter une connexion distante, pour cela executer depuis la machine cliente :
+
+```
+psql -h <ip_du_server> -U documentagent -d postgres
+```
+
+Pour obtenir l'IP du serveur, executer __ifconfig__ depuis le serveur et copier l'adresse de la bonne interface.
+
+**Suppression des tables (just in case)**
 
 ```sql
 \i purge_db.sql

@@ -20,13 +20,13 @@ public class StartBSFile extends MTApplication {
 	@Override
 	public void startUp() {
 		//Launching the Scene
-		MTBSFileScene scene = new MTBSFileScene(this, "Multi-touch File Brainstorming");
+		LoginScene logScene = new LoginScene(this, "Logging scene");
 		
 		//Launching the Agent
 		//launchAgentContainer(scene);
 		
 		//Add the Scene to the Application
-		addScene(scene);
+		addScene(logScene);
 	}
 	
 	
