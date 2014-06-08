@@ -1,9 +1,7 @@
 package Tests;
 
-import java.sql.Timestamp;
-
 import ModelObjects.Document;
-import ModelObjects.Session;
+import ModelObjects.Project;
 import Requests.LinkRequest;
 import Requests.Relation;
 import SpecialisedRelations.MobilizedIn;
@@ -17,7 +15,7 @@ public abstract class TestLinkRequest
 	public static void main(String[] args)
 	{
 		final Document subject = new Document(0, "le journal du lundi", "pdf");
-		final Relation r = new MobilizedIn(new Session("projet_ia04",new Timestamp(System.currentTimeMillis()).toString()));
+		final Relation r = new MobilizedIn(new Project("projet_ia04_0","","",""));
 		LinkRequest req = new LinkRequest(subject,r);
 		System.out.println(req.toSQL());
 	}

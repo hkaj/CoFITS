@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import Constants.RequestConstants;
+import ModelObjects.Project;
 import ModelObjects.Session;
 import Requests.Filter;
 import Requests.Predicate;
@@ -26,7 +27,7 @@ public class TestSelectRequest
 	{
 		ArrayList<Predicate> p = new ArrayList<Predicate>();
 		p.add(new Filter("name","la vie des moineaux"));
-		p.add(new MobilizedIn(new Session("projet_ia04",new Timestamp(System.currentTimeMillis()).toString())));
+		p.add(new MobilizedIn(new Project("projet_ia04_0","","","")));
 		SelectRequest sr = new SelectRequest(RequestConstants.objectTypes.document, p.toArray(new Predicate[0]));
 		System.out.println(sr.toSQL());
 	}
@@ -35,7 +36,7 @@ public class TestSelectRequest
 	{
 		ArrayList<Predicate> p = new ArrayList<Predicate>();
 		p.add(new Filter("login","narichar"));
-		p.add(new MobilizedIn(new Session("projet_ia04",new Timestamp(System.currentTimeMillis()).toString())));
+		p.add(new MobilizedIn(new Project("projet_ia04_0","","","")));
 		SelectRequest sr = new SelectRequest(RequestConstants.objectTypes.user, p.toArray(new Predicate[0]));
 		System.out.println(sr.toSQL());
 	}

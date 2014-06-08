@@ -13,6 +13,7 @@ import Constants.RequestConstants.objectTypes;
 import ModelObjects.BinaryContent;
 import ModelObjects.Document;
 import ModelObjects.ModelObject;
+import ModelObjects.Project;
 import ModelObjects.Session;
 import Requests.DownloadRequest;
 import Requests.Predicate;
@@ -27,6 +28,7 @@ public final class DemoBehaviour2 extends Behaviour
 	int step = 0;
 	AID dest;
 	Session session;
+	Project project;
 	Document doc;
 //	MessageTemplate filter=null;
 	public DemoBehaviour2()
@@ -59,7 +61,7 @@ public final class DemoBehaviour2 extends Behaviour
 	
 	private void selectDocument()
 	{
-		Predicate p[] ={new MobilizedIn(session)};
+		Predicate p[] ={new MobilizedIn(project)};
 		final SelectRequest request = new SelectRequest(objectTypes.document,p );
 		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import Constants.RequestConstants;
 import ModelObjects.Document;
+import ModelObjects.Project;
 import ModelObjects.Session;
 import Requests.AddRequest;
 import Requests.DownloadRequest;
@@ -92,6 +93,7 @@ public class SendRequestBehaviour extends OneShotBehaviour
 	{
 		final Document doc = new Document(21, "le journal du lundi", "pdf");
 		final Session session = new Session("projet sr04",new Timestamp(System.currentTimeMillis()).toString());
+		final Project project = new Project("projet_sr04_0", "","","");
 		System.out.println(session.getDate().toString());
 		
 		final AddRequest r1 = new AddRequest(doc);
@@ -106,7 +108,7 @@ public class SendRequestBehaviour extends OneShotBehaviour
 		message.setContent(r2.toJSON());
 		this.myAgent.send(message);
 		
-		final Relation rel = new MobilizedIn(session);
+		final Relation rel = new MobilizedIn(project);
 		final LinkRequest req = new LinkRequest(doc,rel);
 		message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);

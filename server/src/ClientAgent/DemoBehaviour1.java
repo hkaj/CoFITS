@@ -15,6 +15,7 @@ import Constants.RequestConstants;
 import Constants.RequestConstants.objectTypes;
 import ModelObjects.Document;
 import ModelObjects.ModelObject;
+import ModelObjects.Project;
 import ModelObjects.Session;
 import Requests.AddRequest;
 import Requests.Filter;
@@ -34,6 +35,7 @@ public final class DemoBehaviour1 extends Behaviour
 //	MessageTemplate filter=null;
 	final Session session = new Session("projet_ia04_0",new Timestamp(System.currentTimeMillis()).toString());
 	Document doc = new Document(0,"nf11cours-2013",".pdf");
+	final Project project = new Project("project_ia04_0", "", "", "");
 	AID dest;
 	public DemoBehaviour1()
 	{
@@ -89,7 +91,7 @@ public final class DemoBehaviour1 extends Behaviour
 	
 	private void linkDocument()
 	{
-		final Relation rel = new MobilizedIn(session);
+		final Relation rel = new MobilizedIn(project);
 		final LinkRequest req = new LinkRequest(doc,rel);
 		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
 		message.addReceiver(this.dest);
