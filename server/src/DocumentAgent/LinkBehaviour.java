@@ -29,7 +29,8 @@ public final class LinkBehaviour extends OneShotBehaviour
 		try
 		{
 			final Statement s = ((DocumentAgent)this.myAgent).createConnection().createStatement();
-//			System.out.println(sql);
+			System.out.println(this.request.toJSON());
+			System.out.println(sql);
 			s.execute(sql);
 		} catch (SQLException e)
 		{

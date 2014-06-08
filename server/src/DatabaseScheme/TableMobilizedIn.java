@@ -2,8 +2,8 @@ package DatabaseScheme;
 
 public class TableMobilizedIn implements RelationTable
 {
-	final private static String[] att ={"document","session_proj", "session_date"};
-	final private static String[] keyAtt = {"document","session_proj", "session_date"};
+	final private static String[] att ={"document","project"};
+	final private static String[] keyAtt = {"document","project"};
 	final private static TableMobilizedIn instance = new TableMobilizedIn();
 	
 	private TableMobilizedIn(){};
