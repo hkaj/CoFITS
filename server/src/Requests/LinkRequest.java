@@ -84,9 +84,9 @@ public final class LinkRequest implements BaseRequest
 		System.arraycopy(a, 0, c, 0, a.length);
 		System.arraycopy(b, 0, c, a.length , b.length);
 		
-		values=LinkRequest.toSeparatedList(c, ", ");
+		values=LinkRequest.toSeparatedList(c, "', '");
 		
-		return "INSERT INTO "+table +"("+att+") VALUES("+values+");";
+		return "INSERT INTO "+table +"("+att+") VALUES("+"'"+values+"'"+");";
 	}
 
 }
