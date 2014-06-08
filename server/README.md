@@ -93,3 +93,7 @@ Pour obtenir l'IP du serveur, executer __ifconfig__ depuis le serveur et copier 
 ```
 
 Un diagramme des tables est disponible dans le dossier **about**.
+
+## TODO:
+
+- Retourner des messages d'erreurs au lieu de rien en cas d'erreur serveur.
