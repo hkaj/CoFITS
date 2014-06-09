@@ -153,25 +153,26 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
 		keyboard.updateOrientation(locationOnScreen.x, locationOnScreen.y);
 		
-		switch (keyboard.getOrientation()) { // for right handed
-			case BOTTOM :
-				keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
-				break;
-			case LEFT :
-				//locationOnScreen.y -= keyboard.getWidth();
-				keyboard.translate(new Vector3D(0, - keyboard.getWidth()), TransformSpace.GLOBAL);
-				break;
-			case TOP :
-				//locationOnScreen.x += keyboard.getWidth();
-				keyboard.translate(new Vector3D(keyboard.getWidth(), 0), TransformSpace.GLOBAL);
-				break;
-			case RIGHT :
-				//locationOnScreen.y += keyboard.getWidth();
-				keyboard.translate(new Vector3D(0, keyboard.getWidth()), TransformSpace.GLOBAL);
-				break;
-			default :
-				System.out.println("NO KEYBOARD ORIENTATION");
-				break;
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			switch (keyboard.getOrientation()) { // for right handed
+				case BOTTOM :
+					keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+					break;
+				case LEFT :
+					keyboard.translate(new Vector3D(0, - keyboard.getWidth()), TransformSpace.GLOBAL);
+					break;
+				case TOP :
+					keyboard.translate(new Vector3D(keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+					break;
+				case RIGHT :
+					keyboard.translate(new Vector3D(0, keyboard.getWidth()), TransformSpace.GLOBAL);
+					break;
+				default :
+					System.out.println("NO KEYBOARD ORIENTATION");
+					break;
+			}
+		} else {
+			keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
 		}
 		
 		keyboard.setVisible(true);

@@ -69,48 +69,52 @@ public class ControlOrb extends MTEllipse {
 	private float angle = 0;
 	
 	public void updateOrientation(float x, float y) {
-		float width = getApplication().width;
-		float height = getApplication().height;
-		
-		float leftDistance =  x;
-		float rightDistance = width - x;
-		float topDistance = y;
-		float bottomDistance = height - y;
-		
-		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
-			setAngle(new Vector3D(x, y), 90);
-		}
-		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
-			setAngle(new Vector3D(x, y), 180);
-		}
-		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
-			setAngle(new Vector3D(x, y), 270);
-		}
-		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
-			setAngle(new Vector3D(x, y), 0);
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = getApplication().width;
+			float height = getApplication().height;
+			
+			float leftDistance =  x;
+			float rightDistance = width - x;
+			float topDistance = y;
+			float bottomDistance = height - y;
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 90);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 180);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 270);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(new Vector3D(x, y), 0);
+			}
 		}
 	}
 	
 	public void updateOrientation() {
-		float width = getApplication().width;
-		float height = getApplication().height;
-		
-		float leftDistance =  getCenterPointGlobal().x;
-		float rightDistance = width - getCenterPointGlobal().x;
-		float topDistance = getCenterPointGlobal().y;
-		float bottomDistance = height - getCenterPointGlobal().y;	
-		
-		if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
-			setAngle(getCenterPointGlobal(), 90);
-		}
-		else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
-			setAngle(getCenterPointGlobal(), 180);
-		}
-		else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
-			setAngle(getCenterPointGlobal(), 270);
-		}
-		else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
-			setAngle(getCenterPointGlobal(), 0);
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = getApplication().width;
+			float height = getApplication().height;
+			
+			float leftDistance =  getCenterPointGlobal().x;
+			float rightDistance = width - getCenterPointGlobal().x;
+			float topDistance = getCenterPointGlobal().y;
+			float bottomDistance = height - getCenterPointGlobal().y;	
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 90);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 180);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 270);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(getCenterPointGlobal(), 0);
+			}
 		}
 	}
 	

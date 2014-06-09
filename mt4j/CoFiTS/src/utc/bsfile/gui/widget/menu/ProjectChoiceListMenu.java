@@ -3,10 +3,6 @@ package utc.bsfile.gui.widget.menu;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
-import org.mt4j.input.inputProcessors.IGestureEventListener;
-import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -43,6 +39,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		System.out.println("LA POLISSE : "+sfont);
 		m_pathArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
 		m_pathArea.setText("Projects and sessions");
+		m_pathArea.removeAllGestureEventListeners();
 		m_pathArea.setNoFill(true);
 		m_pathArea.setNoStroke(true);
 		m_pathArea.setFontColor(new MTColor(255, 255, 255, 255));
