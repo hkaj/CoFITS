@@ -18,12 +18,13 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
-
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
 import utc.bsfile.util.PropertyManager;
@@ -37,7 +38,8 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
 		super(mtApplication, name, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
-		//this.registerGlobalInputProcessor(new CursorTracer(app, this));
+		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
+
 
 		// set orbs orientables for the present scene
 		for (ControlOrb orb : orbs) {
@@ -66,6 +68,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		backgroundPan.setNoStroke(true);
 
 		backgroundPan.setText("CoFiTS");
+
 		backgroundPan.setPickable(false);
 		this.getCanvas().addChild(backgroundPan);
 		backgroundPan.setPositionGlobal(new Vector3D(getMTApplication().width / 2f, getMTApplication().height / 2f + 1 * verticalPad, 0));

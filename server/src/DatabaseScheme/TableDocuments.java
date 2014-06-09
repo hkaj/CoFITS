@@ -3,7 +3,7 @@ package DatabaseScheme;
 public class TableDocuments implements ReferenceTable
 {
 	
-	final private static String[] att ={"id","name","type"};
+	final private static String[] att ={"id","name","type", "owner", "last_modified"};
 	final private static String[] keyAtt = {"id"};
 	
 	final private static TableDocuments instance = new TableDocuments();
