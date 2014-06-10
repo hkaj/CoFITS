@@ -19,7 +19,7 @@ public class ReceiveFile extends SequentialBehaviour {
 		
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(m_initialMessage.getContent());
 		m_nbPartExpected = jsonNode.get("number_of_messages").asInt();
-		m_filename = "foo/bar.txt";	//TODO set the right filename from file id
+		m_filename = "foo";	//TODO set the right filename from file id
 		
 		m_partsReceivedBehaviours = new Vector<ReceivePartOfFile>(m_nbPartExpected);
 		m_newMessages = queue;

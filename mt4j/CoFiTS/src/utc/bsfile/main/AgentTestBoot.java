@@ -20,7 +20,7 @@ public class AgentTestBoot {
 	}
 	
 	private static void downloadFileTest(CofitsGuiAgent agent) {
-		int id = 0;	//File id
+		int id = 6;	//File id
 		agent.addBehaviour(new RequestDownloadFile(agent, id));
 	}
 
