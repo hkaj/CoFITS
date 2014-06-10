@@ -2,6 +2,7 @@ package utc.bsfile.main;
 
 import org.mt4j.MTApplication;
 
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -19,14 +20,15 @@ public class StartCofitsEntities extends MTApplication {
 	
 	@Override
 	public void startUp() {
-
+		//Launching the model
+		CofitsModel model = new CofitsModel();
+		
 		//Launching the Scene
 		LoginScene logScene = new LoginScene(this, "Logging scene");
+		model.addPropertyChangeListener(logScene);
 		
 		//Add the Scene to the Application
-		addScene(logScene);
-		
-		
+		addScene(logScene);		
 	}
 	
 	
