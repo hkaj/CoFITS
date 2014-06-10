@@ -41,11 +41,11 @@ public class DispatchBehaviour extends CyclicBehaviour
 				HashMap<String,String> req = mapper.readValue(content, new TypeReference<HashMap<String,String>>(){});
 				switch((String)req.get("action"))
 				{
-				case "create":
-					this.myAgent.addBehaviour(new AddBehaviour((AddRequest)req,message));
-					break;
+//				case "create":
+//					this.myAgent.addBehaviour(new AddBehaviour((AddRequest)req,message));
+//					break;
 				case "UPLOAD_FILE" :
-					this.myAgent.addBehaviour(new UploadBehaviour((UploadRequest)req));
+					this.myAgent.addBehaviour(new UploadBehaviour(req, message));
 					break;
 				case "DOWNLOAD_FILE" :
 					this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
@@ -56,18 +56,18 @@ public class DispatchBehaviour extends CyclicBehaviour
 //				case "ADD_USER" :
 //					this.myAgent.addBehaviour(new ...Behaviour(req, message));
 //					break;
-				case "link":
-					this.myAgent.addBehaviour(new LinkBehaviour((LinkRequest)req));
-					break;
+//				case "link":
+//					this.myAgent.addBehaviour(new LinkBehaviour((LinkRequest)req));
+//					break;
 				case "quit":
 					System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
 					break;
 				case "represent":
 					System.err.println("DispatchBehaviour.represent : Fonction non implémentée.");
 					break;
-				case "select":
-					this.myAgent.addBehaviour(new SelectBehaviour((SelectRequest) req,message));
-					break;
+//				case "select":
+//					this.myAgent.addBehaviour(new SelectBehaviour((SelectRequest) req,message));
+//					break;
 				default:
 					break;
 				}

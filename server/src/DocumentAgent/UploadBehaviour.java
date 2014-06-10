@@ -1,27 +1,27 @@
 package DocumentAgent;
 
-import Requests.UploadRequest;
-import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
 
-public final class UploadBehaviour extends OneShotBehaviour
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ModelObjects.Project;
+
+public class UploadBehaviour extends OneShotBehaviour
 {
-	final UploadRequest request;
-	public UploadBehaviour(UploadRequest request)
-	{
-		this.request = request;
-	}
+	final HashMap<String, String> request;
+	final ACLMessage message;
+	ArrayList<Project> projects;
 
-	public UploadBehaviour(Agent a, UploadRequest request)
-	{
-		super(a);
+	public UploadBehaviour (HashMap<String, String> request, ACLMessage message) {
 		this.request = request;
+		this.message = message;
 	}
 
 	@Override
-	public void action()
-	{
-		this.request.exec();
+	public void action() {
+		System.out.println("Coucou");
 	}
-
+	
 }
