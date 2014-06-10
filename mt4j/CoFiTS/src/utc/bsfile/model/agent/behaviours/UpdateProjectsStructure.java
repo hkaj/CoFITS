@@ -26,15 +26,14 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 	}
 
 	@Override
-	public void action() {
-		
+	public void action() {		
 		//Create JsonNode from content of message
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(m_message.getContent());
 		
 		if (jsonNode != null){
 			
 			//Create the new TwoLinkedTree
-			TwoLinkedJsonNode newNodeTree = new TwoLinkedJsonNode(jsonNode, "", true);
+			TwoLinkedJsonNode newNodeTree = new TwoLinkedJsonNode(jsonNode, "root", true);
 			TwoLinkedJsonNode oldNodeTree = m_guiAgent.getProjectsArchitectureRootNode();
 			
 			if (oldNodeTree != null){
@@ -58,11 +57,13 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 			m_guiAgent.setProjectsArchitectureRootNode(newNodeTree);
 			
 			//Release the old tree
-			oldNodeTree.releaseTree();
+			if (oldNodeTree != null){
+				oldNodeTree.releaseTree();
+			}
 			
 			//Save the new Json File
 			FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
-			FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newNodeTree.treeToString());
+			FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newNodeTree.treeToJsonNodeString());
 		} 
 
 	}
@@ -72,6 +73,7 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 		
 		for (TwoLinkedJsonNode newProjectNode : newArchitectureNode.getChildren()){
 			
+			//Looking for two matching nodes
 			TwoLinkedJsonNode oldProjectNode = null;
 			for (TwoLinkedJsonNode oldNode : oldArchitectureNode.getChildren()){
 				if (oldNode.getName().equals(newProjectNode.getName())){
@@ -84,7 +86,7 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 			
 		}
 		
-		//If the session is on the device but not on server, delete it
+		//If the project is on the device but not on server, delete it
 		for (TwoLinkedJsonNode oldProjectNode : oldArchitectureNode.getChildren()){
 			boolean doDeleteProject = true;
 			for (TwoLinkedJsonNode newNode : newArchitectureNode.getChildren()){
@@ -110,43 +112,44 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 	
 	
 	private void mergeProjects(TwoLinkedJsonNode oldProjectNode, TwoLinkedJsonNode newProjectNode) {
-		
 		//Check if the projects exists in the old tree
 		if (oldProjectNode != null){
-			
 			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){
-				
-				TwoLinkedJsonNode oldSessionNode = null;
-				for (TwoLinkedJsonNode oldNode : oldProjectNode.getChildren()){
-					if (oldNode.getName().equals(newSessionNode.getName())){
-						oldSessionNode = oldNode;
-						break;
+				if (!newSessionNode.isLeaf()){
+					TwoLinkedJsonNode oldSessionNode = null;
+					for (TwoLinkedJsonNode oldNode : oldProjectNode.getChildren()){
+						if (oldNode.getName().equals(newSessionNode.getName())){
+							oldSessionNode = oldNode;
+							break;
+						}
 					}
+					
+					mergeSessions(oldSessionNode, newSessionNode);
 				}
-				
-				mergeSessions(oldSessionNode, newSessionNode);
 				
 			}
 			
 			//If the session is on the device but not on server, delete it
 			for (TwoLinkedJsonNode oldSessionNode : oldProjectNode.getChildren()){
-				boolean doDeleteSession = true;
-				for (TwoLinkedJsonNode newNode : newProjectNode.getChildren()){
-					if (newNode.getName().equals(oldSessionNode.getName())){
-						doDeleteSession = false;
-						break;
+				if (!oldSessionNode.isLeaf()){
+					boolean doDeleteSession = true;
+					for (TwoLinkedJsonNode newNode : newProjectNode.getChildren()){
+						if (newNode.getName().equals(oldSessionNode.getName())){
+							doDeleteSession = false;
+							break;
+						}
 					}
-				}
-				
-				if (doDeleteSession){
-					String separator = FileSystems.getDefault().getSeparator();
-					String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
-					path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
-					path += oldProjectNode.getName() + separator + oldSessionNode.getName();
 					
-					System.out.println("Session path to delete : " + path);
-					
-					FilePathManager.getInstance().deletePath(path);
+					if (doDeleteSession){
+						String separator = FileSystems.getDefault().getSeparator();
+						String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
+						path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
+						path += oldProjectNode.getName() + separator + oldSessionNode.getName();
+						
+						System.out.println("Session path to delete : " + path);
+						
+						FilePathManager.getInstance().deletePath(path);
+					}
 				}
 			}
 			
@@ -166,14 +169,17 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 
 
 	private void mergeSessions(TwoLinkedJsonNode oldSessionNode, TwoLinkedJsonNode newSessionNode) {
-		
 		//Check if the sessions exists in the old tree
 		if (oldSessionNode != null){
 			
-			//Merge each file
-			for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
+			//get the files node
+			TwoLinkedJsonNode newSessionFilesNode = newSessionNode.getChild("files");
+			TwoLinkedJsonNode oldSessionFilesNode = oldSessionNode.getChild("files");
+			
+			//Merge each file			
+			for (TwoLinkedJsonNode newFileNode : newSessionFilesNode.getChildren()){
 				TwoLinkedJsonNode oldFileNode = null;
-				for (TwoLinkedJsonNode oldNode : oldSessionNode.getChildren()){
+				for (TwoLinkedJsonNode oldNode : oldSessionFilesNode.getChildren()){
 					if (oldNode.getName().equals(newFileNode.getName())){
 						oldFileNode = oldNode;
 						break;
@@ -181,29 +187,30 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 				}
 				
 				mergeFiles(oldFileNode, newFileNode);
-				
 			}
 			
 			//If the file is on the device but not on server, delete it
-			for (TwoLinkedJsonNode oldFileNode : oldSessionNode.getChildren()){
-				if(oldFileNode.getCurrent().path("local").asBoolean()){	
-					boolean doDeleteFile = true;
-					for (TwoLinkedJsonNode newNode : newSessionNode.getChildren()){
-						if (newNode.getName().equals(oldFileNode.getName())){
-							doDeleteFile = false;
-							break;
+			for (TwoLinkedJsonNode oldFileNode : oldSessionFilesNode.getChildren()){
+				if (!oldFileNode.isLeaf()){	
+					if(oldFileNode.getCurrent().path("local").asBoolean()){	
+						boolean doDeleteFile = true;
+						for (TwoLinkedJsonNode newNode : newSessionFilesNode.getChildren()){
+							if (newNode.getName().equals(oldFileNode.getName())){
+								doDeleteFile = false;
+								break;
+							}
 						}
-					}
-					
-					if (doDeleteFile){
-						TwoLinkedJsonNode oldProjectNode = (TwoLinkedJsonNode) oldSessionNode.getParent();
 						
-						String separator = FileSystems.getDefault().getSeparator();
-						String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
-						path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
-						path += oldProjectNode.getName() + separator + oldSessionNode.getName() + separator + oldFileNode.getName();
-						
-						FilePathManager.getInstance().deletePath(path);
+						if (doDeleteFile){
+							TwoLinkedJsonNode oldProjectNode = (TwoLinkedJsonNode) oldSessionNode.getParent();
+							
+							String separator = FileSystems.getDefault().getSeparator();
+							String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
+							path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
+							path += oldProjectNode.getName() + separator + oldSessionNode.getName() + separator + oldFileNode.getName();
+							
+							FilePathManager.getInstance().deletePath(path);
+						}
 					}
 				}
 			}
@@ -223,7 +230,6 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 
 
 	private void mergeFiles(TwoLinkedJsonNode oldFileNode, TwoLinkedJsonNode newFileNode) {
-		
 		if (oldFileNode == null){
 			//Add the local field to new node
 			ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
@@ -249,11 +255,14 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 				}
 				
 			}
-			
 			//Add the local field to newNode from oldNode
 			ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
-			newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
-			newFileNode.addChild(new TwoLinkedJsonNode(oldFileNode.getCurrent().path("local"), "local"), false);
+			if (oldFileNode.getCurrent().get("local") == null){
+				newJsonNode.put("local", false);
+			} else {
+				newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
+			}
+			newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
 		}
 		
 	}

@@ -83,7 +83,7 @@ public class ProjectArchitectureModel implements IMenuModel {
 			if (m_currentLevel == m_maxLevel)
 				return false;
 			
-			return node.getChildCount() > 0;
+			return node.getNotLeafChildCount() > 0;
 		}
 		
 		return false;
@@ -94,17 +94,20 @@ public class ProjectArchitectureModel implements IMenuModel {
 		Object[] choices = null;
 
 		if (choice instanceof TwoLinkedJsonNode){
-			if (((TwoLinkedJsonNode)choice).getChildCount() > 0)
+			if (((TwoLinkedJsonNode)choice).getNotLeafChildCount() > 0)
 			{
 				TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
-				choices = new Object[node.getChildCount()];
+				choices = new Object[node.getNotLeafChildCount()];
 	
 				int index = 0;
 				Enumeration<TwoLinkedJsonNode> enumeration = node.children();
 				while (enumeration.hasMoreElements())
 				{
-					choices[index] = enumeration.nextElement();
-					++index;
+					TwoLinkedJsonNode child = enumeration.nextElement(); 
+					if (!child.isLeaf()){
+						choices[index] = child;
+						++index;
+					}
 				}
 			}
 		}

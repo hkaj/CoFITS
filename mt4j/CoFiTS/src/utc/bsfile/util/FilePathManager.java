@@ -127,6 +127,7 @@ public class FilePathManager {
 			} else {
 				try {
 					filePath.createNewFile();
+					appendTextFile(filePath, content);
 				} catch (IOException e) {
 					System.err.println("Unabled to create file : " + filePath.getAbsolutePath());
 					e.printStackTrace();
@@ -148,7 +149,7 @@ public class FilePathManager {
 	 * Append text to a file
 	 */
 	public void appendTextFile(File filePath, String content){
-		if (filePath.exists()){
+		if (!filePath.exists()){
 			System.err.println("File : " + filePath.getAbsolutePath() + " does not exist");
 		} else {
 			try { 

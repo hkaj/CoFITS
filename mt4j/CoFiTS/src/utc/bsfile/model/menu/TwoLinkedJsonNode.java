@@ -19,15 +19,44 @@ public class TwoLinkedJsonNode implements TreeNode {
 	 */
 	public void constructTree(){
 		releaseTree();
-		
+
 		if (m_current.isObject()) {
 			Iterator<String> it = m_current.fieldNames();
+			
 			while (it.hasNext()){
 				String field = it.next();
+				
 				if (field != null){
 					TwoLinkedJsonNode child = new TwoLinkedJsonNode(m_current.get(field), this, field, true);
+					if (child.getCurrent().has("name")){
+						child.setName(child.getCurrent().get("name").asText());
+					} else if (child.getCurrent().has("date")) {
+						child.setName(child.getCurrent().get("date").asText());
+					}
+					
 					addChild(child, false);
 				}
+			}
+			
+		} else if (m_current.isArray()){
+			Iterator<JsonNode> itNode = m_current.iterator();
+			while(itNode.hasNext()){
+				JsonNode listNode = itNode.next();
+				
+				if (listNode != null){
+					//The parent is this parent, because we don't want the array node in our tree 
+					TwoLinkedJsonNode child = new TwoLinkedJsonNode(listNode, this, m_name, true);
+					
+					if (child.getCurrent().has("name")){
+						child.setName(child.getCurrent().get("name").asText());
+					} else if (child.getCurrent().has("date")) {
+						child.setName(child.getCurrent().get("date").asText());
+					}
+					
+					//Working only if arrays are not directly nested in another array
+					addChild(child, false);
+				}
+				
 			}
 		}
 	}
@@ -53,9 +82,9 @@ public class TwoLinkedJsonNode implements TreeNode {
 	
 	
 	//Methods	
-	public void addChild(TwoLinkedJsonNode node, boolean doEraseIfJsonNodeChildExists){
+	public void addChild(TwoLinkedJsonNode node, boolean doAddInJsonNodeTree){
 		m_children.add(node);
-		if (m_current.get(node.getName()) == null || doEraseIfJsonNodeChildExists) {
+		if (doAddInJsonNodeTree) {
 			ObjectNode objectNode = (ObjectNode) m_current;
 			objectNode.put(node.getName(), node.getCurrent());
 		}
@@ -63,9 +92,9 @@ public class TwoLinkedJsonNode implements TreeNode {
 	}
 
 
-	public void addChildren(Collection<TwoLinkedJsonNode> nodes, boolean doEraseIfJsonNodeChildExists){
+	public void addChildren(Collection<TwoLinkedJsonNode> nodes, boolean doAddInJsonNodeTree){
 		for (TwoLinkedJsonNode node : nodes){
-			addChild(node, doEraseIfJsonNodeChildExists);
+			addChild(node, doAddInJsonNodeTree);
 		}
 	}
 
@@ -80,6 +109,16 @@ public class TwoLinkedJsonNode implements TreeNode {
 	@Override
 	public int getChildCount() {
 		return m_children.size();
+	}
+	
+	public int getNotLeafChildCount(){
+		int nb = 0;
+		for (TwoLinkedJsonNode child : m_children){
+			if (!child.isLeaf()){
+				++nb;
+			}
+		}
+		return nb;
 	}
 
 	@Override
@@ -127,7 +166,7 @@ public class TwoLinkedJsonNode implements TreeNode {
 	 * WARNING : You should not have used a addChild method with doErase to false unless you managed JsonNode child before
 	 * Otherwise, the json file might not be what you're expecting 
 	 */
-	public String treeToString(){
+	public String treeToJsonNodeString(){
 		return m_current.toString();
 	}
 	
@@ -143,6 +182,15 @@ public class TwoLinkedJsonNode implements TreeNode {
 		}
 		
 		m_children.clear();		
+	}
+	
+	
+	public TwoLinkedJsonNode getChild(String field){
+		for (TwoLinkedJsonNode child : m_children){
+			if (child.getName().equals(field))
+				return child;
+		}
+		return null;
 	}
 	
 	
@@ -164,8 +212,8 @@ public class TwoLinkedJsonNode implements TreeNode {
 		return m_parent.getCurrent();
 	}
 	
-	public void setName(String filename) {
-		m_name = filename;		
+	public void setName(String name) {
+		m_name = name;		
 	}
 
 	//Members
