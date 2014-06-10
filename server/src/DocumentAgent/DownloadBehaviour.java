@@ -39,7 +39,7 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		Document document = new Document(Integer.parseInt(this.request
 				.get("file_id")), this.request.get("login"));
 		Path path = Paths.get(RequestConstants.documentAgentDirectory
-				+ document.getName() + document.getType());
+				+ document.getName() + (document.getType().equals("") ? "" : "." + document.getType()));
 		
 		// Send a confirmation message
 		ACLMessage reply = this.message.createReply();
