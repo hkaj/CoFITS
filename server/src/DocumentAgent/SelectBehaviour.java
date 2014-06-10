@@ -15,7 +15,6 @@ import ModelObjects.Document;
 import ModelObjects.ModelObject;
 import ModelObjects.Project;
 import ModelObjects.Session;
-import ModelObjects.User;
 import Requests.SelectRequest;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
@@ -68,9 +67,9 @@ public final class SelectBehaviour extends OneShotBehaviour
 				case session:
 					element = new Session(res);
 					break;
-				case user:
-					element = new User(res);
-					break;
+//				case user:
+//					element = new User(res);
+//					break;
 				default:
 					element = null;
 					break;
