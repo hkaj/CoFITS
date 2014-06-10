@@ -2,6 +2,7 @@ package DocumentAgent;
 
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
@@ -51,6 +52,8 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		jsonMap.put("action", "DOWNLOAD_FILE");
 		jsonMap.put("file_id", this.request.get("file_id"));
 		jsonMap.put("number_of_message", "1");
+		Envelope envelop = new Envelope();
+		envelop.setComments("1");
 
 		try {
 			mapper.writeValue(stringWriter, jsonMap);
@@ -65,7 +68,8 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		BinaryContent res = null;
 		try {
 			res = new BinaryContent(Files.readAllBytes(path));
-			reply.setContent(mapper.writeValueAsString(res));
+			reply.setByteSequenceContent(res.getContent());
+			reply.setEnvelope(envelop);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
