@@ -1,7 +1,5 @@
 package utc.bsfile.main;
 
-import jade.gui.GuiEvent;
-
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.HashMap;
@@ -32,7 +30,6 @@ import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
-import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
@@ -206,14 +203,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			int fileId = m_files.get(filename).getId();
 			addFileToOpen(filename, fileChooser);
 			
-			//Send a gui event to the agent
-			GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
-			event.addParameter(fileId);
-			if (m_agent != null){
-				m_agent.postGuiEvent(event);
-			} else {
-				System.err.println("No Agent running");
-			}
+			m_model.downloadFile(fileId);
 		}
 
 	}

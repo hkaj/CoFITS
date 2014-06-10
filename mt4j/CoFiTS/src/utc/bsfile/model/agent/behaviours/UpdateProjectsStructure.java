@@ -35,7 +35,7 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 			
 			//Create the new TwoLinkedTree
 			TwoLinkedJsonNode newNodeTree = new TwoLinkedJsonNode(jsonNode, "", true);
-			TwoLinkedJsonNode oldNodeTree = m_guiAgent.getProjectsArchitectureRootNode();
+			TwoLinkedJsonNode oldNodeTree = m_guiAgent.getModel().getProjectsArchitectureRootNode();
 			
 			if (oldNodeTree != null){
 				//Merge the trees and process modification in memory
@@ -55,7 +55,7 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 			}
 			
 			//The new node replace the old one
-			m_guiAgent.setProjectsArchitectureRootNode(newNodeTree);
+			m_guiAgent.getModel().setProjectsArchitectureRootNode(newNodeTree);
 			
 			//Release the old tree
 			oldNodeTree.releaseTree();

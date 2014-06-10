@@ -14,10 +14,9 @@ import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
-import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.model.CofitsFile;
-import utc.bsfile.model.agent.CofitsGuiAgent;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
@@ -140,14 +139,14 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
 	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node; generateFilesMap();}
 
-	public final CofitsGuiAgent getAgent(){return m_agent;}
+	public final CofitsModel getModel(){return m_model;}
 	public final Map<String,CofitsFile> getFiles(){return m_files;}
 	public final CofitsFile getFile(String filename){return m_files.get(filename);}
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
 	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
-	protected CofitsGuiAgent m_agent = null;
 	protected Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
+	protected CofitsModel m_model;
 	
 }
