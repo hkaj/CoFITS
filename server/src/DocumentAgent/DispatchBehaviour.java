@@ -53,9 +53,12 @@ public class DispatchBehaviour extends CyclicBehaviour
 				case "LIST" :
 					this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
 					break;
-//				case "ADD_USER" :
-//					this.myAgent.addBehaviour(new ...Behaviour(req, message));
-//					break;
+				case "LIST_PROJECT" :
+					this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
+					break;
+				case "ADD_USER" :
+					this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
+					break;
 //				case "link":
 //					this.myAgent.addBehaviour(new LinkBehaviour((LinkRequest)req));
 //					break;
