@@ -2,6 +2,7 @@ package utc.bsfile.gui.widget.menu;
 
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
@@ -9,9 +10,12 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.main.StartCofitsEntities;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
@@ -92,6 +96,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	
 	public final MTImageButton getLaunchAgentsButton(){
 		return m_launchAgentsButton;
+	}
 
 	protected TwoLinkedJsonNode m_selectedNode;
 	protected MTSvgButton m_confirmButton;
