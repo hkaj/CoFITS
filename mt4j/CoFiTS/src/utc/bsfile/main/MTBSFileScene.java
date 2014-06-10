@@ -1,8 +1,12 @@
 package utc.bsfile.main;
 
+import jade.gui.GuiEvent;
+
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -18,18 +22,20 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
-import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
+import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.util.PropertyManager;
 
-public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeListener {
+public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
 		this(mtApplication, name, orbs, false);
@@ -51,7 +57,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		for (ControlOrb orb : m_orbs){
 			orb.setVisible(true);
 		}		
-		
+
 		float verticalPad = 53;
 
 		MTColor white = new MTColor(255, 255, 255);
@@ -170,11 +176,62 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		if (evt.getPropertyName().equals(Constants.OPEN_PICK))	
 			playPickFileChooser(new Vector3D(400, 200));
 	}
 	
+	
+	@Override
+	protected void processFileDownloaded(String filename) {
+		super.processFileDownloaded(filename);
+		
+		File file = new File(filename);
+		if(m_filesToOpen.containsKey(file.getAbsolutePath())){
+			m_filesToOpen.get(file.getAbsolutePath()).createFileViewer(file);
+			m_filesToOpen.remove(file.getAbsolutePath());
+		}
+	}
+	
+	
+	@Override
+	public void choiceSelected(ChoiceEvent choiceEvent) {
+		final File file = new File(choiceEvent.getChoice());
+		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
+		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
+		
+		if (m_files.get(filename).isLocal()){	
+			fileChooser.createFileViewer(file);
+		} else {
+			int fileId = m_files.get(filename).getId();
+			addFileToOpen(filename, fileChooser);
+			
+			//Send a gui event to the agent
+			GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
+			event.addParameter(fileId);
+			if (m_agent != null){
+				m_agent.postGuiEvent(event);
+			} else {
+				System.err.println("No Agent running");
+			}
+		}
+
+	}
+
+	@Override
+	public void choiceCancelled(ChoiceEvent choiceEvent) {
+		// TODO Auto-generated method stub
+		
+	} 
+	
+	
+	//Getters & Setters
+	public final Map<String, PickFileChooser> getFilesToOpen(){return m_filesToOpen;}
+	public void addFileToOpen(String filename, PickFileChooser fileChooser) {m_filesToOpen.put(filename, fileChooser);}
+	
+	
 	//Members
 	AbstractShape m_pick;
+	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
 
 }
