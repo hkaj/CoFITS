@@ -13,7 +13,7 @@ public class ReceivePartOfFile extends OneShotBehaviour {
 		super(a);
 		m_message = message;
 		m_filename = filename;
-		//TODO set the part number field
+		m_partNumber = Integer.parseInt(m_message.getEnvelope().getComments());
 	}
 	
 	@Override

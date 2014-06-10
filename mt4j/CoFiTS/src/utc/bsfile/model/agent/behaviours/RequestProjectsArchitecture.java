@@ -20,7 +20,7 @@ public class RequestProjectsArchitecture extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-ACLMessage messageToSend = new ACLMessage(ACLMessage.REQUEST);	//TODO Change the performative or add information
+		ACLMessage messageToSend = new ACLMessage(ACLMessage.REQUEST);	//TODO Change the performative or add information
 		
 		//Send to the server
 		messageToSend.addReceiver(m_agent.searchServer());
