@@ -15,11 +15,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class DownloadRequest implements BaseRequest
 {
 	final Document subject;
+	final String user;
 	
 	@JsonCreator
-	public DownloadRequest(@JsonProperty("subject")Document subject)
+	public DownloadRequest(@JsonProperty("subject")Document subject, @JsonProperty("user")String user)
 	{
 		this.subject = subject;
+		this.user = user;
 	}
 
 	@Override @JsonIgnore

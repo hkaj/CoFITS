@@ -1,9 +1,13 @@
 package ModelObjects;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 
+import Constants.DataBaseConstants;
 import DatabaseScheme.ReferenceTable;
 import DatabaseScheme.TableSessions;
 
@@ -13,14 +17,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Session extends ModelObject
 {
+	final Integer id;
 	final private String project;
 	final private String date;
 	final static private String[] validProperties = {"project","date"};
 	
+	public Session(@JsonProperty("id")Integer id) {
+		super();
+		this.id = id;
+		this.project = retrieveProp("project", id);
+		this.date = retrieveProp("date", id);
+	}
 
-	public Session(String project, Timestamp date)
+	public Session(Integer id, String project, Timestamp date)
 	{
 		super();
+		this.id = id;
 		this.project = project;
 		this.date = date.toString();
 	}
@@ -29,6 +41,7 @@ public class Session extends ModelObject
 	public Session(@JsonProperty("project")String project, @JsonProperty("date")String date)
 	{
 		super();
+		this.id = retrieveId(project, date);
 		this.project = project;
 		this.date = date;
 	}
@@ -36,9 +49,42 @@ public class Session extends ModelObject
 	public Session(ResultSet r) throws SQLException
 	{
 		super();
+		this.id = r.getInt("id");
 		this.project = r.getString("project");
 		this.date = r.getTimestamp("date").toString();
 	}
+	
+	private String retrieveProp(String prop, Integer id)
+	{
+		String value = "";
+		String requestStr = "SELECT " + prop + " FROM sessions s where s.id = " + id + ";"; 
+		try {
+			Statement s = this.createConnection().createStatement();
+			final ResultSet res = s.executeQuery(requestStr);
+			if (prop == "date") {
+				value = res.getTimestamp(prop).toString();
+			} else {
+				value = res.getString(prop);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	private Integer retrieveId(String project, String date) {
+		Integer value = 0;
+		String requestStr = "SELECT id FROM sessions s where s.project = " + project + " AND date = '" + date + "';"; 
+		try {
+			Statement s = this.createConnection().createStatement();
+			final ResultSet res = s.executeQuery(requestStr);
+			value = res.getInt("id");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
 	public String getProject()
 	{
 		return project;
@@ -74,6 +120,17 @@ public class Session extends ModelObject
 	public String[] getKeyValues()
 	{
 		return this.getValue();
+	}
+	
+	private Connection createConnection() throws SQLException {
+		Connection conn = null;
+		conn = DriverManager.getConnection(
+				"jdbc:postgresql://" + DataBaseConstants.host + "/"
+					+ DataBaseConstants.databaseName,
+				DataBaseConstants.userName,
+				DataBaseConstants.password
+		);
+	    return conn;
 	}
 	
 }

@@ -5,53 +5,71 @@ import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import Constants.RequestConstants;
 import ModelObjects.BinaryContent;
 import ModelObjects.Document;
-import Requests.DownloadRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class DownloadBehaviour extends OneShotBehaviour
-{
-	final DownloadRequest request;
+public final class DownloadBehaviour extends OneShotBehaviour {
+	final HashMap<String, String> request;
 	final ACLMessage message;
-	public DownloadBehaviour(DownloadRequest request, ACLMessage message)
-	{
+
+	public DownloadBehaviour(HashMap<String, String> request, ACLMessage message) {
 		this.request = request;
 		this.message = message;
 	}
 
-	public DownloadBehaviour(Agent a, DownloadRequest request, ACLMessage message)
-	{
+	public DownloadBehaviour(Agent a, HashMap<String, String> request,
+			ACLMessage message) {
 		super(a);
 		this.request = request;
 		this.message = message;
 	}
 
 	@Override
-	public void action()
-	{
-			final Document target = this.request.getSubject();
-			Path path = Paths.get(RequestConstants.documentAgentDirectory+target.getName()+target.getType());
-			BinaryContent res = null;
-			final ACLMessage reply =this.message.createReply();
-			final ObjectMapper mapper = new ObjectMapper();
-			mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-			try
-			{
-				res = new BinaryContent(Files.readAllBytes(path));
-				reply.setContent(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(res));
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-			
-			reply.setPerformative(ACLMessage.INFORM);
-			this.myAgent.send(reply);
+	public void action() {
+		Document document = new Document(Integer.parseInt(this.request
+				.get("file_id")), this.request.get("login"));
+		Path path = Paths.get(RequestConstants.documentAgentDirectory
+				+ document.getName() + document.getType());
+		
+		// Send a confirmation message
+		ACLMessage reply = this.message.createReply();
+		reply.setPerformative(ACLMessage.AGREE);
+
+		ObjectMapper mapper = new ObjectMapper();
+		HashMap<String, String> jsonMap = new HashMap<String, String>();
+		StringWriter stringWriter = new StringWriter();
+
+		jsonMap.put("action", "DOWNLOAD_FILE");
+		jsonMap.put("file_id", this.request.get("file_id"));
+		jsonMap.put("number_of_message", "1");
+
+		try {
+			mapper.writeValue(stringWriter, jsonMap);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		reply.setContent(stringWriter.toString());
+		this.myAgent.send(reply);
+
+		// Actually send the file
+		reply = this.message.createReply();
+		BinaryContent res = null;
+		try {
+			res = new BinaryContent(Files.readAllBytes(path));
+			reply.setContent(mapper.writeValueAsString(res));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		reply.setPerformative(ACLMessage.INFORM);
+		this.myAgent.send(reply);
+	}
 }

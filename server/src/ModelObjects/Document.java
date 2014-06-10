@@ -1,8 +1,12 @@
 package ModelObjects;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
+import Constants.DataBaseConstants;
 import DatabaseScheme.ReferenceTable;
 import DatabaseScheme.TableDocuments;
 
@@ -17,16 +21,27 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public class Document extends ModelObject
 {
 	final Integer id;
-	final String name,type;
+	final String name,type, owner;
 	final static private String[] validProperties = {"name","usedDuring","UsedIn","ownedBy", "lastModified"};
 
 	@JsonCreator
-	public Document(@JsonProperty("id")Integer id, @JsonProperty("name")String name, @JsonProperty("type")String type)
+	public Document(@JsonProperty("id")Integer id, @JsonProperty("name")String name, @JsonProperty("type")String type, @JsonProperty("owner")String owner)
 	{
 		super();
 		this.id=id;
 		this.name = name;
 		this.type = type;
+		this.owner = owner;
+	}
+	
+	@JsonCreator
+	public Document(@JsonProperty("id")Integer id, @JsonProperty("owner")String owner)
+	{
+		super();
+		this.id=id;
+		this.name = this.retrieveProp("name", id);
+		this.type = this.retrieveProp("type", id);
+		this.owner = owner;
 	}
 	
 	public Document(ResultSet r) throws SQLException
@@ -35,6 +50,7 @@ public class Document extends ModelObject
 		this.id = r.getInt("id");
 		this.name = r.getString("name");
 		this.type = r.getString("type");
+		this.owner = r.getString("owner");
 	}
 
 	public String getName()
@@ -45,6 +61,20 @@ public class Document extends ModelObject
 	public String getType()
 	{
 		return type;
+	}
+	
+	public String retrieveProp(String prop, Integer id)
+	{
+		String value = "";
+		String requestStr = "SELECT " + prop + " FROM documents d where d.id = " + id + ";"; 
+		try {
+			Statement s = this.createConnection().createStatement();
+			final ResultSet res = s.executeQuery(requestStr);
+			value = res.getString(prop);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return value;
 	}
 	
 	@Override @JsonIgnore
@@ -72,5 +102,16 @@ public class Document extends ModelObject
 	{
 		final String[] res = {this.id.toString()};
 		return res ;
+	}
+	
+	public Connection createConnection() throws SQLException {
+		Connection conn = null;
+		conn = DriverManager.getConnection(
+				"jdbc:postgresql://" + DataBaseConstants.host + "/"
+					+ DataBaseConstants.databaseName,
+				DataBaseConstants.userName,
+				DataBaseConstants.password
+		);
+	    return conn;
 	}
 }
