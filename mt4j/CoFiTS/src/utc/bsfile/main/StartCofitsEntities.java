@@ -2,13 +2,13 @@ package utc.bsfile.main;
 
 import org.mt4j.MTApplication;
 
-import utc.bsfile.model.agent.BSFileGuiAgent;
+import utc.bsfile.model.agent.CofitsGuiAgent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 
-public class StartBSFile extends MTApplication {
+public class StartCofitsEntities extends MTApplication {
 	private static final long serialVersionUID = 1L;
 	public static String SECOND_PROPERTIES_FILE = "rsc/config/second.properties";
 	
@@ -19,14 +19,14 @@ public class StartBSFile extends MTApplication {
 	
 	@Override
 	public void startUp() {
+
 		//Launching the Scene
 		LoginScene logScene = new LoginScene(this, "Logging scene");
 		
-		//Launching the Agent
-		//launchAgentContainer(scene);
-		
 		//Add the Scene to the Application
 		addScene(logScene);
+		
+		
 	}
 	
 	
@@ -34,7 +34,7 @@ public class StartBSFile extends MTApplication {
 	 * @param scene - The main Scene of the application
 	 * @brief Launch the Agent in charge of communication with server
 	 */
-	private void launchAgentContainer(MTBSFileScene scene) {
+	static public void launchAgentContainer(CofitsDesignScene scene) {
 		Runtime rt = Runtime.instance();
 	  	ProfileImpl p = null;
 	  	ContainerController cc; 
@@ -46,13 +46,12 @@ public class StartBSFile extends MTApplication {
 	         * platformID - is the symbolic name of the platform, 
 	         * isMain
 	  		 */
-	  		
+
 	  		p = new ProfileImpl(SECOND_PROPERTIES_FILE);
-	  		
 		    cc = rt.createAgentContainer(p);
 		    
-		    AgentController ac = cc.createNewAgent("bsgui-agent", "utc.bsfile.model.agent.BSFileGuiAgent",new Object[]{scene});
-			ac.start();
+		    AgentController ac = cc.createNewAgent("bsgui-agent", CofitsGuiAgent.class.getName() ,new Object[]{scene});
+		    ac.start();
 			
 	  	  } catch(Exception ex) {
 	  		  System.out.println("Main container not started");
@@ -61,5 +60,5 @@ public class StartBSFile extends MTApplication {
 	
 	
 	//Members
-	BSFileGuiAgent guiagent = null;
+	CofitsGuiAgent guiagent = null;
 }

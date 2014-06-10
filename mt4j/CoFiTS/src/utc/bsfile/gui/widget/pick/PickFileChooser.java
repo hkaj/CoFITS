@@ -12,11 +12,11 @@ import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
 import utc.bsfile.gui.widget.image.MTIMAGE;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.FileChooser;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;
-import utc.bsfile.gui.widget.menu.ListMenu.ChoiceListener;
 import utc.bsfile.gui.widget.metadata.MTMetadata;
 import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
@@ -126,32 +126,37 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	 */
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
-		final File file = new File(choiceEvent.getChoice());
-		
-		if (FileExtensionFilter.IMG_FILTER.accept(file)) {
-			IMAGEModel img = new IMAGEModel(file.getAbsolutePath());
+
+	}
+
+	/**
+	 * @param filepath
+	 */
+	public void createFileViewer(final File filepath) {
+		if (FileExtensionFilter.IMG_FILTER.accept(filepath)) {
+			IMAGEModel img = new IMAGEModel(filepath.getAbsolutePath());
 			MTIMAGE image = new MTIMAGE(getRenderer(), img);
 			image.setWidthXYGlobal(200);
 			image.setAnchor(PositionAnchor.CENTER);
 			image.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(image);
 			
-		} else if (FileExtensionFilter.PDF_FILTER.accept(file)) {
-			PDFModel pdf = new PDFModel(file.getAbsolutePath());
+		} else if (FileExtensionFilter.PDF_FILTER.accept(filepath)) {
+			PDFModel pdf = new PDFModel(filepath.getAbsolutePath());
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(pdfWidget);
 	 		pdf.addPDFListener(pdfWidget);
 			
-		} else if (FileExtensionFilter.VIDEO_FILTER.accept(file)) {
-			MovieModel movie = new MovieModel(file.getAbsolutePath());
+		} else if (FileExtensionFilter.VIDEO_FILTER.accept(filepath)) {
+			MovieModel movie = new MovieModel(filepath.getAbsolutePath());
 			MTMOVIE movieWidget = new MTMOVIE(getRenderer(), movie);
 			movieWidget.setAnchor(PositionAnchor.CENTER);
 			movieWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(movieWidget);
 
-		} else if (FileExtensionFilter.HTML_FILTER.accept(file)) {
+		} else if (FileExtensionFilter.HTML_FILTER.accept(filepath)) {
 			// BrowserComponent bc = new BrowserComponent(
 			// (AbstractMTApplication) getRenderer(), "Browser",
 			// file.getAbsolutePath(), 900, 450, true, workbench);
@@ -162,15 +167,13 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			//
 
 		}
-
 		else {
-			UnknownFile unknownFile = new UnknownFile(file);
+			UnknownFile unknownFile = new UnknownFile(filepath);
 			MTMetadata metaWidget = new MTMetadata(getRenderer(), unknownFile);
 			metaWidget.setAnchor(PositionAnchor.CENTER);
 			metaWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(metaWidget);
 		}
-
 	}
 
 	@Override

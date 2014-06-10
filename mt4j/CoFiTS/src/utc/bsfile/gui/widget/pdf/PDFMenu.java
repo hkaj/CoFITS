@@ -17,8 +17,8 @@ import org.mt4jx.util.animation.AnimationUtil;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
-import utc.bsfile.gui.widget.menu.ListMenu.ChoiceListener;
 import utc.bsfile.util.PropertyManager;
 
 /**

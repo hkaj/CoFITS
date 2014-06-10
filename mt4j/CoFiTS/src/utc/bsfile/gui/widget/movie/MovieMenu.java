@@ -2,27 +2,23 @@ package utc.bsfile.gui.widget.movie;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import org.mt4j.components.MTComponent;
-import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTEllipse;
-import org.mt4j.components.visibleComponents.shapes.MTRectangle.PositionAnchor;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MTColor;
-import org.mt4j.util.math.Vector3D;
 import org.mt4jx.components.visibleComponents.widgets.circularmenu.CircularMenuSegmentHandle;
 import org.mt4jx.components.visibleComponents.widgets.circularmenu.MTCircularMenu;
 import org.mt4jx.util.animation.AnimationUtil;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
-import utc.bsfile.gui.widget.menu.ListMenu.ChoiceListener;
 import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.util.PropertyManager;
 
