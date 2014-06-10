@@ -31,7 +31,7 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		if (request.get("login") != "TATIN") {
+		if (!request.get("login").equals("TATIN")) {
 			System.out
 					.println("An unauthorized user tried to download the architecture!");
 			return;
@@ -55,7 +55,7 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 
 	private ArrayList<Project> getProjects() {
 		ArrayList<Project> projects = new ArrayList<Project>();
-		String requestStr = "SELECT id FROM projects;";
+		String requestStr = "SELECT * FROM projects;";
 		try {
 			Statement s = this.createConnection().createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
@@ -91,7 +91,7 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 
 	private ArrayList<Object> getFiles(Integer sessionId) {
 		ArrayList<Object> files = new ArrayList<Object>();
-		String requestStr = "SELECT * FROM mobilizedIn WHERE session = '"
+		String requestStr = "SELECT * FROM mobilizedIn mobIn INNER JOIN documents doc ON mobIn.document = doc.id WHERE session = '"
 				+ sessionId + "';";
 		try {
 			Statement s = this.createConnection().createStatement();
