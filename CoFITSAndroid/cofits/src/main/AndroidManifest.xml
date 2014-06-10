@@ -3,6 +3,8 @@
     package="com.android.cofits" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.android.cofits.MainActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,38 +21,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.cofits.ProjectsActivity"
+            android:name=".ProjectsFragment"
             android:label="@string/title_activity_project" >
         </activity>
         <activity
-            android:name="com.android.cofits.SessionsActivity"
+            android:name=".SessionsFragment"
             android:label="@string/title_activity_session" >
         </activity>
         <activity
-            android:name="com.android.cofits.FilesActivity"
+            android:name=".FilesFragment"
             android:label="@string/title_activity_files" >
         </activity>
         <activity
-            android:name="com.android.cofits.AddFileActivity"
+            android:name=".AddFileActivity"
             android:label="@string/title_activity_add_file"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.android.cofits.FileViewActivity"
+            android:name=".FileViewActivity"
             android:label="@string/title_activity_file_view" >
         </activity>
         <activity
-            android:name="com.android.cofits.ListFileActivity"
+            android:name=".ListFileActivity"
             android:label="@string/title_activity_list_file" >
         </activity>
         <activity
-            android:name="com.android.cofits.FileExplore"
+            android:name=".FileExplore"
             android:label="@string/title_activity_file_explore"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
         </activity>
 
         <service android:name="jade.android.MicroRuntimeService" />
 
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/title_activity_main" >
+        </activity>
     </application>
 
 </manifest>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pre-dex-items>
+
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/jackson-core-2.0.6-b8062d4bc66f8a9c087c9e8e865b9cda2284c77b.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-core-2.0.6.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="bcc0d21a3d06c72e4ffa3dffd88b3e95e1eb6d10"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/json-simple-1.1.1-abe48da4b944ff7c0cdbb8ec1ee956f3cb92510a.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/json-simple-1.1.1.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="5d6f9b6a9ddca2a28c0216cc44efb2e20d9c23b5"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/jackson-databind-2.0.6-f69b6d3d85f27d8e41d250d51eea151df081f89c.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-databind-2.0.6.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="4dcf35d1de37c9d0d388d40ff39b5eaf7866e4a0"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/support-v4-19.1.0-fe930dc68beb1e566675ce71b270d4091c6c249b.jar"
+        jar="/Applications/Android Studio.app/sdk/extras/android/m2repository/com/android/support/support-v4/19.1.0/support-v4-19.1.0.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="85f201b380937e61a9dce6ca90ccf6872abbfb67"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/classes-457316176c51cf4b248534e0cd1fb6e2bd8fdbd6.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/build/exploded-aar/com.android.support/appcompat-v7/19.1.0/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="3499ceba05ca1f6037c6a2fad73df8f636224a28"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/jackson-annotations-2.0.6-9338b1e21b382e3c0f31cfbed88fee7c113b6350.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/jackson-annotations-2.0.6.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="fa6d3bf01c145735477770644f06ecf65d8914e2"/>
+    <item
+        dex="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/cofits/build/pre-dexed/debug/JadeAndroid-03f703cb16af888fa34c800349135474e8a00aa7.jar"
+        jar="/Users/Sanaa/Documents/1_GI05/IA04/CoFITS/CoFITSAndroid/libraries/libs/JadeAndroid.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="a44ed39a4ecf5c96fa94d8b8a3bff9cc4632cf55"/>
+
+</pre-dex-items>

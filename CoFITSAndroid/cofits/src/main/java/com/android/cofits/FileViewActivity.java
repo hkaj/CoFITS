@@ -12,26 +12,29 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.io.File;
 
 public class FileViewActivity extends ActionBarActivity {
-    WebView mWebView;
+    Button buttonDownload;
+    TextView textViewFileName;  
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_view);
-        mWebView = (WebView) findViewById(R.id.fileWebView);
+        textViewFileName = (TextView) findViewById(R.id.fileName);
+        textViewFileName.setText(FilesFragment.FILE_NAME);
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.getSettings().setDomStorageEnabled(true);
-        mWebView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return false;
-            }
-        });
-        String pdfURL = "http://dl.dropboxusercontent.com/u/37098169/Course%20Brochures/AND101.pdf";
-        mWebView.loadUrl("http://docs.google.com/gview?embedded=true&url=" + pdfURL);
+
+        buttonDownload = (Button) findViewById(R.id.downloadButton);
+
     }
+
+
 
 
     @Override

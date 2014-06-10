@@ -24,14 +24,22 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+
+import jade.util.Logger;
 
 
 public class AddFileActivity extends ActionBarActivity {
-    Button buttonBrowse, buttonVisualize;
-
+    Button buttonVisualize, buttonUpload;
+    TextView textViewFileName;
     // Stores names of traversed directories
     ArrayList<String> str = new ArrayList<String>();
 
@@ -45,6 +53,10 @@ public class AddFileActivity extends ActionBarActivity {
     private String chosenFile;
     private static final int DIALOG_LOAD_FILE = 1000;
 
+    //Strings
+    public static String FILE_TO_STRING = "";
+    public static String FILE_NAME = "";
+
     ListAdapter adapter;
 
     @Override
@@ -52,9 +64,9 @@ public class AddFileActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_file);
 
-        buttonBrowse = (Button) findViewById(R.id.browseButton);
+        textViewFileName = (TextView) findViewById(R.id.fileName);
 
-        buttonBrowse.setOnClickListener(new View.OnClickListener() {
+        textViewFileName.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 onClickBrowse();
             }
@@ -67,6 +79,30 @@ public class AddFileActivity extends ActionBarActivity {
                 onClickVisualize();
             }
         });
+
+        buttonUpload = (Button) findViewById(R.id.uploadButton);
+
+        buttonUpload.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                onClickUpload();
+            }
+        });
+
+
+    }
+
+    private void onClickUpload() {
+
+        if(chosenFile != null) {
+            File myFile = new File(path.toString()+"/"+chosenFile);
+            FILE_TO_STRING = read(myFile.toString());
+            FILE_NAME = chosenFile;
+            System.out.println("fileToStringgg" + myFile.toString() + " " + FILE_TO_STRING);
+
+            ClientAgent clientAgent = AgentProvider.getInstance().getMyAgent();
+            Log.d("clientAgent =" , clientAgent.getLocalName());
+            clientAgent.addBehaviour(new SendFileToServerBehaviour());
+        }
     }
 
     private void onClickVisualize() {
@@ -75,6 +111,29 @@ public class AddFileActivity extends ActionBarActivity {
             File myFile = new File(path.toString()+"/"+chosenFile);
             FileOpen.openFile(AddFileActivity.this.getBaseContext(), myFile);
         }
+    }
+
+    public String read(String filename) {
+        FileInputStream in;
+
+        try {
+            in = new FileInputStream (new File(filename));
+            InputStreamReader inputStreamReader = new InputStreamReader(in);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            in.close();
+            return sb.toString();
+        } catch (FileNotFoundException e) {
+            Log.e("app", "write", e);
+        } catch (IOException e) {
+            Log.e("app", "write", e);
+        }
+
+        return null;
     }
 
 
@@ -266,8 +325,7 @@ public class AddFileActivity extends ActionBarActivity {
                             else {
                                 // Perform action with file picked
 
-                                EditText fileNameText = (EditText) findViewById(R.id.fileName);
-                                fileNameText.setText(chosenFile);
+                                textViewFileName.setText(chosenFile);
 
                             }
 

@@ -1,244 +1,124 @@
 package com.android.cofits;
 
-import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.os.IBinder;
+import android.content.res.Configuration;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.os.Build;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-import java.util.logging.Level;
-
-import jade.android.AndroidHelper;
-import jade.android.MicroRuntimeService;
-import jade.android.MicroRuntimeServiceBinder;
-import jade.android.RuntimeCallback;
-import jade.core.MicroRuntime;
-import jade.core.NotFoundException;
-import jade.core.Profile;
-import jade.util.Logger;
-import jade.util.leap.Properties;
-import jade.wrapper.AgentController;
-import jade.wrapper.ControllerException;
 
 public class MainActivity extends ActionBarActivity {
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+    private ActionBarDrawerToggle mDrawerToggle;
 
-    private EditText emailText, passwordText;
-    private Button loginButton;
-    private Logger logger = Logger.getJADELogger(this.getClass().getName());
-
-    private ServiceConnection serviceConnection;
-    private MicroRuntimeServiceBinder microRuntimeServiceBinder;
-
-    private String email = "";
-    private String pwd = "";
-
-    private String agentName;
-    private Properties profile;
-
-    private static ClientAgent clientAgent;
-
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    private String[] mMenuTitles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         setContentView(R.layout.activity_main);
 
-        emailText = (EditText) findViewById(R.id.login_email_field);
-        passwordText = (EditText) findViewById(R.id.login_password_field);
-        loginButton = (Button) findViewById(R.id.login_login_button);
+        mTitle = mDrawerTitle = getTitle();
+        mMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        int[] mIcon = new int[]{
+                R.drawable.ic_sidebar_projects,
+                R.drawable.ic_sidebar_sessions,
+                R.drawable.ic_sidebar_files
+        };
 
-        loginButton.setOnClickListener(loginListener);
+        // set a custom shadow that overlays the main content when the drawer opens
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
+        // Create and set MenuListAdapter
+        MenuListAdapter mMenuAdapter = new MenuListAdapter(this, mMenuTitles, mIcon);
+        mDrawerList.setAdapter(mMenuAdapter);
 
-        Button goToProjects = (Button) findViewById(R.id.button2);
-        goToProjects.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ProjectsActivity.class);
-                startActivity(intent);
+        // set up the drawer's list view with items and click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+        // enable ActionBar app icon to behave as action to toggle nav drawer
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        // ActionBarDrawerToggle ties together the the proper interactions
+        // between the sliding drawer and the action bar app icon
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_drawer,  /* nav drawer image to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description for accessibility */
+                R.string.drawer_close  /* "close drawer" description for accessibility */
+        ) {
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                supportInvalidateOptionsMenu();
             }
-        });
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
-    }
-
-    private View.OnClickListener loginListener = new View.OnClickListener() {
-        public void onClick(View v) {
-
-            email = emailText.getText().toString();
-            pwd = passwordText.getText().toString();
-
-            if (checkLogin(email, pwd)) {
-                Toast.makeText(getApplicationContext(), "utilisateur ", Toast.LENGTH_SHORT).show();
-
-                try {
-                    clientAgent = null;
-                    agentName = email;
-                    profile = new Properties();
-                    profile.setProperty("host", "172.25.25.0");
-                    profile.setProperty("port", "2000");
-                    start();
-                } catch (Exception ex) {
-                    logger.log(Level.SEVERE, "Unexpected exception connecting to the server!");
-                }
-            } else
-                Toast.makeText(getApplicationContext(), "erreur utilisateur", Toast.LENGTH_SHORT).show();
-        }
-
-    };
-
-    private static boolean checkLogin(String email, String pwd) {
-        return email.equals("sanaa") && pwd.equals("sanaa");
-    }
-
-    private RuntimeCallback<AgentController> agentStartupCallback = new RuntimeCallback<AgentController>() {
-        @Override
-        public void onSuccess(AgentController agent) {
-        }
-
-        @Override
-        public void onFailure(Throwable throwable) {
-            logger.log(Level.INFO, "Email already in use!");
-        }
-    };
-    private void start() {
-        serviceConnection = new ServiceConnection() {
-            public void onServiceConnected(ComponentName className,
-                                           IBinder service) {
-                microRuntimeServiceBinder = (MicroRuntimeServiceBinder) service;
-                Log.v("jade_android", "Gateway successfully bound to MicroRuntimeService");
-                startContainer();
-            };
-
-            public void onServiceDisconnected(ComponentName className) {
-                microRuntimeServiceBinder = null;
-                Log.v("jade_android", "Gateway unbound from MicroRuntimeService");
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle(mDrawerTitle);
+                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
-        Log.v("jade_android", "Binding Gateway to MicroRuntimeService...");
-        bindService(new Intent(getApplicationContext(),
-                MicroRuntimeService.class), serviceConnection,
-                Context.BIND_AUTO_CREATE);
-    }
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
 
-    private void startContainer() {
-        if (!MicroRuntime.isRunning()) {
-            microRuntimeServiceBinder.startAgentContainer(profile,
-                    new RuntimeCallback<Void>() {
-                        @Override
-                        public void onSuccess(Void thisIsNull) {
-                            Log.v("jade_android", "Successfully start of the container...");
-                            startAgent();
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            Log.v("jade_android", "Failed to start the container..." + throwable.getMessage());
-                        }
-                    });
-        } else {
-            startAgent();
+        if (savedInstanceState == null) {
+            selectItem(0);
         }
-    }
-
-    private void startAgent() {
-        microRuntimeServiceBinder.startAgent(agentName,
-                ClientAgent.class.getName(),
-                new Object[] { getApplicationContext() },
-                new RuntimeCallback<Void>() {
-                    @Override
-                    public void onSuccess(Void thisIsNull) {
-                        Log.v("jade_android", "Successfully start of the "
-                                + ClientAgent.class.getName() + "...");
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.v("jade_android", "Failed to start the "
-                                + ClientAgent.class.getName() + "...");
-                    }
-                });
-    }
-
-    public void stop() {
-        if (clientAgent != null) {
-            //clientAgent.logOut();
-        }
-        Log.v("jade_android", "stopping jade runtime manager");
-        if (microRuntimeServiceBinder == null) {
-            Log.v("jade_android", "no runtime");
-        } else {
-            microRuntimeServiceBinder.stopAgentContainer(new RuntimeCallback<Void>() {
-                @Override
-                public void onSuccess(Void thisIsNull) {
-                    Log.v("jade_android", "jade runtime manager now stopped");
-                    clientAgent = null;
-                }
-
-                @Override
-                public void onFailure(Throwable throwable) {
-
-                    Log.v("jade_android","Failed to stop the "
-                            + ClientAgent.class.getName()
-                            + "..." + throwable.getMessage());
-                }
-            });
-        }
-        if (serviceConnection == null) {
-            Log.v("jade_android", "no service connection");
-        }else {
-            serviceConnection = null;
-        }
-    }
-
-    public ClientAgent getAndroidAgent() {
-        if (clientAgent == null && microRuntimeServiceBinder != null){
-            start();
-        }
-        return clientAgent;
-    }
-
-    public void setAndroidAgent(ClientAgent clientAgent) {
-        MainActivity.clientAgent = clientAgent;
+        mDrawerToggle.setDrawerIndicatorEnabled(false);
 
     }
 
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
+    }
+    public ActionBarDrawerToggle getmDrawerToggle(){
+        return mDrawerToggle;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
+
+    /* Called whenever we call invalidateOptionsMenu() */
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // If the nav drawer is open, hide action items related to the content view
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+
+        // The action bar home/up action should open or close the drawer.
+        // ActionBarDrawerToggle will take care of this.
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -246,24 +126,69 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void onClickLogin(View view) {
+    /* The click listner for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+
+        }
+
     }
 
+    private void selectItem(int position) {
+        // update the main content by replacing fragments
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment;
+        switch (position) {
+            case 0:
+                fragment = new ProjectsFragment();
+                break;
+            case 1:
+                fragment = new SessionsFragment();
+                break;
+            case 2:
+                fragment = new FilesFragment();
+                break;
+            default:
+                fragment = new Fragment();
+                break;
+        }
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction().replace(R.id.content_frame, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+
+        // update selected item and title, then close the drawer
+        mDrawerList.setItemChecked(position, true);
+        setTitle(mMenuTitles[position]);
+        mDrawerLayout.closeDrawer(mDrawerList);
+    }
+
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
 
     /**
-     * A placeholder fragment containing a simple view.
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
      */
-    public static class PlaceholderFragment extends Fragment {
 
-        public PlaceholderFragment() {
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggls
+        mDrawerToggle.onConfigurationChanged(newConfig);
     }
 
 }
