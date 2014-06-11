@@ -8,11 +8,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import Constants.CommunicationConstants;
-import Requests.AddRequest;
-import Requests.DownloadRequest;
-import Requests.LinkRequest;
-import Requests.SelectRequest;
-import Requests.UploadRequest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -53,15 +48,15 @@ public class DispatchBehaviour extends CyclicBehaviour
 				case "LIST" :
 					this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
 					break;
-				case "LIST_PROJECT" :
-					this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
-					break;
+//				case "LIST_PROJECT" :
+//					this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
+//					break;
 				case "ADD_USER" :
 					this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
 					break;
-				case "CREATE_SESSION" :
-					this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
-					break;
+//				case "CREATE_SESSION" :
+//					this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
+//					break;
 				case "quit":
 					System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
 					break;
@@ -91,5 +86,4 @@ public class DispatchBehaviour extends CyclicBehaviour
 	{
 		return true;
 	}
-
 }
