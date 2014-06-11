@@ -34,7 +34,7 @@ public final class DemoBehaviour1 extends Behaviour {
 	// MessageTemplate filter=null;
 	final Session session = new Session("projet_ia04_0", new Timestamp(
 			System.currentTimeMillis()).toString());
-	Document doc = new Document(0, "nf11cours-2013", ".pdf");
+//	Document doc = new Document(0, "nf11cours-2013", ".pdf");
 	final Project project = new Project("projet_ia04_0", "", "", "");
 	AID dest;
 
@@ -52,65 +52,65 @@ public final class DemoBehaviour1 extends Behaviour {
 		this.myAgent.send(message);
 	}
 
-	private void insertDocument() {
-		final AddRequest request = new AddRequest(doc);
-		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(this.dest);
-		message.setContent(request.toJSON());
-		System.out.println("insertDocument message: " + message);
-		this.myAgent.send(message);
-	}
+//	private void insertDocument() {
+//		final AddRequest request = new AddRequest(doc);
+//		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+//		message.addReceiver(this.dest);
+//		message.setContent(request.toJSON());
+//		System.out.println("insertDocument message: " + message);
+//		this.myAgent.send(message);
+//	}
 
-	private void selectDocument() {
-		Predicate[] p = { new Filter("name", "nf11cours-2013"),
-				new Filter("type", ".pdf") };
-		final SelectRequest request = new SelectRequest(objectTypes.document, p);
-		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(this.dest);
-		message.setContent(request.toJSON());
-		System.out.println("selectDocument message: " + message);
-		this.myAgent.send(message);
-		System.out.println("waiting for the response...");
-		final ACLMessage answer = this.myAgent.blockingReceive();
-		System.out.println("Response : " + answer.getContent());
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//	private void selectDocument() {
+//		Predicate[] p = { new Filter("name", "nf11cours-2013"),
+//				new Filter("type", ".pdf") };
+//		final SelectRequest request = new SelectRequest(objectTypes.document, p);
+//		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+//		message.addReceiver(this.dest);
+//		message.setContent(request.toJSON());
+//		System.out.println("selectDocument message: " + message);
+//		this.myAgent.send(message);
+//		System.out.println("waiting for the response...");
+//		final ACLMessage answer = this.myAgent.blockingReceive();
+//		System.out.println("Response : " + answer.getContent());
+//		final ObjectMapper mapper = new ObjectMapper();
+//		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//
+//		ModelObject[] res = null;
+//		try {
+//			// System.out.println("Documents reçus : "+answer.getContent());
+//			res = mapper.readValue(answer.getContent(), ModelObject[].class);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		this.doc = (Document) res[0];
+//	}
 
-		ModelObject[] res = null;
-		try {
-			// System.out.println("Documents reçus : "+answer.getContent());
-			res = mapper.readValue(answer.getContent(), ModelObject[].class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.doc = (Document) res[0];
-	}
+//	private void linkDocument() {
+//		final Relation rel = new MobilizedIn(project);
+//		final LinkRequest req = new LinkRequest(doc, rel);
+//		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+//		message.addReceiver(this.dest);
+//		message.setContent(req.toJSON());
+//		this.myAgent.send(message);
+//	}
 
-	private void linkDocument() {
-		final Relation rel = new MobilizedIn(project);
-		final LinkRequest req = new LinkRequest(doc, rel);
-		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(this.dest);
-		message.setContent(req.toJSON());
-		this.myAgent.send(message);
-	}
-
-	private void uploadDocument() {
-		final Path path = Paths.get(RequestConstants.clientAgentDirectory
-				+ doc.getName() + doc.getType());
-		byte[] content = null;
-		try {
-			content = Files.readAllBytes(path);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		final UploadRequest request = new UploadRequest(doc, content);
-		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(this.dest);
-		message.setContent(request.toJSON());
-		this.myAgent.send(message);
-	}
+//	private void uploadDocument() {
+//		final Path path = Paths.get(RequestConstants.clientAgentDirectory
+//				+ doc.getName() + doc.getType());
+//		byte[] content = null;
+//		try {
+//			content = Files.readAllBytes(path);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		final UploadRequest request = new UploadRequest(doc, content);
+//		final ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+//		message.addReceiver(this.dest);
+//		message.setContent(request.toJSON());
+//		this.myAgent.send(message);
+//	}
 
 	public DemoBehaviour1(Agent a) {
 		super(a);
@@ -123,18 +123,18 @@ public final class DemoBehaviour1 extends Behaviour {
 		case 0:
 			this.createSession();
 			break;
-		case 1:
-			this.insertDocument();
-			break;
-		case 2:
-			this.selectDocument();
-			break;
-		case 3:
-			this.linkDocument();
-			break;
-		case 4:
-			this.uploadDocument();
-			break;
+//		case 1:
+//			this.insertDocument();
+//			break;
+//		case 2:
+//			this.selectDocument();
+//			break;
+//		case 3:
+//			this.linkDocument();
+//			break;
+//		case 4:
+//			this.uploadDocument();
+//			break;
 		}
 		try {
 			System.out.println("Passer à l'étape suivante ?");

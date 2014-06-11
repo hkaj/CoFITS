@@ -59,9 +59,9 @@ public class DispatchBehaviour extends CyclicBehaviour
 				case "ADD_USER" :
 					this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
 					break;
-//				case "link":
-//					this.myAgent.addBehaviour(new LinkBehaviour((LinkRequest)req));
-//					break;
+				case "CREATE_SESSION" :
+					this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
+					break;
 				case "quit":
 					System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
 					break;

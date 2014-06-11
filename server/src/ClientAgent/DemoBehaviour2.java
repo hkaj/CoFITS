@@ -83,43 +83,43 @@ public final class DemoBehaviour2 extends Behaviour
 		this.doc = (Document)res[0];
 	}
 
-	private void downloadDocument()
-	{
-		
-		final DownloadRequest request = new DownloadRequest(doc);
-		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
-		message.addReceiver(this.dest);
-		message.setContent(request.toJSON());
-		this.myAgent.send(message);
-		
-		
-		final ACLMessage answer = this.myAgent.blockingReceive();
-		
-		final ObjectMapper mapper = new ObjectMapper();
-		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
-		
-		BinaryContent res=null;
-		try
-		{
-//			System.out.println("Sessions reçues :"+answer.getContent());
-			res = mapper.readValue(answer.getContent(), BinaryContent.class);
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		
-		final String path = RequestConstants.clientAgentDirectory+this.doc.getName()+this.doc.getType();
-		FileOutputStream fos;
-		try
-		{
-			fos = new FileOutputStream(path);
-			fos.write(res.getContent());
-			fos.close();
-		} catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-	}
+//	private void downloadDocument()
+//	{
+//		
+//		final DownloadRequest request = new DownloadRequest(doc);
+//		ACLMessage message = new ACLMessage(ACLMessage.REQUEST);
+//		message.addReceiver(this.dest);
+//		message.setContent(request.toJSON());
+//		this.myAgent.send(message);
+//		
+//		
+//		final ACLMessage answer = this.myAgent.blockingReceive();
+//		
+//		final ObjectMapper mapper = new ObjectMapper();
+//		mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+//		
+//		BinaryContent res=null;
+//		try
+//		{
+////			System.out.println("Sessions reçues :"+answer.getContent());
+//			res = mapper.readValue(answer.getContent(), BinaryContent.class);
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		
+//		final String path = RequestConstants.clientAgentDirectory+this.doc.getName()+this.doc.getType();
+//		FileOutputStream fos;
+//		try
+//		{
+//			fos = new FileOutputStream(path);
+//			fos.write(res.getContent());
+//			fos.close();
+//		} catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public DemoBehaviour2(Agent a)
 	{
@@ -138,9 +138,9 @@ public final class DemoBehaviour2 extends Behaviour
 		case 1 :
 			this.selectDocument();
 			break;
-		case 2 :
-			this.downloadDocument();
-			break;
+//		case 2 :
+//			this.downloadDocument();
+//			break;
 		}
 		try
 		{
