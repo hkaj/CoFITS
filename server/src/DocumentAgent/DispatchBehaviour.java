@@ -1,5 +1,6 @@
 package DocumentAgent;
 
+import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
@@ -35,8 +36,7 @@ public class DispatchBehaviour extends CyclicBehaviour
 			{
 				HashMap<String,String> req = mapper.readValue(content, new TypeReference<HashMap<String,String>>(){});
 				if (message.getPerformative() == ACLMessage.SUBSCRIBE) {
-					String proj = req.get("project_id");
-					
+					this.myAgent.addBehaviour(new AddSubscriberBehaviour(req, message));
 				} else {
 					switch((String)req.get("action"))
 					{

@@ -21,7 +21,7 @@ public class UploadBehaviour extends OneShotBehaviour
 
 	@Override
 	public void action() {
-		
+		// Ne pas oublier de propager les changements aux subscribers
 	}
 	
 }

@@ -37,6 +37,15 @@ public class DocumentAgent extends Agent
 		System.out.println(getLocalName() + " ---> deployed");
 	}
 	
+	public void addSubscriber(String project, AID agent) {
+		if (this.subscribedAgents.containsKey(project)) {
+			this.subscribedAgents.get(project).add(agent);
+		} else {
+			List<AID> subscrbrs = new ArrayList<AID>();
+			subscrbrs.add(agent);
+			this.subscribedAgents.put(project, subscrbrs);
+		}
+	}
 	protected void register()
 	{
 		final DFAgentDescription dfd = new DFAgentDescription();
