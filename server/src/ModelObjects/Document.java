@@ -70,6 +70,7 @@ public class Document extends ModelObject
 		try {
 			Statement s = this.createConnection().createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
+			s.
 			res.next();
 			value = res.getString(prop);
 		} catch (SQLException e) {
