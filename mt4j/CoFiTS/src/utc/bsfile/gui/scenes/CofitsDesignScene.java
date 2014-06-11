@@ -85,11 +85,12 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	 * By convention, the admin controlOrb is the first in the list
 	 */
 	protected ControlOrb getAdminOrb(){
-		if (!m_orbs.isEmpty()){
-			return m_orbs.get(0);
-		} else {
-			return null;
+		for (ControlOrb orb : m_orbs){
+			if (orb.isAdmin()){
+				return orb;
+			}
 		}
+		return null;
 	}
 	
 	
@@ -117,6 +118,13 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	
 	//Getters & Setters
 	public final CofitsModel getModel(){return m_model;}
+	public ControlOrb getOrb(String login){
+		for (ControlOrb orb : m_orbs){
+			if (orb.getLogin().equals(login))
+				return orb;
+		}
+		return null;
+	}
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();

@@ -8,7 +8,9 @@ import jade.wrapper.ContainerController;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
@@ -94,6 +96,22 @@ public class CofitsModel {
 			}
 		}
 	}
+	
+	
+	//Handle the users
+	public void addUser(CofitsUser user) {
+		m_users.add(user);		
+	}
+	
+	
+	public boolean hasUser(String text) {
+		for (CofitsUser user : m_users){
+			if (user.getLogin().equals(text)){
+				return true;
+			}
+		}
+		return false;
+	}
 
 	
 	//Property Change methods
@@ -123,5 +141,6 @@ public class CofitsModel {
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	private CofitsGuiAgent m_agent;	//TODO Initialize it
 	private Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
+	private List<CofitsUser> m_users = new ArrayList<CofitsUser>();
 
 }
