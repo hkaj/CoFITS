@@ -8,6 +8,8 @@ import jade.wrapper.ContainerController;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.HashMap;
+import java.util.Map;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
@@ -58,6 +60,24 @@ public class CofitsModel {
 	public void fileReceived(String filename) {
 		firePropertyChange("File Received", null, filename);		
 	}
+	
+	
+	
+	/**
+	 * Generate a map to easily have the link between id and filename for a file
+	 */
+	private void generateFilesMap() {
+		//TODO Find another place to do that
+		m_files.clear();
+		
+		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
+			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
+				for (TwoLinkedJsonNode fileNode : sessionNodes.getChildren()){	
+					m_files.put(fileNode.getName(), new CofitsFile(fileNode));
+				}
+			}
+		}
+	}
 
 	
 	//Property Change methods
@@ -82,9 +102,13 @@ public class CofitsModel {
 		firePropertyChange("projectsArchitectureRootNode changed", oldValue, m_projectsArchitectureRootNode);
 	}
 	
+	public final Map<String,CofitsFile> getFiles(){return m_files;}
+	public final CofitsFile getFile(String filename){return m_files.get(filename);}
+	
 	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	private CofitsGuiAgent m_agent;	//TODO Initialize it
+	private Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
 }

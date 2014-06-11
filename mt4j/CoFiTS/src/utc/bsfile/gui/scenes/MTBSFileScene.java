@@ -197,10 +197,10 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
 		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
 		
-		if (m_files.get(filename).isLocal()){	
+		if (m_model.getFiles().get(filename).isLocal()){	
 			fileChooser.createFileViewer(file);
 		} else {
-			int fileId = m_files.get(filename).getId();
+			int fileId = m_model.getFiles().get(filename).getId();
 			addFileToOpen(filename, fileChooser);
 			
 			m_model.downloadFile(fileId);
