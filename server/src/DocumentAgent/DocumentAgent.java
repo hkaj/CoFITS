@@ -1,5 +1,6 @@
 package DocumentAgent;
 
+import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -9,6 +10,10 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import Constants.DataBaseConstants;
 
@@ -16,9 +21,12 @@ public class DocumentAgent extends Agent
 {
 	final static public String serviceName ="DocumentService";
 	final static public String serviceType ="ProjectManagement";
+	private Map<String, List<AID>> subscribedAgents;
+
 	public DocumentAgent()
 	{
 		super();
+		subscribedAgents = new HashMap<String, List<AID>>();
 	}
 	
 	@Override

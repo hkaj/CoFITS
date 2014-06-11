@@ -18,8 +18,9 @@ public class DispatchBehaviour extends CyclicBehaviour
 	DispatchBehaviour()
 	{
 		super();
-		this.filter = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
-		
+		MessageTemplate f1 = MessageTemplate.MatchPerformative(ACLMessage.SUBSCRIBE);
+		MessageTemplate f2 = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
+		this.filter = MessageTemplate.and(f1, f2);
 	}
 	
 	@Override
@@ -29,45 +30,49 @@ public class DispatchBehaviour extends CyclicBehaviour
 		if (message != null)
 		{
 			final String content =  message.getContent();
-//			System.out.println("DispatchBehaviour : "+ content);
 		    ObjectMapper mapper = new ObjectMapper();
 			try
 			{
 				HashMap<String,String> req = mapper.readValue(content, new TypeReference<HashMap<String,String>>(){});
-				switch((String)req.get("action"))
-				{
-//				case "create":
-//					this.myAgent.addBehaviour(new AddBehaviour((AddRequest)req,message));
-//					break;
-				case "UPLOAD_FILE" :
-					this.myAgent.addBehaviour(new UploadBehaviour(req, message));
-					break;
-				case "DOWNLOAD_FILE" :
-					this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
-					break;
-				case "LIST" :
-					this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
-					break;
-//				case "LIST_PROJECT" :
-//					this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
-//					break;
-				case "ADD_USER" :
-					this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
-					break;
-//				case "CREATE_SESSION" :
-//					this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
-//					break;
-				case "quit":
-					System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
-					break;
-				case "represent":
-					System.err.println("DispatchBehaviour.represent : Fonction non implémentée.");
-					break;
-//				case "select":
-//					this.myAgent.addBehaviour(new SelectBehaviour((SelectRequest) req,message));
-//					break;
-				default:
-					break;
+				if (message.getPerformative() == ACLMessage.SUBSCRIBE) {
+					String proj = req.get("project_id");
+					
+				} else {
+					switch((String)req.get("action"))
+					{
+//					case "create":
+//						this.myAgent.addBehaviour(new AddBehaviour((AddRequest)req,message));
+//						break;
+					case "UPLOAD_FILE" :
+						this.myAgent.addBehaviour(new UploadBehaviour(req, message));  // TODO
+						break;
+					case "DOWNLOAD_FILE" :
+						this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
+						break;
+					case "LIST" :
+						this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
+						break;
+//					case "LIST_PROJECT" :
+//						this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
+//						break;
+					case "ADD_USER" :
+						this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
+						break;
+//					case "CREATE_SESSION" :
+//						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
+//						break;
+					case "quit":
+						System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
+						break;
+					case "represent":
+						System.err.println("DispatchBehaviour.represent : Fonction non implémentée.");
+						break;
+//					case "select":
+//						this.myAgent.addBehaviour(new SelectBehaviour((SelectRequest) req,message));
+//						break;
+					default:
+						break;
+					}
 				}
 			} catch (IOException e)
 			{
