@@ -1,4 +1,4 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -114,7 +114,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
-					m_model.launchAgentContainer(ProjectChoiceScene.this);
+					m_model.launchAgentContainer();
 					projectList.getLaunchAgentsButton().setEnabled(false);
 					break;
 				default:

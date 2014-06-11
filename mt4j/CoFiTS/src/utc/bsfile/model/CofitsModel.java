@@ -9,7 +9,6 @@ import jade.wrapper.ContainerController;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 
@@ -27,7 +26,7 @@ public class CofitsModel {
 	 * @param scene - The main Scene of the application
 	 * @brief Launch the Agent in charge of communication with server
 	 */
-	public void launchAgentContainer(CofitsDesignScene scene) {
+	public void launchAgentContainer() {
 		Runtime rt = Runtime.instance();
 	  	ProfileImpl p = null;
 	  	ContainerController cc; 

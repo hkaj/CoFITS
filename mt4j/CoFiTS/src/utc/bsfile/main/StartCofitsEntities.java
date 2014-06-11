@@ -2,6 +2,7 @@ package utc.bsfile.main;
 
 import org.mt4j.MTApplication;
 
+import utc.bsfile.gui.scenes.LoginScene;
 import utc.bsfile.model.CofitsModel;
 
 public class StartCofitsEntities extends MTApplication {

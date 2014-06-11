@@ -1,4 +1,4 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
