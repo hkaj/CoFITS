@@ -8,6 +8,7 @@ import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
+import utc.bsfile.model.agent.behaviours.RequestProjectsArchitecture;
 import jade.core.AID;
 import jade.core.NotFoundException;
 import jade.core.behaviours.ThreadedBehaviourFactory;
@@ -30,7 +31,9 @@ public class CofitsGuiAgent extends GuiAgent {
 		
 		m_model = (CofitsModel) getArguments()[0];	
 		m_model.setAgent(this);
+		
 		addBehaviour(new ReceiveMessageBehaviour(this));
+		addBehaviour(new RequestProjectsArchitecture(this));
 	}
 
 	@Override
