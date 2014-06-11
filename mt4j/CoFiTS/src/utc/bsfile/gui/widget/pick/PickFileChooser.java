@@ -53,7 +53,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 
 		addChoiceListener(this);
 		setCloseVisible(true);
-		ButtonListener listener = new ButtonListener();
+		PickButtonListener listener = new PickButtonListener();
 
 		PositionSequencer position2 = new PositionSequencer(new Vector3D(x
 				- getSpacing() - iconWidth, y + getSpacing()), getSpacing(),
@@ -95,19 +95,11 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
-		// filterWindow.setFillColor(new MTColor(159, 182, 205, 200));
-		//filterWindow.setFillColor(new MTColor(70, 200, 200, 80));
 		filterWindow.setFillColor(new MTColor(34, 83, 120, 255));
-		//filterWindow.setStrokeColor(MTColor.BLACK);
 		filterWindow.setNoStroke(true);
 		filterWindow.removeAllGestureEventListeners();
-		// filterWindow.setStrokeColor(MTColor.YELLOW);
-		// filterWindow.setPositionGlobal(new Vector3D(-iconWidth, iconHeight));
 		filterWindow.setPositionRelativeToParent(new Vector3D(-iconWidth + 17,
 				iconHeight + 135));
-		// filterWindow.setPositionGlobal(new Vector3D(x - getSpacing() -
-		// iconWidth, y + getSpacing()
-		// * 2f + iconHeight));
 
 		filterWindow.addChild(pdfButton);
 		filterWindow.addChild(movieButton);
@@ -183,7 +175,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	public void choiceCancelled(ChoiceEvent choiceEvent) {
 	}
 
-	protected class ButtonListener implements IGestureEventListener {
+	protected class PickButtonListener implements IGestureEventListener {
 		public boolean processGestureEvent(MTGestureEvent ge) {
 			if (ge instanceof TapEvent) {
 				TapEvent tapEvent = (TapEvent) ge;

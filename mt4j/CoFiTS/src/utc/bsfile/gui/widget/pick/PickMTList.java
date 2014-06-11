@@ -17,6 +17,8 @@
  ***********************************************************************/
 package utc.bsfile.gui.widget.pick;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -689,6 +691,9 @@ public class PickMTList extends MTClipRectangle {
 		}
 	}
 
+	
+
+	
 	/*@Override
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		System.out.println("PASSAGE ICI");

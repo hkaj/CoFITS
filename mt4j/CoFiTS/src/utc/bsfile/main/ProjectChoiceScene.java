@@ -90,7 +90,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void playProjectAndSessionsList(Vector3D position, ControlOrb orb) {
 		//Create the model from Json File
 		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
-		ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
+		final ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
 		projectList.setMustBeDestroy(false);
 		
 		projectList.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
@@ -99,7 +99,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
 					System.out.println("OK");
-					launchProjectChoiceScene();
+					launchProjectChoiceScene(projectList.getModel());
 					break;
 				default:
 					break;
@@ -113,10 +113,10 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	}
 	
 	
-	protected void launchProjectChoiceScene() {
+	protected void launchProjectChoiceScene(IMenuModel model) {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		MTBSFileScene projectChoiceScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		MTBSFileScene projectChoiceScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES, model);
 		//Add the scene to the mt application
 		getMTApplication().addScene(projectChoiceScene);
 		

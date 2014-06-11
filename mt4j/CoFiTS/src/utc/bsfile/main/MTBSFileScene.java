@@ -26,15 +26,16 @@ import org.mt4j.util.math.Vector3D;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
+import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeListener {
 	
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
-		this(mtApplication, name, orbs, false);
+		this(mtApplication, name, orbs, false, null);
 	}
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures, IMenuModel model) {
 		super(mtApplication, name, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		//this.registerGlobalInputProcessor(new CursorTracer(app, this));
@@ -92,7 +93,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 			processInputForOrb(cOrb);
 		}
 		
-		//addPickFileChooser();
+		m_model = model;
 	}
 	
 	protected void processInputForOrb(final ControlOrb orb) {
@@ -160,6 +161,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
+		//((PickFileChooser)m_pick).setModel(m_model);
 		getCanvas().addChild(m_pick);
 	}
 
@@ -173,5 +175,6 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	
 	//Members
 	AbstractShape m_pick;
+	IMenuModel m_model;
 
 }

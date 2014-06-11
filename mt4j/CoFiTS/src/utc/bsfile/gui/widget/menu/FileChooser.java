@@ -1,5 +1,7 @@
 package utc.bsfile.gui.widget.menu;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -8,10 +10,16 @@ import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
+import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
+import org.mt4j.util.animation.Animation;
+import org.mt4j.util.animation.AnimationEvent;
+import org.mt4j.util.animation.IAnimationListener;
+import org.mt4j.util.animation.MultiPurposeInterpolator;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
@@ -20,6 +28,8 @@ import processing.core.PImage;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.model.menu.FileChooserModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
@@ -27,7 +37,7 @@ import utc.bsfile.util.PropertyManager;
 
 
 
-public class FileChooser extends ListMenu
+public class FileChooser extends ListMenu implements PropertyChangeListener
 {
 	/**
 	 * @uml.property  name="root"
@@ -96,12 +106,9 @@ public class FileChooser extends ListMenu
 	 */
 	private MTImageButton disabledShareButton;
 
-	private MTRectangle confirmationWindow;
-	private MTTextArea deleteConfirmText;
-	//private MTImageButton confirmDeleteButton;
-	//private MTImageButton cancelDeleteButton;
-	private MTTextArea confirmDeleteButton;
-	private MTTextArea cancelDeleteButton;
+
+	private MTSvgButton downloadingIcon;
+	private MTSvgButton downloadingIconArrows;
 
 	public PApplet applet;
 	
@@ -140,7 +147,29 @@ public class FileChooser extends ListMenu
 		cancelActionButton.setWidthXYGlobal(75);
 		cancelActionButton.setHeightXYGlobal(35);
 		
+		downloadingIcon = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-center.svg");
+		downloadingIcon.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + 75 + getSpacingX2(), y + getSpacing() + 25));
+		downloadingIcon.removeAllGestureEventListeners();
+		downloadingIcon.setWidthXYGlobal(20);
+		downloadingIcon.setHeightXYGlobal(20);
+		downloadingIcon.setVisible(false);
 		
+		downloadingIconArrows = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-arrows.svg");
+		downloadingIconArrows.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + 75 + getSpacingX2(), y + getSpacing() + 25));
+		downloadingIconArrows.removeAllGestureEventListeners();
+		downloadingIconArrows.setWidthXYGlobal(45);
+		downloadingIconArrows.setHeightXYGlobal(45);
+		downloadingIconArrows.setVisible(false);
+		
+		MultiPurposeInterpolator interpolator = new MultiPurposeInterpolator(0, 100, 1000, 0.0f, 1.0f, -1);
+		Animation rotationAnimation = new Animation("Arrows rotation", interpolator, downloadingIconArrows, 0);
+		rotationAnimation.addAnimationListener(new IAnimationListener() {
+			@Override
+			 public void processAnimationEvent(AnimationEvent ae) {
+				 downloadingIconArrows.rotateZGlobal(downloadingIconArrows.getCenterPointGlobal(), 3);
+			 }
+		});
+
 		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
@@ -153,9 +182,26 @@ public class FileChooser extends ListMenu
 		deleteButton = createIconButton(bottomPosition.getPosition(), "delete-icon.png", listener);
 		bottomPosition.nextPosition(deleteButton);
 		
+		addChild(downloadingIcon);
+		addChild(downloadingIconArrows);
 		addChild(actionButton);
 		addChild(parentButton);
 		addChild(pathField);
+		
+		rotationAnimation.start();
+		displayDownloadingAnimation();
+		
+		//this.setModel(new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.FILE_LEVEL));
+	}
+	
+	public void displayDownloadingAnimation() {
+		if(!downloadingIcon.isVisible()){
+			downloadingIcon.setVisible(true);
+			downloadingIconArrows.setVisible(true);
+		} else {
+			downloadingIcon.setVisible(false);
+			downloadingIconArrows.setVisible(false);
+		}
 	}
 	
 	public void displayDisabledBottomButtons() {
@@ -207,6 +253,10 @@ public class FileChooser extends ListMenu
 	{
 		MTComponent component = new MTComponent(getRenderer());
 		File file = (File) choice;
+		//TwoLinkedJsonNode choice = (TwoLinkedJsonNode)choice;
+		
+		String choiceName = file.getName();
+		
 		try {
 			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
@@ -227,15 +277,17 @@ public class FileChooser extends ListMenu
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 16, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 14, MTColor.BLACK, true));
 		
-		if ( file.getName().length() <= 20 ){
-			textArea.setText(file.getName());
+		if ( choiceName.length() <= 20 ){
+			textArea.setText(choiceName);
 		} else {
-			textArea.setText(file.getName().substring(0, 20)+"...");
+			textArea.setText(choiceName.substring(0, 20)+"...");
 		}
 		
-		Theme.getTheme().applyStyle(StyleID.TRANSPARENT, textArea);
+		textArea.setNoFill(true);
+		textArea.setNoStroke(true);
+		
 		component.addChild(textArea);
 
 		return component;
@@ -260,7 +312,6 @@ public class FileChooser extends ListMenu
 				if (tapEvent.isTapped()) {
 					if (tapEvent.getTarget() == parentButton) {
 						Object parent = getModel().getParentMenu(FileChooser.this.getModel().getCurrentMenu());
-						//System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
 						
 						//We can go to parent only if we are under FILE_PATH property root
 						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH))) {
@@ -275,6 +326,7 @@ public class FileChooser extends ListMenu
 					} else if (tapEvent.getTarget() == actionButton) {
 						setSelectionList(FileChooser.this);
 						displayDisabledBottomButtons();
+						
 					} else if (tapEvent.getTarget() == cancelActionButton) {
 						updateList();
 						removeBottomButtons();
@@ -290,5 +342,14 @@ public class FileChooser extends ListMenu
 
 			return false;
 		}
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent event) {
+		if (event.getSource().equals(list)){
+			displayDownloadingAnimation();
+		}
+		
 	}
 }

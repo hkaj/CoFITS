@@ -1,14 +1,17 @@
 package utc.bsfile.gui.widget.menu;
 
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.Theme;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.PropertyManager;
@@ -22,7 +25,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChoiceListener(this);
 		
 		m_menuModel = model;
-		
+
 		//Add a confirmation button
 		m_confirmButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
 		int buttonSize = 40;
@@ -36,7 +39,6 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		Vector3D pathAreaPosition = new Vector3D(x + getSpacing() + 3, y + getSpacingX2() + getSpacedIconHeight() );
 		m_pathArea.setPositionGlobal(pathAreaPosition);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		System.out.println("LA POLISSE : "+sfont);
 		m_pathArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
 		m_pathArea.setText("Projects and sessions");
 		m_pathArea.removeAllGestureEventListeners();
@@ -46,6 +48,16 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		
 		addChild(m_pathArea);
 		addChild(m_confirmButton);
+	}
+	
+	@Override
+	public void colorSelectedCell(MTGestureEvent ge) {
+		// change the color of the selected cell
+		for (MTListCell cell : list.getListCellContainer().getCells()) {
+			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
+			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+			System.out.println("PROJECTCHOICELISTMENU");
+		}
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import org.mt4j.util.math.Vector3D;
 import processing.core.PApplet;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
+import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.gui.widget.pick.PickMTList;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.model.menu.IMenuModel;
@@ -133,7 +134,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this.setAnchor(PositionAnchor.UPPER_LEFT);
 
 		this.menuModel = model;
-		this.mustBeDestroy = true;
+		this.mustBeDestroy = false;
 
 		this.applet = applet;
 
@@ -367,6 +368,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		emptyListCells();
 	}
 
+	
 	protected void setSelectionList(final FileChooser fc) {
 		list.removeAllListElements();
 		list.removeScrollBar();
@@ -391,8 +393,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					final MTListCell cell = new MTListCell(getRenderer(), getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 					final MTImageButton checkedIcon = new MTImageButton(this.getRenderer(), ImageManager.getInstance().load("checked-icon.png"));
 					checkedIcon.setNoStroke(true);
-					// Theme.getTheme().applyStyle("LIST_CHOICE", cell);
-					//cell.setFillColor(new MTColor(140, 210, 210, 240));
 					cell.setFillColor(Theme.ITEM_LIGHT_COLOR); // cell color after action-button pushed
 					cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // the same that the filechooser background
 					cell.setStrokeWeight(2);
@@ -403,7 +403,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 								public boolean processGestureEvent(MTGestureEvent ge) {
 									if (ge instanceof TapEvent) {
 										TapEvent tapEvent = (TapEvent) ge;
-										
+
 										if (tapEvent.isTapped()) {
 											if (listCells
 													.contains((File) choice)) {
@@ -553,6 +553,12 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						for (ChoiceListener listener : ListMenu.this.listeners)
 							listener.choiceSelected(new ChoiceEvent(ListMenu.this, choice));
 						
+						colorSelectedCell(ge);
+						
+						//TODO : dire à la scène de traiter cette ouverture de fichier
+						// connexion ? hors connexion ?
+						// présent sur la table ? non présent ?
+						
 						//Destroy the list after opening a file
 						if (ListMenu.this.mustBeDestroy()){
 							this.destroy();
@@ -564,6 +570,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		
 		return false;
 	}
+	
+	public void colorSelectedCell(MTGestureEvent ge) {System.out.println("LISTMENU");}
 
 	/**
 	 * @author claude

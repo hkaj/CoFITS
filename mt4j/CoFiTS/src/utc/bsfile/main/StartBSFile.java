@@ -2,7 +2,7 @@ package utc.bsfile.main;
 
 import org.mt4j.MTApplication;
 
-import utc.bsfile.model.agent.BSFileGuiAgent;
+//import utc.bsfile.model.agent.BSFileGuiAgent;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
@@ -61,5 +61,5 @@ public class StartBSFile extends MTApplication {
 	
 	
 	//Members
-	BSFileGuiAgent guiagent = null;
+	//BSFileGuiAgent guiagent = null;
 }
