@@ -27,7 +27,9 @@ public class CofitsGuiAgent extends GuiAgent {
 	@Override
 	protected void setup() {
 		super.setup();
-		m_model = (CofitsModel) getArguments()[0];		
+		
+		m_model = (CofitsModel) getArguments()[0];	
+		m_model.setAgent(this);
 		addBehaviour(new ReceiveMessageBehaviour(this));
 	}
 

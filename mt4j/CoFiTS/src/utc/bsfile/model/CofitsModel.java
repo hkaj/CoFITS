@@ -13,6 +13,8 @@ import java.util.Map;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import utc.bsfile.util.FilePathManager;
+import utc.bsfile.util.PropertyManager;
 
 public class CofitsModel {
 	
@@ -37,7 +39,7 @@ public class CofitsModel {
 	  		p = new ProfileImpl(SECOND_PROPERTIES_FILE);
 		    cc = rt.createAgentContainer(p);
 		    
-		    AgentController ac = cc.createNewAgent("tatin-cofits-agent", CofitsGuiAgent.class.getName() ,new Object[]{});
+		    AgentController ac = cc.createNewAgent("tatin-cofits-agent", CofitsGuiAgent.class.getName() ,new Object[]{this});
 		    ac.start();
 			
 	  	  } catch(Exception ex) {
@@ -62,12 +64,26 @@ public class CofitsModel {
 	}
 	
 	
+	public void changeProjectArchitecture(TwoLinkedJsonNode newArchitectureNode, TwoLinkedJsonNode oldArchitectureNode) {		
+		//Fire the changes to the views
+		firePropertyChange("projectsArchitectureRootNode changed", oldArchitectureNode, newArchitectureNode);
+		
+		//The new node replace the old one
+		m_projectsArchitectureRootNode = newArchitectureNode;
+		generateFilesMap();
+		
+		//Save the new Json File
+		FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
+		FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newArchitectureNode.treeToString());
+		
+		//Release the old tree
+		oldArchitectureNode.releaseTree();
+	}
 	
 	/**
 	 * Generate a map to easily have the link between id and filename for a file
 	 */
 	private void generateFilesMap() {
-		//TODO Find another place to do that
 		m_files.clear();
 		
 		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
@@ -96,19 +112,16 @@ public class CofitsModel {
 	
 	//Getters & Setters
 	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
-	public void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {
-		TwoLinkedJsonNode oldValue = m_projectsArchitectureRootNode;
-		m_projectsArchitectureRootNode = node;
-		firePropertyChange("projectsArchitectureRootNode changed", oldValue, m_projectsArchitectureRootNode);
-	}
 	
 	public final Map<String,CofitsFile> getFiles(){return m_files;}
 	public final CofitsFile getFile(String filename){return m_files.get(filename);}
 	
+	public void setAgent(CofitsGuiAgent agent) {this.m_agent = agent;} //TODO find a way to only let the agent access this method
 	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	private CofitsGuiAgent m_agent;	//TODO Initialize it
 	private Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
+
 }

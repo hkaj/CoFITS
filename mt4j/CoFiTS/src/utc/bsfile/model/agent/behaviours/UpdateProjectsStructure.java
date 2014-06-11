@@ -53,16 +53,9 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 					}
 				}
 			}
+		
 			
-			//The new node replace the old one
-			m_guiAgent.getModel().setProjectsArchitectureRootNode(newNodeTree);
-			
-			//Release the old tree
-			oldNodeTree.releaseTree();
-			
-			//Save the new Json File
-			FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
-			FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newNodeTree.treeToString());
+			m_guiAgent.getModel().changeProjectArchitecture(newNodeTree, oldNodeTree);
 		} 
 
 	}
