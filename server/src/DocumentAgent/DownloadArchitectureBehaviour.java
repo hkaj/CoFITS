@@ -57,11 +57,14 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 		ArrayList<Project> projects = new ArrayList<Project>();
 		String requestStr = "SELECT * FROM projects;";
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			while (res.next()) {
 				projects.add(new Project(res));
 			}
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +76,8 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 		String requestStr = "SELECT * FROM sessions where project = '"
 				+ projectId + "';";
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			while (res.next()) {
 				HashMap<String, Object> session = new HashMap<String, Object>();
@@ -83,6 +87,8 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 				session.put("files", getFiles(id));
 				sessions.add(session);
 			}
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -94,7 +100,8 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 		String requestStr = "SELECT * FROM mobilizedIn mobIn INNER JOIN documents doc ON mobIn.document = doc.id WHERE session = '"
 				+ sessionId + "';";
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			while (res.next()) {
 				HashMap<String, Object> file = new HashMap<String, Object>();
@@ -106,6 +113,8 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 						.toString());
 				files.add(file);
 			}
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

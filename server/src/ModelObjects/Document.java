@@ -68,10 +68,13 @@ public class Document extends ModelObject
 		String value = "";
 		String requestStr = "SELECT " + prop + " FROM documents d where d.id = " + id + ";"; 
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			res.next();
 			value = res.getString(prop);
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
