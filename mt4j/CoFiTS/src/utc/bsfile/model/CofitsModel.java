@@ -9,9 +9,7 @@ import jade.wrapper.ContainerController;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
@@ -91,7 +89,7 @@ public class CofitsModel {
 		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
 			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
 				for (TwoLinkedJsonNode fileNode : sessionNodes.getChildren()){	
-					m_files.put(fileNode.getName(), new CofitsFile(fileNode));
+					m_files.add(new CofitsFile(fileNode));
 				}
 			}
 		}
@@ -131,16 +129,23 @@ public class CofitsModel {
 	//Getters & Setters
 	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
 	
-	public final Map<String,CofitsFile> getFiles(){return m_files;}
-	public final CofitsFile getFile(String filename){return m_files.get(filename);}
+	public final List<CofitsFile> getFiles(){return m_files;}
+	public final CofitsFile getFile(String filename){
+		for (CofitsFile file : m_files){
+			if (file.getFilename().equals(filename)){
+				return file;
+			}
+		}
+		return null;
+	}
 	
 	public void setAgent(CofitsGuiAgent agent) {this.m_agent = agent;} //TODO find a way to only let the agent access this method
 	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
-	private CofitsGuiAgent m_agent;	//TODO Initialize it
-	private Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
+	private CofitsGuiAgent m_agent;
+	private List<CofitsFile> m_files = new ArrayList<CofitsFile>();
 	private List<CofitsUser> m_users = new ArrayList<CofitsUser>();
 
 }

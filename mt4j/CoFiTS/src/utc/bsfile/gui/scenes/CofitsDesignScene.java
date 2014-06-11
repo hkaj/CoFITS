@@ -112,7 +112,7 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	}
 	
 	protected void processFileDownloaded(String filename){
-		m_model.getFiles().get(filename).setLocal(true);
+		m_model.getFile(filename).setLocal(true);
 	}
 
 	
