@@ -93,10 +93,10 @@ public class LoginActivity extends ActionBarActivity {
                     profile = new Properties();
 
                     //Home
-                    profile.setProperty("host", "172.29.38.140");
+                    //profile.setProperty("host", "172.29.38.140");
 
                     //UTC
-                    //profile.setProperty("host", "172.25.25.0");
+                    profile.setProperty("host", "172.25.25.0");
 
                     profile.setProperty("port", "2000");
                     start();
@@ -149,6 +149,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     private void startContainer() {
+        Log.v("jade_android", "startContainer()");
         if (!MicroRuntime.isRunning()) {
             microRuntimeServiceBinder.startAgentContainer(profile,
                     new RuntimeCallback<Void>() {
@@ -169,6 +170,8 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     private void startAgent() {
+        Log.v("jade_android", "startAgent()");
+
         microRuntimeServiceBinder.startAgent(agentName,
                 ClientAgent.class.getName(),
                 new Object[] { getApplicationContext() },

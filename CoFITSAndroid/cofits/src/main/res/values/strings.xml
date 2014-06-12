@@ -49,4 +49,6 @@
     <string name="your_sessions">Here is the list of your sessions:</string>
     <string name="your_files">Here is the list of your files:</string>
     <string name="file_name">File Name:</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
