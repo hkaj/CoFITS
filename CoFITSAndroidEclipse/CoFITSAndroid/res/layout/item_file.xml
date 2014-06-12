@@ -3,7 +3,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:descendantFocusability="blocksDescendants">
-    >
+    
 
     <ImageView
         android:id="@+id/icon"
@@ -26,11 +26,11 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:textColor="#040404"
-        android:textSize="17sp"
+        android:typeface="sans"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:singleLine="true"
         android:layout_gravity="center"
-        android:layout_centerVertical="true"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_centerVertical="true" />
 
 
 <LinearLayout

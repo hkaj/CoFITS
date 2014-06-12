@@ -271,7 +271,7 @@ int drawable ic_sidebar_projects 0x7f020075
 int drawable ic_sidebar_sessions 0x7f020076
 int drawable list_selected_item_color 0x7f020077
 int drawable tabhost_tab 0x7f020078
-int id action_add 0x7f05005c
+int id action_add 0x7f05005f
 int id action_bar 0x7f05001c
 int id action_bar_activity_content 0x7f050015
 int id action_bar_container 0x7f05001b
@@ -283,7 +283,7 @@ int id action_context_bar 0x7f05001d
 int id action_menu_divider 0x7f050016
 int id action_menu_presenter 0x7f050017
 int id action_mode_close_button 0x7f050024
-int id action_settings 0x7f05005b
+int id action_settings 0x7f05005e
 int id activity_chooser_view_content 0x7f050025
 int id addFileTextView 0x7f05003d
 int id always 0x7f05000b
@@ -318,8 +318,11 @@ int id icon 0x7f05002a
 int id ifRoom 0x7f05000a
 int id image 0x7f050027
 int id item_filename 0x7f050055
+int id item_projectauthor 0x7f05005b
+int id item_projectdescription 0x7f05005a
 int id item_projectname 0x7f050059
-int id item_sessionname 0x7f05005a
+int id item_sessiondate 0x7f05005d
+int id item_sessionname 0x7f05005c
 int id layoutItemScore 0x7f050058
 int id left_drawer 0x7f05004d
 int id listMode 0x7f050001
@@ -446,6 +449,7 @@ int string loginCAS 0x7f0a000f
 int string login_email 0x7f0a0022
 int string login_login 0x7f0a0024
 int string login_password 0x7f0a0023
+int string lorem_ipsum 0x7f0a002e
 int string tab_file 0x7f0a0015
 int string tab_project 0x7f0a0011
 int string tab_session 0x7f0a0013

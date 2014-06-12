@@ -1118,7 +1118,7 @@ containing a value of this type.
         public static final int tabhost_tab=0x7f020078;
     }
     public static final class id {
-        public static final int action_add=0x7f05005c;
+        public static final int action_add=0x7f05005f;
         public static final int action_bar=0x7f05001c;
         public static final int action_bar_activity_content=0x7f050015;
         public static final int action_bar_container=0x7f05001b;
@@ -1130,7 +1130,7 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05005b;
+        public static final int action_settings=0x7f05005e;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int addFileTextView=0x7f05003d;
         public static final int always=0x7f05000b;
@@ -1165,8 +1165,11 @@ containing a value of this type.
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
         public static final int item_filename=0x7f050055;
+        public static final int item_projectauthor=0x7f05005b;
+        public static final int item_projectdescription=0x7f05005a;
         public static final int item_projectname=0x7f050059;
-        public static final int item_sessionname=0x7f05005a;
+        public static final int item_sessiondate=0x7f05005d;
+        public static final int item_sessionname=0x7f05005c;
         public static final int layoutItemScore=0x7f050058;
         public static final int left_drawer=0x7f05004d;
         public static final int listMode=0x7f050001;
@@ -1352,6 +1355,7 @@ containing a value of this type.
         public static final int login_email=0x7f0a0022;
         public static final int login_login=0x7f0a0024;
         public static final int login_password=0x7f0a0023;
+        public static final int lorem_ipsum=0x7f0a002e;
         public static final int tab_file=0x7f0a0015;
         public static final int tab_project=0x7f0a0011;
         public static final int tab_session=0x7f0a0013;
