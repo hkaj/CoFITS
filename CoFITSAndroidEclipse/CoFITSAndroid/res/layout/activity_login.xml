@@ -29,7 +29,7 @@
             android:orientation="horizontal"></LinearLayout>
         <!-- Footer Ends -->
         <!-- Login Form -->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout 
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:hint="@string/login_email"
-            android:gravity="center"
-            android:background="@android:color/white" />
+            android:background="@android:color/white"
+            android:gravity="center" />
         <!--  Password Label -->
         <EditText
             android:id="@+id/login_password_field"
@@ -81,7 +81,7 @@
 
         </LinearLayout>
         <!-- Login Form Ends -->
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout 
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

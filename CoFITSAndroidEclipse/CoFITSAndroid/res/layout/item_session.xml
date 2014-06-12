@@ -4,20 +4,32 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:id="@+id/layoutItemScore"
-	android:padding="5dip" >
+	android:padding="5dip"
+		android:background="#FFFFFF" >
 
     <TextView
         android:id="@+id/item_sessionname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Session num"
+        android:textColor="#225378"
+        android:typeface="sans"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginLeft="5dp"
+        android:textStyle="bold"/>
+    
+    <!-- Session's Date -->
+    <TextView
+        android:id="@+id/item_sessiondate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:text="Text 1"
+        android:layout_below="@id/item_sessionname"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dip"
+        android:layout_marginTop="1dip"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:ellipsize="end"
-        android:textSize="17sp"
-        android:textColor="#2E2E2E"
-        android:singleLine="true"
-        android:layout_gravity="center_vertical"/>
+        android:maxLines="7"
+        android:text="Thursday, June 12th, 2014"
+        android:textColor="#343434" />
     
 </RelativeLayout>

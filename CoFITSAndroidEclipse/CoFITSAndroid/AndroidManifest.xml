@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cofits.cofitsandroid" 
     android:versionCode="1"
-    android:versionName="1.0">
+    android:versionName="1.0"
+    android:minSdkVersion="7">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -19,8 +20,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-            >
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,20 +30,18 @@
         <activity
             android:name=".ProjectsFragment"
             android:label="@string/title_activity_project"
-            android:screenOrientation="portrait" >
-            >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".SessionsFragment"
             android:label="@string/title_activity_session"
-            android:screenOrientation="portrait" >
-            >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".FilesFragment"
-            android:label="@string/title_activity_files"
-            android:screenOrientation="portrait" >
-            >
+            android:label="@string/title_activity_files" 
+            android:screenOrientation="portrait">
+
         </activity>
         <activity
             android:name=".AddFileActivity"
@@ -52,21 +50,18 @@
         </activity>
         <activity
             android:name=".FileViewActivity"
-            android:label="@string/title_activity_file_view"
-            android:screenOrientation="portrait" >
-            >
+            android:label="@string/title_activity_file_view" 
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".ListFileActivity"
             android:label="@string/title_activity_list_file"
-            android:screenOrientation="portrait" >
-            >
+            android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".FileExplore"
             android:label="@string/title_activity_file_explore"
-            android:screenOrientation="portrait"
-            >
+            android:screenOrientation="portrait">
         </activity>
 
         <service android:name="jade.android.MicroRuntimeService" />
@@ -74,8 +69,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
-            android:screenOrientation="portrait" >
-            >
+            android:screenOrientation="portrait">
         </activity>
     </application>
 
