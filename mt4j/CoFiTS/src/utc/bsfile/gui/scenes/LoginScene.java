@@ -30,6 +30,7 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.CofitsUser;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.util.PropertyManager;
@@ -41,8 +42,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	AbstractMTApplication applet;
 	
 	//Constructors
-	public LoginScene(AbstractMTApplication mtApplication, String name) {
-		super(mtApplication, name);
+	public LoginScene(AbstractMTApplication mtApplication, String name, CofitsModel model) {
+		super(mtApplication, name, model);
 		applet = mtApplication;
 		m_listOfUsers.setCellsEnabled(false);
 		
@@ -321,7 +322,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void launchProjectChoiceScene() {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application
 		getMTApplication().addScene(projectChoiceScene);
 		

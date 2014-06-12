@@ -19,7 +19,7 @@ public class StartCofitsEntities extends MTApplication {
 		CofitsModel model = new CofitsModel();
 		
 		//Launching the Scene
-		LoginScene logScene = new LoginScene(this, "Logging scene");
+		LoginScene logScene = new LoginScene(this, "Logging scene", model);
 		model.addPropertyChangeListener(logScene);
 		
 		//Add the Scene to the Application

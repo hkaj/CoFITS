@@ -23,12 +23,14 @@ import utc.bsfile.util.ImageManager;
  */
 public abstract class CofitsDesignScene extends AbstractScene implements PropertyChangeListener{
 
-	public CofitsDesignScene(AbstractMTApplication mtApplication, String name){
-		this(mtApplication, name, new ArrayList<ControlOrb>(), false);
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name, CofitsModel model){
+		this(mtApplication, name, model, new ArrayList<ControlOrb>(), false);
 	}
 	
-	public CofitsDesignScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doClearOrbGestures) {
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name,CofitsModel model, List<ControlOrb> orbs, boolean doClearOrbGestures) {
 		super(mtApplication, name);
+		
+		m_model = model;
 		
 		//Add the orbs to the list of Orbs
 		for (ControlOrb orb : orbs){

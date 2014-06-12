@@ -24,22 +24,23 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
-import utc.bsfile.gui.widget.controlorb.ControlOrb;
 
+import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
-		this(mtApplication, name, orbs, false);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs) {
+		this(mtApplication, name, model, orbs, false);
 	}
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
-		super(mtApplication, name, orbs, doCleanGestures);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures) {
+		super(mtApplication, name, model, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
