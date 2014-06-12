@@ -3,8 +3,8 @@ package DatabaseScheme;
 public class TableSessions implements ReferenceTable
 {
 	
-	final private static String[] att ={"name","date"};
-	final private static String[] keyAtt = {"name","date"};
+	final private static String[] att ={"project","date"};
+	final private static String[] keyAtt = {"project","date"};
 	final private static TableSessions instance = new TableSessions();
 	static public ReferenceTable getInstance(){return instance;};
 	

@@ -2,8 +2,8 @@ package DatabaseScheme;
 
 public class TableMobilizedIn implements RelationTable
 {
-	final private static String[] att ={"id","name","date"};
-	final private static String[] keyAtt = {"id","name","date"};
+	final private static String[] att ={"document","session_proj", "session_date"};
+	final private static String[] keyAtt = {"document","session_proj", "session_date"};
 	final private static TableMobilizedIn instance = new TableMobilizedIn();
 	
 	private TableMobilizedIn(){};
@@ -30,8 +30,7 @@ public class TableMobilizedIn implements RelationTable
 	@Override
 	public ReferenceTable[] getRelativeTables()
 	{
-		final ReferenceTable[] res = {TableDocuments.getInstance(), TableSessions.getInstance()};
+		final ReferenceTable[] res = {TableDocuments.getInstance(), TableProjects.getInstance()};
 		return res;
 	}
-
 }

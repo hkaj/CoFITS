@@ -1,14 +1,13 @@
 package SpecialisedRelations;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import DatabaseScheme.RelationTable;
-import DatabaseScheme.TableInvolvedIn;
 import DatabaseScheme.TableMobilizedIn;
 import ModelObjects.ModelObject;
 import ModelObjects.Session;
 import Requests.Relation;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public final class MobilizedIn implements Relation
 {

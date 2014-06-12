@@ -1,19 +1,18 @@
 package SpecialisedRelations;
 
+import DatabaseScheme.RelationTable;
+import DatabaseScheme.TableInvolvedIn;
+import ModelObjects.ModelObject;
+import ModelObjects.Project;
+import Requests.Relation;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import DatabaseScheme.RelationTable;
-import DatabaseScheme.TableFollows;
-import DatabaseScheme.TableInvolvedIn;
-import ModelObjects.ModelObject;
-import ModelObjects.Session;
-import Requests.Relation;
-
 public final class InvolvedIn implements Relation
 {
-	final Session subject;
-	public InvolvedIn(@JsonProperty("subject")Session subject)
+	final Project subject;
+	public InvolvedIn(@JsonProperty("subject")Project subject)
 	{
 		this.subject=subject;
 	}
