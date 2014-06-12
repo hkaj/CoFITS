@@ -40,11 +40,14 @@ public class DispatchBehaviour extends CyclicBehaviour
 				} else {
 					switch((String)req.get("action"))
 					{
-//					case "create":
-//						this.myAgent.addBehaviour(new AddBehaviour((AddRequest)req,message));
-//						break;
+					case "CREATE_PROJECT":
+						this.myAgent.addBehaviour(new CreateProjectBehaviour(req,message)); // TODO
+						break;
 					case "UPLOAD_FILE" :
 						this.myAgent.addBehaviour(new UploadBehaviour(req, message));  // TODO
+						break;
+					case "REMOVE_FILE" :
+						this.myAgent.addBehaviour(new RemoveFileBehaviour(req, message)); //TODO
 						break;
 					case "DOWNLOAD_FILE" :
 						this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
@@ -52,24 +55,15 @@ public class DispatchBehaviour extends CyclicBehaviour
 					case "LIST" :
 						this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
 						break;
-//					case "LIST_PROJECT" :
-//						this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message));
-//						break;
+					case "LIST_PROJECT" :
+						this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message)); // TODO
+						break;
 					case "ADD_USER" :
 						this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
 						break;
-//					case "CREATE_SESSION" :
-//						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
-//						break;
-					case "quit":
-						System.err.println("DispatchBehaviour.quit : Fonction non implémentée.");
+					case "CREATE_SESSION" :
+						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message)); //TODO
 						break;
-					case "represent":
-						System.err.println("DispatchBehaviour.represent : Fonction non implémentée.");
-						break;
-//					case "select":
-//						this.myAgent.addBehaviour(new SelectBehaviour((SelectRequest) req,message));
-//						break;
 					default:
 						break;
 					}
