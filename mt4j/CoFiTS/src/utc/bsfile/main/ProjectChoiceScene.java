@@ -1,5 +1,6 @@
 package utc.bsfile.main;
 
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void playProjectAndSessionsList(Vector3D position, ControlOrb orb) {
 		//Create the model from Json File
 		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
-		ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
+		final ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
 		projectList.setMustBeDestroy(false);
 		
 		projectList.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
@@ -108,6 +109,21 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			}
 		});
 		
+		projectList.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+			@Override
+			public boolean processGestureEvent(MTGestureEvent evt) {
+				switch (evt.getId()) {
+				case TapEvent.GESTURE_ENDED :
+					StartCofitsEntities.launchAgentContainer(ProjectChoiceScene.this);
+					projectList.getLaunchAgentsButton().setEnabled(false);
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		});
+		
 		getCanvas().addChild(projectList);
 
 	}
@@ -116,12 +132,12 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void launchProjectChoiceScene() {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		MTBSFileScene projectChoiceScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application
-		getMTApplication().addScene(projectChoiceScene);
+		getMTApplication().addScene(mtbsFileScene);
 		
 		//Do the scene change
-		getMTApplication().changeScene(projectChoiceScene);
+		getMTApplication().changeScene(mtbsFileScene);
 		
 		//Close the scene
 		close();
@@ -132,6 +148,13 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void close() {
 		// TODO Auto-generated method stub
 		super.close();
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

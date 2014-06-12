@@ -38,7 +38,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
 		super(mtApplication, name, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
-		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
+		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
 
 		// set orbs orientables for the present scene
@@ -51,7 +51,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		for (ControlOrb orb : m_orbs){
 			orb.setVisible(true);
 		}		
-		
+
 		float verticalPad = 53;
 
 		MTColor white = new MTColor(255, 255, 255);

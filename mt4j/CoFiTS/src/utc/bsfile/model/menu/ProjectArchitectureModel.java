@@ -35,7 +35,7 @@ public class ProjectArchitectureModel implements IMenuModel {
 		
 		try {
 			jp = mapper.getFactory().createParser(jsonFile);
-			m_start = TwoLinkedJsonNode.getTwoLinkedTreeFromJsonNode((JsonNode) mapper.readTree(jp), "");
+			m_start = new TwoLinkedJsonNode((JsonNode) mapper.readTree(jp), "", true);
 			m_current = m_start;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -54,7 +54,7 @@ public class ProjectArchitectureModel implements IMenuModel {
 		
 		try {
 			jp = mapper.getFactory().createParser(json);
-			m_start = TwoLinkedJsonNode.getTwoLinkedTreeFromJsonNode((JsonNode) mapper.readTree(jp), "");
+			m_start = new TwoLinkedJsonNode((JsonNode) mapper.readTree(jp), "", true);
 			m_current = m_start;
 		} catch (IOException e) {
 			e.printStackTrace();

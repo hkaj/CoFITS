@@ -1,5 +1,6 @@
 package utc.bsfile.main;
 
+import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -331,6 +332,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	
 	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("Something changed");
+	}
+		
+
 	protected void close() {
 		for (TextEntryValidateKeyboard keyboard : m_keyboards){
 			if (keyboard != null){

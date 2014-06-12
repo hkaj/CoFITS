@@ -1,5 +1,8 @@
 package utc.bsfile.main;
 
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import org.mt4j.util.MTColor;
 
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
 
@@ -18,7 +22,7 @@ import utc.bsfile.util.ImageManager;
  * Abstract class for defining the design of every Scene in CoFiTS application
  *
  */
-public abstract class CofitsDesignScene extends AbstractScene {
+public abstract class CofitsDesignScene extends AbstractScene implements PropertyChangeListener{
 
 	public CofitsDesignScene(AbstractMTApplication mtApplication, String name){
 		this(mtApplication, name, new ArrayList<ControlOrb>(), false);
@@ -46,6 +50,7 @@ public abstract class CofitsDesignScene extends AbstractScene {
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 		//this.setClearColor(new MTColor(126, 130, 168, 255));
 		this.setClearColor(new MTColor(50, 50, 50, 255));
+
 	
 		initManager();
 	}
@@ -93,10 +98,24 @@ public abstract class CofitsDesignScene extends AbstractScene {
 	 */
 	protected void close(){
 		destroy();
+	}	
+	
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (evt.getPropertyName().equals("projectsArchitectureRootNode changed")){
+			setProjectsArchitectureRootNode((TwoLinkedJsonNode)evt.getNewValue());
+		}
 	}
+	
+	//Getters & Setters
+	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
+	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node;}
 	
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
+	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
+	
 	
 }
