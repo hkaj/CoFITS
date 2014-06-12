@@ -8,12 +8,16 @@ import jade.wrapper.ContainerController;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FilePathManager;
+import utc.bsfile.util.JsonManager;
 import utc.bsfile.util.PropertyManager;
 
 public class CofitsModel {
@@ -21,7 +25,8 @@ public class CofitsModel {
 	private static String SECOND_PROPERTIES_FILE = "rsc/config/second.properties";
 
 	public CofitsModel() {
-		
+		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME));
+		m_projectsArchitectureRootNode = new TwoLinkedJsonNode(jsonNode, "root", true);
 	}
 	
 	

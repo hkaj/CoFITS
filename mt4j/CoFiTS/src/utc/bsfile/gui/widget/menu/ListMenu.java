@@ -29,6 +29,7 @@ import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.gui.widget.pick.PickMTList;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
@@ -540,9 +541,17 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				if (((TapEvent) ge).isTapped()) {
 					MTListCell listCell = (MTListCell) ge.getTarget();
 					Object choice = listCell.getUserData(CHOICE);
+					File fileChoice;
 					
-					// update the path string
-					if (pathField != null) setPath((File)choice);
+					if (choice instanceof TwoLinkedJsonNode){
+						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
+						fileChoice = new File(node.getName());
+					} else {
+						fileChoice = (File) choice;
+					}
+					
+					// update the path string 
+					if (pathField != null) setPath(fileChoice);
 	
 					if (this.menuModel.hasChoices(choice)) {
 						//A folder had been tapped

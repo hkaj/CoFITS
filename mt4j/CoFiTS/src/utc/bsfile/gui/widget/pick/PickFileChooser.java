@@ -22,6 +22,8 @@ import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
 import utc.bsfile.model.menu.FileChooserModel;
+import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
@@ -42,14 +44,12 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	private MTImageButton htmlButton_activated;
 	private MTImageButton noFilterButton_activated;
 
-	public PickFileChooser(PApplet applet) {
-		this(applet, 0, 0, 300, 7);
+	public PickFileChooser(PApplet applet, IMenuModel model, TwoLinkedJsonNode start) {
+		this(applet, 0, 0, 300, 7, model, start);
 	}
 
-	public PickFileChooser(PApplet applet, int x, int y, float width,
-			int nbItem) {
-		super(applet, x, y, width, nbItem, PropertyManager.getInstance()
-				.getDirProperty(PropertyManager.FILE_PATH), FileExtensionFilter.NO_FILTER);
+	public PickFileChooser(PApplet applet, int x, int y, float width, int nbItem, IMenuModel model, TwoLinkedJsonNode start) {
+		super(applet, x, y, width, nbItem, model, start);
 
 		addChoiceListener(this);
 		setCloseVisible(true);
