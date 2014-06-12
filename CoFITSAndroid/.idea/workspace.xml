@@ -37,13 +37,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="307929ce-ee45-43c7-b27a-7483aa561175" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/Agent/Behaviours/ackFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/Agent/Behaviours/removeFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/Agent/Behaviours/sentFile.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/Agent/theAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/tools/user.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/cofits/src/main/java/util/Util.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cofits/cofits.iml" afterPath="$PROJECT_DIR$/cofits/cofits.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="CoFITSAndroid.iws" />
@@ -880,7 +873,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="4207720251000" />
+        <entry key="$PROJECT_DIR$" value="4207721487000" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -1390,8 +1383,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1478,6 +1469,8 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1577,6 +1570,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <module name="" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -1602,19 +1608,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1803,6 +1796,22 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/cofits/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="686" max-vertical-offset="1245">
+          <caret line="72" column="0" selection-start-line="72" selection-start-column="0" selection-end-line="72" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cofits/src/main/java/com/android/cofits/FilesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2925" max-vertical-offset="3015">
+          <caret line="195" column="0" selection-start-line="195" selection-start-column="0" selection-end-line="195" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/cofits/src/main/res/layout/item_session.xml">
       <provider editor-type-id="android-designer">
         <state />
