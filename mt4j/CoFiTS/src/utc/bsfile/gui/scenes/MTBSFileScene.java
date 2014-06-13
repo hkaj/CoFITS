@@ -1,8 +1,10 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -23,23 +25,26 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
-import utc.bsfile.gui.widget.controlorb.ControlOrb;
 
+import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
 import utc.bsfile.util.PropertyManager;
 
-public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeListener {
+public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
-		this(mtApplication, name, orbs, false);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs) {
+		this(mtApplication, name, model, orbs, false);
 	}
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
-		super(mtApplication, name, orbs, doCleanGestures);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures) {
+		super(mtApplication, name, model, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
-
 
 		// set orbs orientables for the present scene
 		for (ControlOrb orb : orbs) {
@@ -159,7 +164,8 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	 * @brief Draw a FileChooser on the Canvas at the given location
 	 */
 	public void playPickFileChooser(Vector3D location) {
-		m_pick = new PickFileChooser(getMTApplication());
+		//TODO pass project node chosen by user as last argument
+		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
@@ -170,11 +176,55 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		if (evt.getPropertyName().equals(Constants.OPEN_PICK))	
 			playPickFileChooser(new Vector3D(400, 200));
 	}
 	
+	
+	@Override
+	protected void processFileDownloaded(String filename) {
+		super.processFileDownloaded(filename);
+		
+		File file = new File(filename);
+		if(m_filesToOpen.containsKey(file.getAbsolutePath())){
+			m_filesToOpen.get(file.getAbsolutePath()).createFileViewer(file);
+			m_filesToOpen.remove(file.getAbsolutePath());
+		}
+	}
+	
+	
+	@Override
+	public void choiceSelected(ChoiceEvent choiceEvent) {
+		final File file = new File(choiceEvent.getChoice());
+		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
+		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
+		
+		if (m_model.getFile(filename).isLocal()){	
+			fileChooser.createFileViewer(file);
+		} else {
+			int fileId = m_model.getFile(filename).getId();
+			addFileToOpen(filename, fileChooser);
+			
+			m_model.downloadFile(fileId);
+		}
+
+	}
+
+	@Override
+	public void choiceCancelled(ChoiceEvent choiceEvent) {
+		// TODO Auto-generated method stub
+		
+	} 
+	
+	
+	//Getters & Setters
+	public final Map<String, PickFileChooser> getFilesToOpen(){return m_filesToOpen;}
+	public void addFileToOpen(String filename, PickFileChooser fileChooser) {m_filesToOpen.put(filename, fileChooser);}
+	
+	
 	//Members
 	AbstractShape m_pick;
+	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
 
 }

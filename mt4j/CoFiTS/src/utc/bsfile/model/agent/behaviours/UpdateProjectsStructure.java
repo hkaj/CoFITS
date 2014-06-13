@@ -1,19 +1,17 @@
 package utc.bsfile.model.agent.behaviours;
 
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FilePathManager;
+import utc.bsfile.util.JsonManager;
 import utc.bsfile.util.PropertyManager;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -31,21 +29,13 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 	public void action() {
 		
 		//Create JsonNode from content of message
-		JsonNode jsonNode = null;
-		
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			JsonParser jp = mapper.getFactory().createParser(m_message.getContent());
-			jsonNode = (JsonNode) mapper.readTree(jp);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(m_message.getContent());
 		
 		if (jsonNode != null){
 			
 			//Create the new TwoLinkedTree
 			TwoLinkedJsonNode newNodeTree = new TwoLinkedJsonNode(jsonNode, "", true);
-			TwoLinkedJsonNode oldNodeTree = m_guiAgent.getProjectsArchitectureRootNode();
+			TwoLinkedJsonNode oldNodeTree = m_guiAgent.getModel().getProjectsArchitectureRootNode();
 			
 			if (oldNodeTree != null){
 				//Merge the trees and process modification in memory
@@ -63,16 +53,9 @@ public class UpdateProjectsStructure extends OneShotBehaviour {
 					}
 				}
 			}
+		
 			
-			//The new node replace the old one
-			m_guiAgent.setProjectsArchitectureRootNode(newNodeTree);
-			
-			//Release the old tree
-			oldNodeTree.releaseTree();
-			
-			//Save the new Json File
-			FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
-			FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newNodeTree.treeToString());
+			m_guiAgent.getModel().changeProjectArchitecture(newNodeTree, oldNodeTree);
 		} 
 
 	}

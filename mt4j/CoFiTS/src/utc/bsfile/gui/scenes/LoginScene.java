@@ -1,4 +1,4 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
@@ -30,6 +30,8 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.model.CofitsModel;
+import utc.bsfile.model.CofitsUser;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.util.PropertyManager;
 
@@ -40,8 +42,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	AbstractMTApplication applet;
 	
 	//Constructors
-	public LoginScene(AbstractMTApplication mtApplication, String name) {
-		super(mtApplication, name);
+	public LoginScene(AbstractMTApplication mtApplication, String name, CofitsModel model) {
+		super(mtApplication, name, model);
 		applet = mtApplication;
 		m_listOfUsers.setCellsEnabled(false);
 		
@@ -98,7 +100,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		} else {
 			
 			//Update the login in the orb
-			orb.setLogin(keyboard.getText());
+			orb.changeLogin(keyboard.getText());
 			orb.centerLoginString();
 			
 		}
@@ -199,45 +201,53 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	 * Creates an orb and add it to the list of orbs
 	 */
 	protected ControlOrb playOrb(Vector3D orbLocation, TextEntryValidateKeyboard keyboard) {
-		final ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, keyboard.getText(), keyboard);
-		
-		if (keyboard != null){
+		if (!m_model.hasUser(keyboard.getText())){
+			//Create the user
+			CofitsUser user = new CofitsUser(keyboard.getText(), m_orbs.isEmpty());
+			m_model.addUser(user);
+			
+			//Create the orb
+			final ControlOrb orb = new ControlOrb(getMTApplication(), orbLocation, user, keyboard);
 			keyboard.setControlOrb(orb);
-		}
-				
-		addOrb(orb);
-		getCanvas().addChild(orb);
-		
-		//Tap long on the orb
-		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
-		orb.removeAllGestureEventListeners(ScaleProcessor.class);
-		orb.removeAllGestureEventListeners(RotateProcessor.class);
-		
-		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
-		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
-			public boolean processGestureEvent(MTGestureEvent ge) {
-				TapAndHoldEvent th = (TapAndHoldEvent)ge;
-				switch (th.getId()) {
-				case TapAndHoldEvent.GESTURE_STARTED:
-					break;
-				case TapAndHoldEvent.GESTURE_UPDATED:
-					break;
-				case TapAndHoldEvent.GESTURE_ENDED:
-					if (th.isHoldComplete()){
-						//Create a keyboard if does not exist
-						if (orb.getKeyboard() == null){
-							playKeyboard(orb.getCenterPointGlobal(), orb);
+			addOrb(orb);
+			getCanvas().addChild(orb);
+			
+			//Tap long on the orb
+			orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
+			orb.removeAllGestureEventListeners(ScaleProcessor.class);
+			orb.removeAllGestureEventListeners(RotateProcessor.class);
+			
+			orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
+			orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+				public boolean processGestureEvent(MTGestureEvent ge) {
+					TapAndHoldEvent th = (TapAndHoldEvent)ge;
+					switch (th.getId()) {
+					case TapAndHoldEvent.GESTURE_STARTED:
+						break;
+					case TapAndHoldEvent.GESTURE_UPDATED:
+						break;
+					case TapAndHoldEvent.GESTURE_ENDED:
+						if (th.isHoldComplete()){
+							//Create a keyboard if does not exist
+							if (orb.getKeyboard() == null){
+								playKeyboard(orb.getCenterPointGlobal(), orb);
+							}
 						}
+						break;
+					default:
+						break;
 					}
-					break;
-				default:
-					break;
+					return false;
 				}
-				return false;
-			}
-		});
+			});
+			
+			return orb;
+			
+		} else {
+			return getOrb(keyboard.getText());					
+		}
 		
-		return orb;
+		 
 	}
 	
 	
@@ -312,7 +322,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void launchProjectChoiceScene() {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application
 		getMTApplication().addScene(projectChoiceScene);
 		
@@ -333,6 +343,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
+		super.propertyChange(evt);
 		System.out.println("Something changed");
 	}
 		
@@ -345,6 +356,12 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		}
 		
 		super.close();
+	}
+	
+	
+	@Override
+	protected void processFileDownloaded(String filename) {
+		super.processFileDownloaded(filename);	
 	}
 	
 	

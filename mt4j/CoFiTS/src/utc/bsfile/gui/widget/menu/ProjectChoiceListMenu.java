@@ -10,9 +10,9 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
-import utc.bsfile.main.StartCofitsEntities;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
@@ -51,7 +51,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_pathArea.setFontColor(new MTColor(255, 255, 255, 255));
 		
 		addChild(m_pathArea);
-		
+
 		//Add a connexion button
 		m_launchAgentsButton = new MTImageButton(applet, ImageManager.getInstance().load("connect-icon.png"));
 		
@@ -76,7 +76,6 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	}
 	
 	//Getters
-
 	public final TwoLinkedJsonNode getSelectedNode(){
 		return m_selectedNode;
 	}
@@ -98,10 +97,11 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		return m_launchAgentsButton;
 	}
 
+
+	//Members
 	protected TwoLinkedJsonNode m_selectedNode;
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
 	protected MTImageButton m_launchAgentsButton;
-
 }

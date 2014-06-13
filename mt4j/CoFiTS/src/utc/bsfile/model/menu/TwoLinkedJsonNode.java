@@ -163,6 +163,10 @@ public class TwoLinkedJsonNode implements TreeNode {
 	public JsonNode getParentJsonNode() {
 		return m_parent.getCurrent();
 	}
+	
+	public void setName(String filename) {
+		m_name = filename;		
+	}
 
 	//Members
 	private String m_name;
