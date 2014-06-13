@@ -46,6 +46,15 @@ public class DocumentAgent extends Agent
 			this.subscribedAgents.put(project, subscrbrs);
 		}
 	}
+	
+	public List<AID> getSubscribers(String project) {
+		List<AID> subscribers = null;
+		if (this.subscribedAgents.containsKey(project)) {
+			subscribers = this.subscribedAgents.get(project);
+		}
+		return subscribers;
+	}
+
 	protected void register()
 	{
 		final DFAgentDescription dfd = new DFAgentDescription();
