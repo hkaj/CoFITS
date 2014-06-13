@@ -49,62 +49,60 @@ public class FilesFragment extends Fragment {
     public void onStart() {
 
         super.onStart();
-        parametersListFiles = (ListView) getView().findViewById(R.id.listView_files);
+        
+        this.parametersListFiles = (ListView) getView().findViewById(R.id.listView_files);
         ArrayList<HashMap<String, String>> listItem = new ArrayList<HashMap<String, String>>();
 
-        HashMap<String, String> map = new HashMap<String, String>();
+        String file1 = "File_1.png";
+        String file2 = "File_2.doc";
+        String file3 = "File_3.txt";
+        String file4 = "File_4.jpg";
+        String file5 = "File_5.pdf";
+        String file6 = "File_6.xml";
 
-        map.put("filename", "File_1.png");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_png));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("filename", "File_2.doc");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_doc));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("filename", "File_4.txt");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_txt));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("filename", "File_5.jpg");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_jpg));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("filename", "File_3.pdf");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_pdf));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
-        map = new HashMap<String, String>();
-        map.put("filename", "File_6.xml");
-        map.put("file_icon",Integer.toString(R.drawable.ic_file_other));
-        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
-        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
-        listItem.add(map);
-
+        addRow(listItem, file1);
+        addRow(listItem, file2);
+        addRow(listItem, file3);
+        addRow(listItem, file4);
+        addRow(listItem, file5);
+        addRow(listItem, file6);
 
         SpecialAdapter mSchedule = new SpecialAdapter(getActivity(), listItem, R.layout.item_file,
                 new String[]{"filename","file_icon","delete_icon","download_icon"}, new int[]{R.id.item_filename,R.id.icon,R.id.fileDeleteButton,R.id.fileDownloadButton});
-
 
         parametersListFiles.setAdapter(mSchedule);
 
         ((MainActivity) getActivity()).getmDrawerToggle().setDrawerIndicatorEnabled(true);
 
     }
+
+	private void addRow(ArrayList<HashMap<String, String>> listItem,
+			String file) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("filename", file);
+        map.put("file_icon",getFileIcon(file));
+        map.put("delete_icon",Integer.toString(R.drawable.ic_action_delete));
+        map.put("download_icon",Integer.toString(R.drawable.ic_file_download));
+        listItem.add(map);
+	}
+	private String getFileIcon(String fileName){
+		String fileIcon = "";
+		String extension = "";
+		System.out.println("extension" + fileName);
+        String[] morceaux = fileName.split("\\.");
+		extension = morceaux[morceaux.length-1];
+		System.out.println("extension" + extension);
+		if (extension.equals("pdf")) fileIcon = Integer.toString(R.drawable.ic_file_pdf);
+		else if (extension.equals("png")) fileIcon = Integer.toString(R.drawable.ic_file_png);
+		else if (extension.equals("jpg")) fileIcon = Integer.toString(R.drawable.ic_file_jpg);
+		else if (extension.equals("doc")) fileIcon = Integer.toString(R.drawable.ic_file_doc);
+		else if (extension.equals("txt")) fileIcon = Integer.toString(R.drawable.ic_file_txt);
+		else fileIcon = Integer.toString(R.drawable.ic_file_other);
+		
+		System.out.println("extension" + fileIcon);
+
+		return fileIcon;
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
