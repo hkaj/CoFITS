@@ -47,6 +47,7 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 			Map<String, Object> proj = new HashMap<String, Object>();
 			proj.put("name", p.getName());
 			proj.put("creator", p.getCreator());
+			proj.put("description", p.getDescription());
 			proj.put("sessions", getSessions(p.getId()));
 			projectMap.put(p.getId(), proj);
 		}

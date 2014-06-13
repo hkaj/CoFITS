@@ -73,6 +73,7 @@ public class DownloadProjectOverviewBehaviour extends OneShotBehaviour {
 			projStruct = new HashMap<String, Object>();
 			projStruct.put("name", proj.getName());
 			projStruct.put("creator", proj.getCreator());
+			projStruct.put("description", proj.getDescription());
 			projStruct.put("sessions", getSessions(proj.getId()));
 			Map<String, Object> content = new HashMap<String, Object>();
 			content.put("action", "LIST_PROJECT");
