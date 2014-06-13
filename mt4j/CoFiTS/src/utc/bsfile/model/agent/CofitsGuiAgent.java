@@ -27,6 +27,8 @@ public class CofitsGuiAgent extends GuiAgent {
 		CofitsDesignScene scene = (CofitsDesignScene) getArguments()[0];
 		addPropertyChangeListener(scene);
 		
+		registerToDF();
+		
 		addBehaviour(new LaunchPickBehaviour(scene));
 		addBehaviour(new ReceiveMessageBehaviour(this));
 		addBehaviour(new RequestProjectsStructure(this));
@@ -57,6 +59,27 @@ public class CofitsGuiAgent extends GuiAgent {
 		
 		CofitsDesignScene m_scene;
 
+	}
+	
+	
+	/**
+	 * 	The agent registers to the AMS
+	 */
+	private void registerToDF() {
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("table");
+		sd.setName("TATIN");
+		
+		dfd.addServices(sd);
+		
+		try{
+			DFService.register(this, dfd);
+		} catch (FIPAException e){
+			e.printStackTrace();
+		}
 	}
 	
 	
