@@ -162,6 +162,10 @@ public class CofitsGuiAgent extends GuiAgent {
 		return m_model;
 	}
 	
+	public Map<String, ReceiveFile> getReceiveFileBehaviours(){
+		return m_receiveFileBehaviours;
+	}
+	
 	
 	//Members
 	private Map<String, ReceiveFile> m_receiveFileBehaviours = new HashMap<String, ReceiveFile>();

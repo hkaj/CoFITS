@@ -25,7 +25,7 @@ public class CofitsModel {
 	private static String SECOND_PROPERTIES_FILE = "rsc/config/second.properties";
 
 	public CofitsModel() {
-		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME));
+		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.JSON_STRUCTURE_FILENAME));
 		m_projectsArchitectureRootNode = new TwoLinkedJsonNode(jsonNode, "root", true);
 	}
 	
@@ -78,11 +78,35 @@ public class CofitsModel {
 		generateFilesMap();
 		
 		//Save the new Json File
-		FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
-		FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, newArchitectureNode.treeToString());
+		saveJsonStructureFile();
 		
 		//Release the old tree
 		oldArchitectureNode.releaseTree();
+	}
+	
+	
+	public void changeProject(TwoLinkedJsonNode newProjectNode) {
+		//Get the old project node
+		TwoLinkedJsonNode oldProjectNode = m_projectsArchitectureRootNode.getChild(newProjectNode.getName());
+		
+		//Fire the changes to the views		
+		firePropertyChange("Project changed", oldProjectNode, newProjectNode);
+		
+		//Set the new node in the architecture to replace the old one
+		m_projectsArchitectureRootNode.removeChild(oldProjectNode.getName());
+		m_projectsArchitectureRootNode.addChild(newProjectNode, false);
+		
+		generateFilesMap();
+		
+		//Save the new Json File
+		saveJsonStructureFile();
+	}
+	
+	
+	public void removeProject(TwoLinkedJsonNode oldProjectNode) {
+		m_projectsArchitectureRootNode.removeChild(oldProjectNode.getName());
+		oldProjectNode.releaseTree();
+		generateFilesMap();
 	}
 	
 	/**
@@ -98,6 +122,15 @@ public class CofitsModel {
 				}
 			}
 		}
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private void saveJsonStructureFile() {
+		FilePathManager.getInstance().deletePath(PropertyManager.JSON_STRUCTURE_FILENAME);
+		FilePathManager.getInstance().createTextFile(PropertyManager.JSON_STRUCTURE_FILENAME, m_projectsArchitectureRootNode.treeToString());
 	}
 	
 	
