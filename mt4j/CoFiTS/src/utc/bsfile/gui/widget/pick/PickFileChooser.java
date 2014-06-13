@@ -22,6 +22,8 @@ import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
 import utc.bsfile.model.menu.FileChooserModel;
+import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
@@ -42,14 +44,12 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	private MTImageButton htmlButton_activated;
 	private MTImageButton noFilterButton_activated;
 
-	public PickFileChooser(PApplet applet) {
-		this(applet, 0, 0, 300, 7);
+	public PickFileChooser(PApplet applet, IMenuModel model, TwoLinkedJsonNode start) {
+		this(applet, 0, 0, 300, 7, model, start);
 	}
 
-	public PickFileChooser(PApplet applet, int x, int y, float width,
-			int nbItem) {
-		super(applet, x, y, width, nbItem, PropertyManager.getInstance()
-				.getDirProperty(PropertyManager.FILE_PATH), FileExtensionFilter.NO_FILTER);
+	public PickFileChooser(PApplet applet, int x, int y, float width, int nbItem, IMenuModel model, TwoLinkedJsonNode start) {
+		super(applet, x, y, width, nbItem, model, start);
 
 		addChoiceListener(this);
 		setCloseVisible(true);
@@ -118,10 +118,15 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	 */
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
-		final File file = new File(choiceEvent.getChoice());
-		
-		if (FileExtensionFilter.IMG_FILTER.accept(file)) {
-			IMAGEModel img = new IMAGEModel(file.getAbsolutePath());
+
+	}
+
+	/**
+	 * @param filepath
+	 */
+	public void createFileViewer(final File filepath) {
+		if (FileExtensionFilter.IMG_FILTER.accept(filepath)) {
+			IMAGEModel img = new IMAGEModel(filepath.getAbsolutePath());
 			MTIMAGE image = new MTIMAGE(getRenderer(), img);
 			image.setWidthXYGlobal(200);
 			image.setAnchor(PositionAnchor.CENTER);
@@ -131,8 +136,8 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			}
 			getParent().addChild(image);
 			
-		} else if (FileExtensionFilter.PDF_FILTER.accept(file)) {
-			PDFModel pdf = new PDFModel(file.getAbsolutePath());
+		} else if (FileExtensionFilter.PDF_FILTER.accept(filepath)) {
+			PDFModel pdf = new PDFModel(filepath.getAbsolutePath());
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
@@ -142,14 +147,14 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			getParent().addChild(pdfWidget);
 	 		pdf.addPDFListener(pdfWidget);
 			
-		} else if (FileExtensionFilter.VIDEO_FILTER.accept(file)) {
-			MovieModel movie = new MovieModel(file.getAbsolutePath());
+		} else if (FileExtensionFilter.VIDEO_FILTER.accept(filepath)) {
+			MovieModel movie = new MovieModel(filepath.getAbsolutePath());
 			MTMOVIE movieWidget = new MTMOVIE(getRenderer(), movie);
 			movieWidget.setAnchor(PositionAnchor.CENTER);
 			movieWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(movieWidget);
 
-		} else if (FileExtensionFilter.HTML_FILTER.accept(file)) {
+		} else if (FileExtensionFilter.HTML_FILTER.accept(filepath)) {
 			// BrowserComponent bc = new BrowserComponent(
 			// (AbstractMTApplication) getRenderer(), "Browser",
 			// file.getAbsolutePath(), 900, 450, true, workbench);
@@ -160,15 +165,13 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			//
 
 		}
-
 		else {
-			UnknownFile unknownFile = new UnknownFile(file);
+			UnknownFile unknownFile = new UnknownFile(filepath);
 			MTMetadata metaWidget = new MTMetadata(getRenderer(), unknownFile);
 			metaWidget.setAnchor(PositionAnchor.CENTER);
 			metaWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(metaWidget);
 		}
-
 	}
 
 	@Override

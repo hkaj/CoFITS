@@ -6,17 +6,20 @@
 			"innov.pdf" :
 			{
 				"name" : "innov.pdf",
-				"local" : true
+				"local" : true,
+				"last-modified" : "20-04-2014 15:12:23"
 			},
 			"utc.png" :
 			{
 				"name" : "utc.png",
-				"local" : true
+				"local" : true,
+				"last-modified" : "20-04-2014 15:12:23"
 			},
 			"nf28.png" :
 			{
 				"name" : "nf28.png",
-				"local" : false
+				"local" : false,
+				"last-modified" : "20-04-2014 15:12:23"
 			}
 		},
 		"session_20_04_14" : 
@@ -60,17 +63,20 @@
 			"nom_de_fichier_1" :
 			{
 				"name" : "nom_de_fichier_1",
-				"local" : true
+				"local" : true,
+				"last-modified" : "20-04-2014 15:12:23"
 			},
 			"nom_de_fichier_1" :
 			{
 				"name" : "nom_de_fichier_2",
-				"local" : true
+				"local" : true,
+				"last-modified" : "20-04-2014 15:12:23"
 			},
 			"nom_de_fichier_1" :
 			{
 				"name" : "nom_de_fichier_3",
-				"local" : true
+				"local" : true,
+				"last-modified" : "20-04-2014 15:12:23"
 			}
 		}
 	}

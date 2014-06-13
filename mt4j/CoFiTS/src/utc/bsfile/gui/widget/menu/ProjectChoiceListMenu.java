@@ -3,6 +3,7 @@ package utc.bsfile.gui.widget.menu;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.util.MT4jSettings;
@@ -14,6 +15,7 @@ import processing.core.PApplet;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
@@ -35,6 +37,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_confirmButton.setPickable(true);
 		m_confirmButton.setVisible(false);
 		
+
 		m_pathArea = new MTTextArea(applet);
 		Vector3D pathAreaPosition = new Vector3D(x + getSpacing() + 3, y + getSpacingX2() + getSpacedIconHeight() );
 		m_pathArea.setPositionGlobal(pathAreaPosition);
@@ -47,7 +50,16 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_pathArea.setFontColor(new MTColor(255, 255, 255, 255));
 		
 		addChild(m_pathArea);
+
+		//Add a connexion button
+		m_launchAgentsButton = new MTImageButton(applet, ImageManager.getInstance().load("connect-icon.png"));
+		
+		m_launchAgentsButton.setPositionGlobal(new Vector3D(getPosition(TransformSpace.GLOBAL).x, getPosition(TransformSpace.GLOBAL).y));
+		m_launchAgentsButton.setPickable(true);
+		m_launchAgentsButton.setEnabled(true);
+		
 		addChild(m_confirmButton);
+		addChild(m_launchAgentsButton);
 	}
 	
 	@Override
@@ -72,6 +84,8 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_confirmButton.setVisible(false);		
 	}
 	
+
+	//Getters
 	public final TwoLinkedJsonNode getSelectedNode(){
 		return m_selectedNode;
 	}
@@ -88,9 +102,16 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	public final MTTextArea getPathArea(){
 		return m_pathArea;
 	}
+	
+	public final MTImageButton getLaunchAgentsButton(){
+		return m_launchAgentsButton;
+	}
+	
 
+	//Members
 	protected TwoLinkedJsonNode m_selectedNode;
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
+	protected MTImageButton m_launchAgentsButton;
 }
