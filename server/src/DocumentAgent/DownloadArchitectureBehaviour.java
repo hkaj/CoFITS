@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import Constants.DataBaseConstants;
 import ModelObjects.Project;
@@ -43,7 +44,11 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 		HashMap<String, Object> projectMap = new HashMap<String, Object>();
 		projects = getProjects();
 		for (Project p : projects) {
-			projectMap.put(p.getId(), getSessions(p.getId()));
+			Map<String, Object> proj = new HashMap<String, Object>();
+			proj.put("name", p.getName());
+			proj.put("creator", p.getCreator());
+			proj.put("sessions", getSessions(p.getId()));
+			projectMap.put(p.getId(), proj);
 		}
 		try {
 			reply.setContent(mapper.writeValueAsString(projectMap));
@@ -107,7 +112,6 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 				HashMap<String, Object> file = new HashMap<String, Object>();
 				file.put("id", res.getInt("id"));
 				file.put("name", res.getString("name"));
-				file.put("type", res.getString("type"));
 				file.put("owner", res.getString("owner"));
 				file.put("last_modified", res.getTimestamp("last_modified")
 						.toString());

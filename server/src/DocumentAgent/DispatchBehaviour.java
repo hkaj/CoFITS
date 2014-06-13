@@ -43,26 +43,35 @@ public class DispatchBehaviour extends CyclicBehaviour
 					case "CREATE_PROJECT":
 						this.myAgent.addBehaviour(new CreateProjectBehaviour(req,message)); // TODO
 						break;
-					case "UPLOAD_FILE" :
+					case "REMOVE_PROJECT":
+						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message));
+						break;
+					case "UPLOAD_FILE":
 						this.myAgent.addBehaviour(new UploadBehaviour(req, message));  // TODO
 						break;
-					case "REMOVE_FILE" :
+					case "REMOVE_FILE":
 						this.myAgent.addBehaviour(new RemoveFileBehaviour(req, message)); //TODO
 						break;
-					case "DOWNLOAD_FILE" :
+					case "DOWNLOAD_FILE":
 						this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
 						break;
-					case "LIST" :
+					case "LIST":
 						this.myAgent.addBehaviour(new DownloadArchitectureBehaviour(req, message));
 						break;
-					case "LIST_PROJECT" :
+					case "LIST_PROJECT":
 						this.myAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, message)); // TODO
 						break;
-					case "ADD_USER" :
+					case "ADD_USER":
 						this.myAgent.addBehaviour(new AddUserBehaviour(req, message));
 						break;
-					case "CREATE_SESSION" :
+//					case "REMOVE_USER" :
+//						this.myAgent.addBehaviour(new RemoveUserBehaviour(req, message));
+//						break;
+					case "CREATE_SESSION":
 						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message)); //TODO
+						break;
+					case "REMOVE_SESSION":
+						this.myAgent.addBehaviour(new RemoveSessionBehaviour(req, message)); //TODO
 						break;
 					default:
 						break;
