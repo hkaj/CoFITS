@@ -16,12 +16,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class DispatchBehaviour extends CyclicBehaviour
 {
 	final MessageTemplate filter;
-	DispatchBehaviour()
+	public DispatchBehaviour()
 	{
 		super();
+		System.out.println("launched");
 		MessageTemplate f1 = MessageTemplate.MatchPerformative(ACLMessage.SUBSCRIBE);
 		MessageTemplate f2 = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
-		this.filter = MessageTemplate.and(f1, f2);
+		this.filter = MessageTemplate.or(f1, f2);
 	}
 	
 	@Override
@@ -38,6 +39,7 @@ public class DispatchBehaviour extends CyclicBehaviour
 				if (message.getPerformative() == ACLMessage.SUBSCRIBE) {
 					this.myAgent.addBehaviour(new AddSubscriberBehaviour(req, message));
 				} else {
+					System.out.println(message.getContent());
 					switch((String)req.get("action"))
 					{
 //					case "CREATE_PROJECT":
