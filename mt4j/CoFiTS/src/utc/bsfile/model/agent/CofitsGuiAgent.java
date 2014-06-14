@@ -186,6 +186,10 @@ public class CofitsGuiAgent extends GuiAgent {
 		firePropertyChange("projectsArchitectureRootNode changed", oldValue, m_projectsArchitectureRootNode);		
 	}
 	
+	public Map<String, ReceiveFile> getReceiveFileBehaviours(){
+		return m_receiveFileBehaviours;
+	}
+	
 	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);

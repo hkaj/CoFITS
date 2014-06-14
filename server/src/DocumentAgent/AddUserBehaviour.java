@@ -4,6 +4,7 @@ import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -71,9 +72,9 @@ public class AddUserBehaviour extends OneShotBehaviour {
 		try {
 			reply.setContent(mapper.writeValueAsString(responseContent));
 			myAgent.send(reply);
-		} catch (JsonProcessingException e) {
+		} catch (IOException e){
 			e.printStackTrace();
-		}
+		} 
 	}
 
 	private void addUserToProject(String login, String project, String admin) {

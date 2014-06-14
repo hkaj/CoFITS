@@ -44,7 +44,7 @@ public class ReceiveMessageBehaviour extends CyclicBehaviour {
 			if (messageContentNode.path("action").asText().equals("LIST")) {
 				myAgent.addBehaviour(new UpdateProjectsStructure(myAgent, message));
 			} else {
-				m_agent.addBehaviour(new UpdateProject(myAgent, message));
+				//m_agent.addBehaviour(new UpdateProject(myAgent, message));
 			}			
 		}
 		
