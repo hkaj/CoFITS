@@ -59,13 +59,16 @@ public class Session extends ModelObject
 		String value = "";
 		String requestStr = "SELECT " + prop + " FROM sessions s where s.id = " + id + ";"; 
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			if (prop == "date") {
 				value = res.getTimestamp(prop).toString();
 			} else {
 				value = res.getString(prop);
 			}
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -76,9 +79,12 @@ public class Session extends ModelObject
 		Integer value = 0;
 		String requestStr = "SELECT id FROM sessions s where s.project = " + project + " AND date = '" + date + "';"; 
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			value = res.getInt("id");
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -18,13 +18,12 @@ import ModelObjects.Project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DownloadArchitectureBehaviour extends OneShotBehaviour {
+public class DownloadProjectOverviewBehaviour extends OneShotBehaviour {
 
 	final HashMap<String, String> request;
 	final ACLMessage message;
-	ArrayList<Project> projects;
 
-	public DownloadArchitectureBehaviour(HashMap<String, String> request,
+	public DownloadProjectOverviewBehaviour(HashMap<String, String> request,
 			ACLMessage message) {
 		this.request = request;
 		this.message = message;
@@ -32,49 +31,79 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		if (!request.get("login").equals("TATIN")) {
-			System.out
-					.println("An unauthorized user tried to download the architecture!");
-			return;
-		}
+		Project proj = null;
+		Map<String, Object> projStruct = null;
 		ACLMessage reply = message.createReply();
-		reply.setPerformative(ACLMessage.INFORM);
-
-		ObjectMapper mapper = new ObjectMapper();
-		HashMap<String, Object> projectMap = new HashMap<String, Object>();
-		projects = getProjects();
-		for (Project p : projects) {
-			Map<String, Object> proj = new HashMap<String, Object>();
-			proj.put("name", p.getName());
-			proj.put("creator", p.getCreator());
-			proj.put("description", p.getDescription());
-			proj.put("sessions", getSessions(p.getId()));
-			projectMap.put(p.getId(), proj);
+		String project_id = this.request.get("project_id");
+		String login = this.request.get("login");
+		boolean authorized = (login == "TATIN");
+		if (!authorized) {
+			String authReq = "SELECT * FROM involvedIn WHERE project='"
+					+ project_id + "' AND user='" + login + "';";
+			Connection conn = null;
+			Statement s = null;
+			try {
+				conn = this.createConnection();
+				s = conn.createStatement();
+				ResultSet res = s.executeQuery(authReq);
+				if (res.next()) {
+					authorized = true;
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (s != null) {
+						s.close();
+					}
+					if (conn != null) {
+						conn.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (!authorized) {
+				System.out
+						.println("[LIST_PROJECT FAIL] An unauthorized user tried to download a project structure.");
+				return;
+			}
+			ObjectMapper mapper = new ObjectMapper();
+			proj = this.getProject(project_id);
+			projStruct = new HashMap<String, Object>();
+			projStruct.put("name", proj.getName());
+			projStruct.put("creator", proj.getCreator());
+			projStruct.put("description", proj.getDescription());
+			projStruct.put("sessions", getSessions(proj.getId()));
+			Map<String, Object> content = new HashMap<String, Object>();
+			content.put("action", "LIST_PROJECT");
+			content.put("list", projStruct);
+			try {
+				reply.setContent(mapper.writeValueAsString(content));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			reply.setPerformative(ACLMessage.INFORM);
+			myAgent.send(reply);
 		}
-		try {
-			reply.setContent(mapper.writeValueAsString(projectMap));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		myAgent.send(reply);
 	}
 
-	private ArrayList<Project> getProjects() {
-		ArrayList<Project> projects = new ArrayList<Project>();
-		String requestStr = "SELECT * FROM projects;";
+	private Project getProject(String id) {
+		Project project = null;
+		String requestStr = "SELECT * FROM projects WHERE id='" + id + "';";
 		try {
 			Connection conn = this.createConnection();
 			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
-			while (res.next()) {
-				projects.add(new Project(res));
+			if (res.next()) {
+				project = new Project(res);
 			}
 			s.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return projects;
+		return project;
 	}
 
 	private ArrayList<Object> getSessions(String projectId) {

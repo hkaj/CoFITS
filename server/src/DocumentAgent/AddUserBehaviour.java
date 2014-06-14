@@ -50,7 +50,8 @@ public class AddUserBehaviour extends OneShotBehaviour {
 				+ adminLogin + "' AND project = '" + projectId
 				+ "' AND admin = true;";
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
 			if (!res.next()) {
 				reply.setPerformative(ACLMessage.REFUSE);
@@ -61,6 +62,8 @@ public class AddUserBehaviour extends OneShotBehaviour {
 				addUserToProject(loginToAdd, projectId, admin);
 				reply.setPerformative(ACLMessage.CONFIRM);
 			}
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -77,8 +80,11 @@ public class AddUserBehaviour extends OneShotBehaviour {
 		String requestStr = "INSERT INTO involvedIn VALUES ('" + login + "', '"
 				+ project + "', " + admin + ");";
 		try {
-			Statement s = this.createConnection().createStatement();
+			Connection conn = this.createConnection();
+			Statement s = conn.createStatement();
 			s.executeUpdate(requestStr);
+			s.close();
+			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
