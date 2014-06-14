@@ -37,7 +37,7 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		Document document = new Document(Integer.parseInt(this.request
-				.get("file_id")), this.request.get("login"));
+				.get("file_id")));
 		Path path = Paths.get(RequestConstants.documentAgentDirectory
 				+ document.getName());
 		

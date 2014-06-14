@@ -35,13 +35,13 @@ public class Document extends ModelObject
 	}
 	
 	@JsonCreator
-	public Document(@JsonProperty("id")Integer id, @JsonProperty("owner")String owner)
+	public Document(@JsonProperty("id")Integer id)
 	{
 		super();
 		this.id=id;
 		this.name = this.retrieveProp("name", id);
 		this.type = this.retrieveProp("type", id);
-		this.owner = owner;
+		this.owner = this.retrieveProp("owner", id);
 	}
 	
 	public Document(ResultSet r) throws SQLException

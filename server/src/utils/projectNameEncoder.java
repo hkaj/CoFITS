@@ -29,7 +29,9 @@ public class projectNameEncoder {
 		try {
 			Statement s = this.createConnection().createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
-			count = res.getInt("c");
+			if (res.next()) {
+				count = res.getInt("c");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
