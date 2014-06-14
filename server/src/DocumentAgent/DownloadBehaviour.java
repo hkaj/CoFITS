@@ -19,8 +19,8 @@ import ModelObjects.Document;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class DownloadBehaviour extends OneShotBehaviour {
-	final HashMap<String, String> request;
-	final ACLMessage message;
+	private final HashMap<String, String> request;
+	private final ACLMessage message;
 
 	public DownloadBehaviour(HashMap<String, String> request, ACLMessage message) {
 		this.request = request;

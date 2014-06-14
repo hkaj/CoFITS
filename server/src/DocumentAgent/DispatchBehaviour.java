@@ -47,7 +47,7 @@ public class DispatchBehaviour extends CyclicBehaviour
 					case "REMOVE_PROJECT":
 						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message)); // TODO
 						break;
-					case "UPLOAD_FILE":
+					case "UPLOAD_FILE": // gerer la mise a jour d'un fichier
 						this.myAgent.addBehaviour(new UploadBehaviour(req, message));
 						break;
 					case "REMOVE_FILE":

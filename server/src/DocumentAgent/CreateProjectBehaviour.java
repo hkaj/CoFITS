@@ -24,7 +24,6 @@ public class CreateProjectBehaviour extends OneShotBehaviour {
 	public CreateProjectBehaviour(HashMap<String, String> req, ACLMessage msg) {
 		this.message = msg;
 		this.request = req;
-
 	}
 
 	@Override
