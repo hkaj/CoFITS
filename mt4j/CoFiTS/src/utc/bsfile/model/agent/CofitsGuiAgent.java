@@ -1,22 +1,17 @@
 package utc.bsfile.model.agent;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import utc.bsfile.main.CofitsDesignScene;
-import utc.bsfile.model.agent.action.SelectPickAction;
 import utc.bsfile.model.agent.behaviours.ManageReceiveFile;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
-import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import utc.bsfile.model.agent.behaviours.RequestProjectsArchitecture;
 import jade.core.AID;
-import jade.core.NotFoundException;
 import jade.core.behaviours.Behaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -32,11 +27,14 @@ public class CofitsGuiAgent extends GuiAgent {
 	public static final int DOWNLOAD_FILE = 1;
 
 	@Override
-	protected void setup() {
+	protected void setup() {	
 		super.setup();		
-		firePropertyChange("Agent Created", null, this);
 		
-		addBehaviour(new ReceiveMessageBehaviour(this));		
+		m_model = (CofitsModel) getArguments()[0];	
+		m_model.setAgent(this);
+		
+		addBehaviour(new ReceiveMessageBehaviour(this));
+		addBehaviour(new RequestProjectsArchitecture(this));
 	}
 
 	@Override
@@ -45,43 +43,6 @@ public class CofitsGuiAgent extends GuiAgent {
 			int fileId = (Integer) evt.getParameter(0);
 			addBehaviour(new RequestDownloadFile(this, fileId));
 		}
-	}
-
-	private class LaunchPickBehaviour extends OneShotBehaviour {
-
-		/**
-	 * 
-	 */
-		private static final long serialVersionUID = 1L;
-
-		public LaunchPickBehaviour(CofitsDesignScene scene) {
-			m_scene = scene;
-		}
-
-		@Override
-		public void action() {
-			m_scene.getMTApplication().registerPreDrawAction(
-					new SelectPickAction(m_pcs));
-		}
-		
-		CofitsDesignScene m_scene;
-
-	}
-	
-	
-	//Property Change Support methods
-	public void addPropertyChangeListener(PropertyChangeListener listener){
-		m_pcs.addPropertyChangeListener(listener);
-	}
-	
-	
-	public void removePropertyChangeListener(PropertyChangeListener listener){
-		m_pcs.removePropertyChangeListener(listener);
-	}
-	
-	
-	public void firePropertyChange(String propertyName, Object oldValue, Object newValue){
-		m_pcs.firePropertyChange(propertyName, oldValue, newValue);
 	}
 
 	
@@ -137,7 +98,7 @@ public class CofitsGuiAgent extends GuiAgent {
 		m_manageReceiveFileBehaviours.remove(conversationId);
 		m_receiveFileMessagesQueues.remove(conversationId);
 		
-		firePropertyChange("File Received", null, receiveFile.getFilename());
+		m_model.fileReceived(receiveFile.getFilename());
 		
 		//Interrupt the thread
 		//TODO Check whether this step is needed or not
@@ -187,11 +148,8 @@ public class CofitsGuiAgent extends GuiAgent {
 	
 	
 	//Getters & Setters
-	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
-	public void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {
-		TwoLinkedJsonNode oldValue = m_projectsArchitectureRootNode;
-		m_projectsArchitectureRootNode = node;
-		firePropertyChange("projectsArchitectureRootNode changed", oldValue, m_projectsArchitectureRootNode);		
+	public CofitsModel getModel() {
+		return m_model;
 	}
 	
 	public Map<String, ManageReceiveFile> getManageReceiveFileBehaviours(){
@@ -200,10 +158,9 @@ public class CofitsGuiAgent extends GuiAgent {
 	
 	
 	//Members
-	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
-	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
 	private Map<String, ManageReceiveFile> m_manageReceiveFileBehaviours = new HashMap<String, ManageReceiveFile>();
 	private Map<String, LinkedBlockingQueue<ACLMessage> > m_receiveFileMessagesQueues = new HashMap<String, LinkedBlockingQueue<ACLMessage> >();
 	private ThreadedBehaviourFactory m_threadedBehaviourFactory = new ThreadedBehaviourFactory();
+	private CofitsModel m_model;
 
 }

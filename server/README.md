@@ -93,3 +93,10 @@ Pour obtenir l'IP du serveur, executer __ifconfig__ depuis le serveur et copier 
 ```
 
 Un diagramme des tables est disponible dans le dossier **about**.
+
+## TODO:
+
+- Retourner des messages d'erreurs au lieu de rien en cas d'erreur serveur.
+- Ameliorer le stockage des documents dans le file system du serveur.
+- Dans la DownloadBehaviour, verifier la legitimite de l'utilitsateur qui demande le fichier.
+- Fragmenter les fichiers a envoyer en plusieurs messages si necessaire.

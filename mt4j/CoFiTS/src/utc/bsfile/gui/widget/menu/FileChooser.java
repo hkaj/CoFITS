@@ -7,14 +7,12 @@ import java.io.IOException;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
-import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -22,19 +20,18 @@ import processing.core.PImage;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.model.menu.FileChooserModel;
+import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.PositionSequencer;
-import utc.bsfile.util.PropertyManager;
 import utc.bsfile.util.PositionSequencer.Orientation;
+import utc.bsfile.util.PropertyManager;
 
 
 
 public class FileChooser extends ListMenu
 {
-	/**
-	 * @uml.property  name="root"
-	 */
-	private File root;
 
 	/**
 	 * @uml.property  name="parentButton"
@@ -108,17 +105,23 @@ public class FileChooser extends ListMenu
 	public PApplet applet;
 	
 	public FileChooser(PApplet applet, int x, int y, float width, int nbItem,
-			File path, FileFilter filter) {
-		super(applet, x, y, width, nbItem, new FileChooserModel(path, filter));
-
-		root = path.getAbsoluteFile();
-				
+			IMenuModel model, TwoLinkedJsonNode start) {
+		super(applet, x, y, width, nbItem, model);
+		
+		m_start = start;
+		
+		if (model instanceof ProjectArchitectureModel){
+			model.setCurrentMenu(m_start);
+		}
+		
 		//---------------------------------------------------------------------------
-		IFont font = FontManager.getInstance().createFont(applet, "century-gothic", 17);
-		this.pathField = new MTTextField(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight(), font);
+		this.pathField = new MTTextArea(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight());
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 30) + "...";
 		}
+		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
+		pathField.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
+		pathField.setFontColor(new MTColor(255, 255, 255, 255));
 		pathField.setText(pathString);
 		pathField.setNoFill(true);
 		pathField.setNoStroke(true);
@@ -129,7 +132,8 @@ public class FileChooser extends ListMenu
 		
 		PositionSequencer position = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing()), getSpacing(), Orientation.HORIZONTAL);
 		ButtonListener listener = new ButtonListener();
-		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener); 
+		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener);
+		parentButton.setSizeXYGlobal(40, 40);
 		position.nextPosition(parentButton);
 		Vector3D savedPosition = position.getPosition();
 		actionButton = createIconButton(savedPosition, "action-icon-on.png", listener);
@@ -155,6 +159,14 @@ public class FileChooser extends ListMenu
 		addChild(actionButton);
 		addChild(parentButton);
 		addChild(pathField);
+
+	}
+	
+	
+	public FileChooser(PApplet applet, int x, int y, float width, int nbItem,
+			File path, FileFilter filter) {
+		this(applet, x, y, width, nbItem, new FileChooserModel(path, filter), null);
+
 	}
 	
 	public void displayDisabledBottomButtons() {
@@ -205,12 +217,13 @@ public class FileChooser extends ListMenu
 	protected MTComponent makeChoiceView(Object choice)
 	{
 		MTComponent component = new MTComponent(getRenderer());
-		File file = (File) choice;
+		TwoLinkedJsonNode nodeChoice = (TwoLinkedJsonNode) choice;
 		try {
 			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
 					getSpacing(), 3, iconWidth, iconHeight);
-			PImage icon = FileExtensionIconManager.getInstance().getIcon(file);
+			//TODO Find why icon is not printed
+			PImage icon = FileExtensionIconManager.getInstance().getIcon(nodeChoice.getName());
 			if (icon != null) {
 				fileExtIcon.setTexture(icon);
 				fileExtIcon.setNoStroke(true);
@@ -226,12 +239,12 @@ public class FileChooser extends ListMenu
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), "century-gothic", 16, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 16, MTColor.BLACK, true));
 		
-		if ( file.getName().length() <= 20 ){
-			textArea.setText(file.getName());
+		if ( nodeChoice.getName().length() <= 20 ){
+			textArea.setText(nodeChoice.getName());
 		} else {
-			textArea.setText(file.getName().substring(0, 20)+"...");
+			textArea.setText(nodeChoice.getName().substring(0, 20)+"...");
 		}
 		
 		Theme.getTheme().applyStyle(StyleID.TRANSPARENT, textArea);
@@ -261,13 +274,32 @@ public class FileChooser extends ListMenu
 						Object parent = getModel().getParentMenu(FileChooser.this.getModel().getCurrentMenu());
 						//System.out.println("CURRENT : " + ((File)getModel().getCurrentMenu()).getPath());
 						
+						File fileChoice;
+						
+						if (getModel().getCurrentMenu() instanceof TwoLinkedJsonNode){
+							TwoLinkedJsonNode node = (TwoLinkedJsonNode) getModel().getCurrentMenu();
+							fileChoice = new File(node.getName());
+						} else {
+							fileChoice = (File) getModel().getCurrentMenu();
+						}
+						
 						//We can go to parent only if we are under FILE_PATH property root
-						if (parent != null && !((File)getModel().getCurrentMenu()).getAbsolutePath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH))) {
+						if (parent != null && !fileChoice.getAbsolutePath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH))) {
+							
+							File fileChoiceParent;
+							
+							if (getModel().getCurrentMenu() instanceof TwoLinkedJsonNode){
+								TwoLinkedJsonNode node = (TwoLinkedJsonNode) parent;
+								fileChoiceParent = new File(node.getName());
+							} else {
+								fileChoiceParent = (File) parent;
+							}
+							
 							FileChooser.this.getModel().setCurrentMenu(parent);
 							updateList();
 							//-----------------------------------------------------------------------
 							// Max : set the current path with the parent's path (update the path textField)
-							setPath((File)parent);
+							setPath(fileChoiceParent);
 							//-----------------------------------------------------------------------
 						}
 						
@@ -290,4 +322,8 @@ public class FileChooser extends ListMenu
 			return false;
 		}
 	}
+	
+	
+	//Members
+	private TwoLinkedJsonNode m_start;
 }

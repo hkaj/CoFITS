@@ -187,6 +187,10 @@ public class PickMTList extends MTClipRectangle {
 	}
 	
 	
+	public MTListCellContainer getListCellContainer() {
+		return listCellContainer;
+	}
+	
 	private Vector3D getListUpperLeftLocal(){
 		PositionAnchor savedAnchor = this.getAnchor();
 		this.setAnchor(PositionAnchor.UPPER_LEFT);
@@ -285,13 +289,16 @@ public class PickMTList extends MTClipRectangle {
 	 * 
 	 * @author Christopher Ruff
 	 */
-	private class MTListCellContainer extends MTRectangle{
+	public class MTListCellContainer extends MTRectangle{
 		private PApplet app;
 		private List<MTListCell> cells;
 		private List<MTListCell> selectedCells; //TODO!
 		
 		private boolean isDragging;
 		
+		public List<MTListCell> getCells() {
+			return cells;
+		}
 
 		public MTListCellContainer(float x, float y, float width, float height,	PApplet applet) {
 			super(applet, x, y, width, height);

@@ -22,6 +22,8 @@ import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
 import utc.bsfile.model.menu.FileChooserModel;
+import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
@@ -42,14 +44,12 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	private MTImageButton htmlButton_activated;
 	private MTImageButton noFilterButton_activated;
 
-	public PickFileChooser(PApplet applet) {
-		this(applet, 0, 0, 300, 7);
+	public PickFileChooser(PApplet applet, IMenuModel model, TwoLinkedJsonNode start) {
+		this(applet, 0, 0, 300, 7, model, start);
 	}
 
-	private PickFileChooser(PApplet applet, int x, int y, float width,
-			int nbItem) {
-		super(applet, x, y, width, nbItem, PropertyManager.getInstance()
-				.getDirProperty(PropertyManager.FILE_PATH), FileExtensionFilter.NO_FILTER);
+	public PickFileChooser(PApplet applet, int x, int y, float width, int nbItem, IMenuModel model, TwoLinkedJsonNode start) {
+		super(applet, x, y, width, nbItem, model, start);
 
 		addChoiceListener(this);
 		setCloseVisible(true);
@@ -139,6 +139,9 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			image.setWidthXYGlobal(200);
 			image.setAnchor(PositionAnchor.CENTER);
 			image.setPositionGlobal(getCenterPointGlobal());
+			if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+				image.updateOrientation();
+			}
 			getParent().addChild(image);
 			
 		} else if (FileExtensionFilter.PDF_FILTER.accept(filepath)) {
@@ -146,6 +149,9 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
+			if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+				pdfWidget.updateOrientation();
+			}
 			getParent().addChild(pdfWidget);
 	 		pdf.addPDFListener(pdfWidget);
 			

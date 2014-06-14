@@ -1,6 +1,4 @@
-package utc.bsfile.main;
-
-import jade.gui.GuiEvent;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -22,7 +20,6 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
-import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -32,24 +29,29 @@ import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
-import utc.bsfile.model.agent.CofitsGuiAgent;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
-		this(mtApplication, name, orbs, false);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs) {
+		this(mtApplication, name, model, orbs, false);
 	}
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
-		super(mtApplication, name, orbs, doCleanGestures);
-
-
-		//this.setClearColor(new MTColor(126, 130, 168, 255));
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures) {
+		super(mtApplication, name, model, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
-		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
+		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
+
+		// set orbs orientables for the present scene
+		for (ControlOrb orb : orbs) {
+			orb.setApplication(mtApplication);
+			orb.addOrientationListener(orb);
+		}
+		
 		//Display the orbs
 		for (ControlOrb orb : m_orbs){
 			orb.setVisible(true);
@@ -71,6 +73,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		backgroundPan.setNoStroke(true);
 
 		backgroundPan.setText("CoFiTS");
+
 		backgroundPan.setPickable(false);
 		this.getCanvas().addChild(backgroundPan);
 		backgroundPan.setPositionGlobal(new Vector3D(getMTApplication().width / 2f, getMTApplication().height / 2f + 1 * verticalPad, 0));
@@ -93,18 +96,18 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
 		//this.getCanvas().addChild(dragOnly);
 		
-		addPickFileChooser();
+		for (ControlOrb cOrb : orbs ) {
+			processInputForOrb(cOrb);
+		}
+		
+		//addPickFileChooser();
 	}
 	
-	
-	/**
-	 * Defines the process in order to create a FileChooser on the screen
-	 */
-	private void addPickFileChooser() {
-		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
-	
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+	protected void processInputForOrb(final ControlOrb orb) {
+		//Tap long on the orb
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),500));
+		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
+		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
 				TapAndHoldEvent th = (TapAndHoldEvent)ge;
 				switch (th.getId()) {
@@ -114,7 +117,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 					break;
 				case TapAndHoldEvent.GESTURE_ENDED:
 					if (th.isHoldComplete()){
-						playPickFileChooser(th.getLocationOnScreen());
+						playPickFileChooser(orb.getCenterPointGlobal());
 					}
 					break;
 				default:
@@ -122,9 +125,37 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 				}
 				return false;
 			}
-		});
-		
+		});		
 	}
+	
+	
+	/**
+	 * Defines the process in order to create a FileChooser on the screen
+	 */
+//	private void addPickFileChooser() {
+//		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
+//	
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+//			public boolean processGestureEvent(MTGestureEvent ge) {
+//				TapAndHoldEvent th = (TapAndHoldEvent)ge;
+//				switch (th.getId()) {
+//				case TapAndHoldEvent.GESTURE_STARTED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_UPDATED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_ENDED:
+//					if (th.isHoldComplete()){
+//						playPickFileChooser(th.getLocationOnScreen());
+//					}
+//					break;
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+//	}
 	
 	
 	
@@ -133,9 +164,11 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 * @brief Draw a FileChooser on the Canvas at the given location
 	 */
 	public void playPickFileChooser(Vector3D location) {
-		m_pick = new PickFileChooser(getMTApplication());
-		location.translate(new Vector3D(-100,0));
+		//TODO pass project node chosen by user as last argument
+		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
+		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
+		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
 		getCanvas().addChild(m_pick);
 	}
 
@@ -167,20 +200,13 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
 		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
 		
-		if (m_files.get(filename).isLocal()){	
+		if (m_model.getFile(filename).isLocal()){	
 			fileChooser.createFileViewer(file);
 		} else {
-			int fileId = m_files.get(filename).getId();
+			int fileId = m_model.getFile(filename).getId();
 			addFileToOpen(filename, fileChooser);
 			
-			//Send a gui event to the agent
-			GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
-			event.addParameter(fileId);
-			if (m_agent != null){
-				m_agent.postGuiEvent(event);
-			} else {
-				System.err.println("No Agent running");
-			}
+			m_model.downloadFile(fileId);
 		}
 
 	}

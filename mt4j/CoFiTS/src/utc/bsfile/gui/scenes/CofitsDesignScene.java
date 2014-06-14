@@ -1,12 +1,10 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.MTComponent;
@@ -15,9 +13,7 @@ import org.mt4j.sceneManagement.AbstractScene;
 import org.mt4j.util.MTColor;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
-import utc.bsfile.model.CofitsFile;
-import utc.bsfile.model.agent.CofitsGuiAgent;
-import utc.bsfile.model.menu.TwoLinkedJsonNode;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.ImageManager;
 
@@ -27,12 +23,14 @@ import utc.bsfile.util.ImageManager;
  */
 public abstract class CofitsDesignScene extends AbstractScene implements PropertyChangeListener{
 
-	public CofitsDesignScene(AbstractMTApplication mtApplication, String name){
-		this(mtApplication, name, new ArrayList<ControlOrb>(), false);
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name, CofitsModel model){
+		this(mtApplication, name, model, new ArrayList<ControlOrb>(), false);
 	}
 	
-	public CofitsDesignScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doClearOrbGestures) {
+	public CofitsDesignScene(AbstractMTApplication mtApplication, String name,CofitsModel model, List<ControlOrb> orbs, boolean doClearOrbGestures) {
 		super(mtApplication, name);
+		
+		m_model = model;
 		
 		//Add the orbs to the list of Orbs
 		for (ControlOrb orb : orbs){
@@ -51,7 +49,8 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		
 		//Input Listener drawing a circle when touching with one finger
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
-		this.setClearColor(new MTColor(126, 130, 168, 255));
+		//this.setClearColor(new MTColor(126, 130, 168, 255));
+		this.setClearColor(new MTColor(50, 50, 50, 255));
 		
 		//TODO construct the node somewhere
 	
@@ -88,11 +87,12 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	 * By convention, the admin controlOrb is the first in the list
 	 */
 	protected ControlOrb getAdminOrb(){
-		if (!m_orbs.isEmpty()){
-			return m_orbs.get(0);
-		} else {
-			return null;
+		for (ControlOrb orb : m_orbs){
+			if (orb.isAdmin()){
+				return orb;
+			}
 		}
+		return null;
 	}
 	
 	
@@ -107,45 +107,29 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals("projectsArchitectureRootNode changed")){
-			setProjectsArchitectureRootNode((TwoLinkedJsonNode)evt.getNewValue());
+			//TODO set the new model for pickFileChooserOpened
 		} else if (evt.getPropertyName().equals("File Received")){
 			processFileDownloaded((String)evt.getNewValue());
 		}
 	}
 	
 	protected void processFileDownloaded(String filename){
-		m_files.get(filename).setLocal(true);
+		m_model.getFile(filename).setLocal(true);
 	}
 
-	
-	/**
-	 * Generate a map to easily have the link between id and filename for a file
-	 */
-	private void generateFilesMap() {
-		//TODO Find another place to do that
-		m_files.clear();
-		
-		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
-			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
-				for (TwoLinkedJsonNode fileNode : sessionNodes.getChildren()){	
-					m_files.put(fileNode.getName(), new CofitsFile(fileNode));
-				}
-			}
-		}
-	}
 	
 	//Getters & Setters
-	public TwoLinkedJsonNode getProjectsArchitectureRootNode() {return m_projectsArchitectureRootNode;}
-	protected void setProjectsArchitectureRootNode(TwoLinkedJsonNode node) {m_projectsArchitectureRootNode = node; generateFilesMap();}
-
-	public final CofitsGuiAgent getAgent(){return m_agent;}
-	public final Map<String,CofitsFile> getFiles(){return m_files;}
-	public final CofitsFile getFile(String filename){return m_files.get(filename);}
+	public final CofitsModel getModel(){return m_model;}
+	public ControlOrb getOrb(String login){
+		for (ControlOrb orb : m_orbs){
+			if (orb.getLogin().equals(login))
+				return orb;
+		}
+		return null;
+	}
 	
 	//Members
 	protected List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	protected TwoLinkedJsonNode m_projectsArchitectureRootNode;
-	protected CofitsGuiAgent m_agent = null;
-	protected Map<String, CofitsFile> m_files = new HashMap<String,CofitsFile>();
+	protected CofitsModel m_model;
 	
 }

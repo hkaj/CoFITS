@@ -6,15 +6,19 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import org.mt4j.components.MTComponent;
+import org.mt4j.components.bounds.BoundingSphere;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
+import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
@@ -25,6 +29,7 @@ import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.gui.widget.pick.PickMTList;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
@@ -101,12 +106,13 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	 * @uml.property name="list"
 	 * @uml.associationEnd
 	 */
-	private PickMTList list;
+	protected PickMTList list;
 	/**
 	 * @uml.property name="closeButton"
 	 * @uml.associationEnd
 	 */
-	private MTImageButton closeButton;
+	//private MTImageButton closeButton;
+	private MTSvgButton closeButton;
 	/**
 	 * @uml.property name="backButton"
 	 * @uml.associationEnd
@@ -132,21 +138,22 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 
 		this.applet = applet;
 
-		Vector3D closeButtonPosition = new Vector3D(x + width
-				- (iconWidth + 2*getSpacing()), y + getSpacing());
-		this.closeButton = createIconButton(closeButtonPosition, "close.png",
-				new IGestureEventListener() {
+		// close button creation
+		int buttonSize = 40;
+		this.closeButton = new MTSvgButton(this.applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybClose-on.svg");
+		Vector3D closeButtonPosition = new Vector3D(x + width - buttonSize/2 - getSpacing(), y + buttonSize/2 + getSpacing());
+		this.closeButton.setPositionGlobal(closeButtonPosition);
+		this.closeButton.setSizeXYGlobal(buttonSize, buttonSize);
+		this.closeButton.setBounds(new BoundingSphere(this.closeButton, closeButtonPosition, buttonSize/2));
+		this.closeButton.addGestureListener(TapProcessor.class, new IGestureEventListener() {
 					public boolean processGestureEvent(MTGestureEvent ge) {
 						if (ge instanceof TapEvent) {
 							TapEvent tapEvent = (TapEvent) ge;
 
-							if (tapEvent.isTapped()
-									&& tapEvent.getTarget() == closeButton) {
-								ChoiceEvent choiceEvent = new ChoiceEvent(
-										ListMenu.this, null);
+							if (tapEvent.isTapped() && tapEvent.getTarget() == closeButton) {
+								ChoiceEvent choiceEvent = new ChoiceEvent(ListMenu.this, null);
 								for (ChoiceListener listener : ListMenu.this.listeners)
 									listener.choiceCancelled(choiceEvent);
-								if (ListMenu.this.mustBeDestroy())
 									ListMenu.this.destroy();
 							}
 						}
@@ -154,10 +161,11 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						return false;
 					}
 				});
-		this.closeButton.setNoStroke(true);
+
 		addChild(this.closeButton);
 
-		this.backButton = createIconButton(closeButtonPosition,
+		Vector3D parentButtonPosition = new Vector3D(x + getSpacing(), y + getSpacing() - 4);
+		this.backButton = createIconButton(parentButtonPosition,
 				"parent-icon.png", new IGestureEventListener() {
 					public boolean processGestureEvent(MTGestureEvent ge) {
 						if (ge instanceof TapEvent) {
@@ -178,6 +186,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						return false;
 					}
 				});
+		this.backButton.setSizeXYGlobal(buttonSize, buttonSize);
+		this.backButton.setNoStroke(true);
 		addChild(this.backButton);
 
 		this.backButton.setVisible(false);
@@ -189,9 +199,12 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		updateList();
 		addChild(this.list);
 
-		list.setFillColor(new MTColor(22, 149, 163, 0)); // list background color
+		list.setFillColor(Theme.ITEM_COLOR); // list background color
 		this.setNoStroke(true);
 		this.listeners = new HashSet<ChoiceListener>();
+		
+		addOrientationListener(this);
+		//updateOrientation(x, y);
 	}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
@@ -204,7 +217,93 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this(applet, x, y, width, nbItem, choices.toArray());
 	}
 
+	// ORIENTATION -------------------------------------------------------
+	float angle = 0;
 	
+	public void updateOrientation(float x, float y) {
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = applet.width;
+			float height = applet.height;
+			
+			float leftDistance =  x;
+			float rightDistance = width - x;
+			float topDistance = y;
+			float bottomDistance = height - y;	
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 90);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 180);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 270);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(new Vector3D(x, y), 0);
+			}
+		}
+	}
+	
+	public void updateOrientation() {
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = applet.width;
+			float height = applet.height;
+			
+			float leftDistance =  getCenterPointGlobal().x;
+			float rightDistance = width - getCenterPointGlobal().x;
+			float topDistance = getCenterPointGlobal().y;
+			float bottomDistance = height - getCenterPointGlobal().y;	
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 90);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 180);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 270);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(getCenterPointGlobal(), 0);
+			}
+		}
+	}
+	
+	protected void setAngle(Vector3D centerPoint, float newAngle) {
+		rotateZGlobal(centerPoint, -angle);
+		rotateZGlobal(centerPoint, newAngle);
+		angle = newAngle;
+	}
+
+	public void addOrientationListener(MTComponent component) {
+		
+		component.addGestureListener(DragProcessor.class, new IGestureEventListener() {
+		
+		@Override
+		public boolean processGestureEvent(MTGestureEvent ge) {
+			String device = PropertyManager.getInstance().getProperty(PropertyManager.DEVICE);
+			if (device.equals("table")){
+				
+				 DragEvent th = (DragEvent) ge;
+                 switch (th.getId()) {
+                 case DragEvent.GESTURE_STARTED:
+                               break;
+                 case DragEvent.GESTURE_UPDATED:
+                	 updateOrientation(th.getDragCursor().getPosition().x, th.getDragCursor().getPosition().y);
+                               break;
+                 case DragEvent.GESTURE_ENDED:
+                               break;
+                 default:
+                               break;
+                 }
+			}
+			return false;
+		}
+		});
+	}
+	
+	//--------------------------------------------------------------------
 	
 	/**
 	 * @param position
@@ -235,7 +334,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
-				closeButton.setVisible(false);
+				//closeButton.setVisible(false);
 				backButton.setVisible(true);
 			}
 		}
@@ -244,7 +343,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		if (choices != null) {
 			for (final Object choice : choices) {
 				nbItems++;
-				MTListCell cell = new MTListCell(getRenderer(), getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
+				MTListCell cell = new MTListCell(getRenderer(), getWidthXYGlobal() - getSpacingX2() - 4, choiceViewHeight);
 				Theme.getTheme().applyStyle("LIST_CHOICE", cell);
 				cell.setUserData(CHOICE, choice);
 				cell.addChild(makeChoiceView(choice));
@@ -252,7 +351,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				cell.addGestureListener(TapProcessor.class, this);
 				//cell.setNoStroke(true);
 				
-				cell.setStrokeColor(new MTColor(34, 83, 120, 255)); // list element stroke color
+				cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // list element stroke color
 				cell.setStrokeWeight(2);
 
 				list.addListElement(cell);
@@ -280,7 +379,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
-				closeButton.setVisible(false);
+				//closeButton.setVisible(false);
 				backButton.setVisible(true);
 			}
 		}
@@ -295,8 +394,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					checkedIcon.setNoStroke(true);
 					// Theme.getTheme().applyStyle("LIST_CHOICE", cell);
 					//cell.setFillColor(new MTColor(140, 210, 210, 240));
-					cell.setFillColor(new MTColor(22, 149, 163, 255)); // cell color after action-button pushed
-					cell.setStrokeColor(new MTColor(34, 83, 120, 255)); // the same that the filechooser background
+					cell.setFillColor(Theme.ITEM_LIGHT_COLOR); // cell color after action-button pushed
+					cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // the same that the filechooser background
 					cell.setStrokeWeight(2);
 					cell.setUserData(CHOICE, choice);
 					cell.addChild(makeChoiceView(choice));
@@ -311,16 +410,14 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 													.contains((File) choice)) {
 												listCells.remove((File) choice);
 												cell.removeChild(checkedIcon);
-												cell.setFillColor(new MTColor(
-														22, 149, 163, 255)); // unselected file color (select and unselect a file)
+												cell.setFillColor(Theme.ITEM_LIGHT_COLOR); // unselected file color (select and unselect a file)
 											} else {
 												listCells.add((File) choice);
 												cell.addChild(checkedIcon);
 												checkedIcon.setPositionRelativeToParent(new Vector3D(
 														getWidthXYGlobal() -  getSpacedIconWidth()/2 - getSpacing()*2,
 														getSpacedIconHeight()/2 - 3));
-												cell.setFillColor(new MTColor(
-														235, 127, 0, 255)); // selected file color
+												cell.setFillColor(Theme.ACTIVE_COLOR); // selected file color
 											}
 										}
 										System.out.println("Taille liste : "+ listCells.size());
@@ -357,9 +454,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	 * Create the TextArea to show the name of the file 
 	 */
 	protected MTComponent makeChoiceView(Object choice) {
-		MTTextArea textArea = new MTTextArea(getRenderer(), getSpacing(), 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
+		MTTextArea textArea = new MTTextArea(getRenderer(), 0, 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 20, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 18, MTColor.BLACK, true));
 		textArea.setText(choice.toString());
 		textArea.setNoFill(true);
 		textArea.setNoStroke(true);
@@ -417,7 +514,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	
 	//-----------------------------------------------------------
 	protected String pathString = "\\server";
-	protected  MTTextField pathField;
+	public  MTTextArea pathField;
 	//-----------------------------------------------------------
 	
 	protected void setPath(File choice) {
@@ -444,6 +541,17 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				if (((TapEvent) ge).isTapped()) {
 					MTListCell listCell = (MTListCell) ge.getTarget();
 					Object choice = listCell.getUserData(CHOICE);
+					File fileChoice;
+					
+					if (choice instanceof TwoLinkedJsonNode){
+						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
+						fileChoice = new File(node.getName());
+					} else {
+						fileChoice = (File) choice;
+					}
+					
+					// update the path string 
+					if (pathField != null) setPath(fileChoice);
 	
 					if (this.menuModel.hasChoices(choice)) {
 						//A folder had been tapped
@@ -507,4 +615,5 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 			return ret;
 		}
 	}
+	
 }

@@ -1,4 +1,4 @@
-package utc.bsfile.main;
+package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
@@ -18,6 +18,7 @@ import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.menu.ProjectChoiceListMenu;
+import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
 
@@ -26,13 +27,19 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	private final static boolean DO_CLEAN_GESTURES = true;
 	
 	
-	public ProjectChoiceScene(AbstractMTApplication mtApplication, String name) {
-		this(mtApplication,name,new ArrayList<ControlOrb>(), false);
+	public ProjectChoiceScene(AbstractMTApplication mtApplication, String name, CofitsModel model) {
+		this(mtApplication,name, model,new ArrayList<ControlOrb>(), false);
 	}
 	
 	
-	public ProjectChoiceScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doClearOrbGestures) {
-		super(mtApplication, name, orbs, doClearOrbGestures);
+	public ProjectChoiceScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doClearOrbGestures) {
+		super(mtApplication, name, model, orbs, doClearOrbGestures);
+		
+		// set orbs orientables for the present scene
+		for (ControlOrb orb : orbs) {
+			orb.setApplication(mtApplication);
+			orb.addOrientationListener(orb);
+		}
 		
 		//Manage the admin Orb
 		if (!m_orbs.isEmpty()){
@@ -53,7 +60,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 
 	protected void processInputForOrb(final ControlOrb orb) {
 		//Tap long on the orb
-		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
 		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
@@ -108,7 +115,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
-					StartCofitsEntities.launchAgentContainer(ProjectChoiceScene.this);
+					m_model.launchAgentContainer();
 					projectList.getLaunchAgentsButton().setEnabled(false);
 					break;
 				default:
@@ -124,9 +131,9 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	
 	
 	protected void launchProjectChoiceScene() {
-		setTransition(new FadeTransition(getMTApplication(), 1700));	//Set a fade transition between the two scenes
+		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);
 		//Add the scene to the mt application
 		getMTApplication().addScene(mtbsFileScene);
 		
