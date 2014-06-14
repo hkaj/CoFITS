@@ -38,6 +38,7 @@ public class DispatchBehaviour extends CyclicBehaviour
 				if (message.getPerformative() == ACLMessage.SUBSCRIBE) {
 					this.myAgent.addBehaviour(new AddSubscriberBehaviour(req, message));
 				} else {
+					System.out.println(message.getContent());
 					switch((String)req.get("action"))
 					{
 					case "CREATE_PROJECT":

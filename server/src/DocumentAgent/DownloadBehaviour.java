@@ -51,7 +51,7 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 
 		jsonMap.put("action", "DOWNLOAD_FILE");
 		jsonMap.put("file_id", this.request.get("file_id"));
-		jsonMap.put("number_of_message", "1");
+		jsonMap.put("number_of_messages", "1");
 		Envelope envelop = new Envelope();
 		envelop.setComments("1");
 
