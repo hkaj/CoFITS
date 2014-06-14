@@ -19,7 +19,6 @@ public class DispatchBehaviour extends CyclicBehaviour
 	public DispatchBehaviour()
 	{
 		super();
-		System.out.println("launched");
 		MessageTemplate f1 = MessageTemplate.MatchPerformative(ACLMessage.SUBSCRIBE);
 		MessageTemplate f2 = MessageTemplate.MatchPerformative(ACLMessage.REQUEST);
 		this.filter = MessageTemplate.or(f1, f2);
