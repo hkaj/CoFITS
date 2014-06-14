@@ -168,10 +168,8 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
 		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
-		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
-		//((PickFileChooser)m_pick).setModel(m_model);
 		getCanvas().addChild(m_pick);
 	}
 

@@ -23,6 +23,8 @@ import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel.ModelFilter;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
@@ -184,32 +186,37 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 				TapEvent tapEvent = (TapEvent) ge;
 				Object currentMenu = PickFileChooser.this.getModel()
 						.getCurrentMenu();
+				int currentLevel = ((ProjectArchitectureModel)getModel()).getCurrentLevel();
 				if (tapEvent.isTapped()) {
-
+					
+					// fichier contenant l'architecture du projet
+					File jsonFile = new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME);
+					ProjectArchitectureModel newModel;
+					
 					if (tapEvent.getTarget() == pdfButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.PDF_FILTER));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu,
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.PDF);
 						setFilterIconON(FilterName.PDF);
 					} else if (tapEvent.getTarget() == movieButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.VIDEO_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.VID));
 						setFilterIconON(FilterName.MPG);
 					} else if (tapEvent.getTarget() == imageButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.IMG_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.IMG));
 						setFilterIconON(FilterName.IMG);
 					} else if (tapEvent.getTarget() == htmlButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.HTML_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.WEB));
 						setFilterIconON(FilterName.HTML);
 					} else if (tapEvent.getTarget() == noFilterButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.NO_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.NONE));
 						setFilterIconON(FilterName.NO_FILTER);
 					}
 				}

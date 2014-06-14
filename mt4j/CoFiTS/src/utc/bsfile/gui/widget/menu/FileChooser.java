@@ -8,12 +8,14 @@ import java.io.IOException;
 
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
+import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.animation.Animation;
@@ -26,7 +28,7 @@ import org.mt4j.util.math.Vector3D;
 import processing.core.PApplet;
 import processing.core.PImage;
 import utc.bsfile.gui.Theme;
-import utc.bsfile.gui.Theme.StyleID;
+import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
@@ -125,7 +127,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 			pathString = pathString.substring(0, 30) + "...";
 		}
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		pathField.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
+		pathField.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 15, MTColor.BLACK, true));
 		pathField.setFontColor(new MTColor(255, 255, 255, 255));
 		pathField.setText(pathString);
 		pathField.setNoFill(true);
@@ -149,14 +151,22 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		cancelActionButton.setHeightXYGlobal(35);
 		
 		downloadingIcon = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-center.svg");
-		downloadingIcon.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + 75 + getSpacingX2(), y + getSpacing() + 25));
+		downloadingIcon.setPositionGlobal(new Vector3D(x + getSpacing() + 60 + getSpacingX2(), y + getSpacing() + 22));
 		downloadingIcon.removeAllGestureEventListeners();
 		downloadingIcon.setWidthXYGlobal(20);
 		downloadingIcon.setHeightXYGlobal(20);
 		downloadingIcon.setVisible(false);
+		downloadingIcon.addGestureListener(TapProcessor.class, new IGestureEventListener() {
+			
+			@Override
+			public boolean processGestureEvent(MTGestureEvent ge) {
+				playArrowsRotation();
+				return false;
+			}
+		});
 		
 		downloadingIconArrows = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-arrows.svg");
-		downloadingIconArrows.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + 75 + getSpacingX2(), y + getSpacing() + 25));
+		downloadingIconArrows.setPositionGlobal(new Vector3D(x + getSpacing() + 60 + getSpacingX2(), y + getSpacing() + 22));
 		downloadingIconArrows.removeAllGestureEventListeners();
 		downloadingIconArrows.setWidthXYGlobal(45);
 		downloadingIconArrows.setHeightXYGlobal(45);
@@ -185,24 +195,40 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		
 		addChild(downloadingIcon);
 		addChild(downloadingIconArrows);
-		addChild(actionButton);
-		addChild(parentButton);
+		//addChild(actionButton);
+		//addChild(parentButton);
 		addChild(pathField);
 		
 		rotationAnimation.start();
-		displayDownloadingAnimation();
 		
-		//this.setModel(new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.FILE_LEVEL));
+		//projectHasToBeRefresh();
+		
 	}
 	
-	public void displayDownloadingAnimation() {
-		if(!downloadingIcon.isVisible()){
-			downloadingIcon.setVisible(true);
-			downloadingIconArrows.setVisible(true);
-		} else {
-			downloadingIcon.setVisible(false);
-			downloadingIconArrows.setVisible(false);
-		}
+//	public void displayDownloadingAnimation() {
+//		if(!downloadingIcon.isVisible()){
+//			downloadingIcon.setVisible(true);
+//			downloadingIconArrows.setVisible(true);
+//		} else {
+//			downloadingIcon.setVisible(false);
+//			downloadingIconArrows.setVisible(false);
+//		}
+//	}
+	
+	public void projectHasToBeRefresh() {
+		downloadingIcon.setVisible(true);
+	}
+	
+	public void projectRefreshed() {
+		downloadingIcon.setVisible(false);
+	}
+	
+	public void playArrowsRotation() {
+		downloadingIconArrows.setVisible(true);
+	}
+	
+	public void stopArrowsRotation() {
+		downloadingIconArrows.setVisible(false);
 	}
 	
 	
@@ -265,8 +291,8 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 			
 			MTRectangle fileExtIcon = new MTRectangle(getRenderer(),
 					getSpacing(), 3, iconWidth, iconHeight);
-			//TODO Find why icon is not printed
-			PImage icon = FileExtensionIconManager.getInstance().getIcon(nodeChoice.getName());
+			String ext = nodeChoice.getName().substring(nodeChoice.getName().length() - 3);
+			PImage icon = FileExtensionIconManager.getInstance().getIcon(ext);
 			if (icon != null) {
 				fileExtIcon.setTexture(icon);
 				fileExtIcon.setNoStroke(true);
@@ -295,6 +321,23 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		
 		component.addChild(textArea);
 
+		CofitsFile file = new CofitsFile(nodeChoice);
+		if ( file.isFile() ) {
+			//ajout de l'icone de présence en local ou non
+			MTSvgButton localIcon;
+			if ( file.isLocal() ) {
+				localIcon = new MTSvgButton(getRenderer(), MT4jSettings.getInstance().getDefaultSVGPath() + "local-icon.svg");
+				System.out.println(MT4jSettings.getInstance().getDefaultSVGPath() + "local-icon.svg");
+			} else {
+				localIcon = new MTSvgButton(getRenderer(), MT4jSettings.getInstance().getDefaultSVGPath() + "not-local-icon.svg");
+				System.out.println(MT4jSettings.getInstance().getDefaultSVGPath() + "not-local-icon.svg");
+			}
+			localIcon.removeAllGestureEventListeners();
+			localIcon.setSizeXYGlobal(15, 15);
+			localIcon.setPositionRelativeToParent(new Vector3D( 258, 30 ));
+			component.addChild(localIcon);
+		}
+		
 		return component;
 	}
 
@@ -335,6 +378,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 							if (getModel().getCurrentMenu() instanceof TwoLinkedJsonNode){
 								TwoLinkedJsonNode node = (TwoLinkedJsonNode) parent;
 								fileChoiceParent = new File(node.getName());
+								setPathToParent();
 							} else {
 								fileChoiceParent = (File) parent;
 							}
@@ -343,7 +387,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 							updateList();
 							//-----------------------------------------------------------------------
 							// Max : set the current path with the parent's path (update the path textField)
-							setPath(fileChoiceParent);
+							//setPath(fileChoiceParent);
 							//-----------------------------------------------------------------------
 						}
 						
@@ -368,16 +412,60 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		}
 	}
 
-
+	/**
+	 * Détruire le dernier composant (le local icon) et le remplacer par l'animation
+	 * se trouvant dans un unique composant.
+	 */
 	@Override
-	public void propertyChange(PropertyChangeEvent event) {
-		if (event.getSource().equals(list)){
-			displayDownloadingAnimation();
-		}
+	public void downLoadFile(MTGestureEvent ge) {
 		
+		MTListCell listCell = (MTListCell) ge.getTarget();
+		MTComponent comp = listCell.getChildByIndex(listCell.getChildCount() - 1); // dernier composant de la listCell
+		comp.removeChild(comp.getChildCount()-1);
+		
+		// rectangle component
+		MTRectangle rect = new MTRectangle(getRenderer(), 30, 30);
+		rect.setPositionRelativeToParent(new Vector3D(258, 30));
+		rect.setNoFill(true);
+		rect.setNoStroke(true);
+		
+		// SVG icons & animation
+		MTSvgButton downloadingIcon;
+		downloadingIcon = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-center.svg");
+		downloadingIcon.setPositionRelativeToParent(new Vector3D( 15,15 ));
+		downloadingIcon.removeAllGestureEventListeners();
+		downloadingIcon.setWidthXYGlobal(12);
+		downloadingIcon.setHeightXYGlobal(12);
+		final MTSvgButton downloadingIconArrows;
+		downloadingIconArrows = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-arrows.svg");
+		downloadingIconArrows.setPositionRelativeToParent(new Vector3D( 15, 15 ));
+		downloadingIconArrows.removeAllGestureEventListeners();
+		downloadingIconArrows.setWidthXYGlobal(24);
+		downloadingIconArrows.setHeightXYGlobal(24);
+		
+		rect.addChild(downloadingIcon);
+		rect.addChild(downloadingIconArrows);
+		
+		MultiPurposeInterpolator interpolator = new MultiPurposeInterpolator(0, 100, 1000, 0.0f, 1.0f, -1);
+		Animation rotationAnimation = new Animation("Arrows rotation", interpolator, downloadingIconArrows, 0);
+		rotationAnimation.addAnimationListener(new IAnimationListener() {
+			@Override
+			 public void processAnimationEvent(AnimationEvent ae) {
+				 downloadingIconArrows.rotateZGlobal(downloadingIconArrows.getCenterPointGlobal(), 3);
+			 }
+		});
+		rotationAnimation.start();
+
+		comp.addChild(rect);
 	}
 	
 	
 	//Members
 	private TwoLinkedJsonNode m_start;
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		// TODO Auto-generated method stub
+		
+	}
 }

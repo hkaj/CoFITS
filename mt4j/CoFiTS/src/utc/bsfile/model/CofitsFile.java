@@ -19,7 +19,7 @@ public class CofitsFile {
 	public final Date getLastModified() {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		try {
-			return formatter.parse(m_node.getCurrent().path("id").asText());
+			return formatter.parse(m_node.getCurrent().path("last-modified").asText());
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -53,6 +53,13 @@ public class CofitsFile {
 	
 	public final boolean isLocal() {
 		return m_node.getCurrent().path("local").asBoolean();
+	}
+	
+	public final boolean isFile() {
+		if ( m_node.getCurrent().path("local").asText().equals("") ){
+			return false;
+		}
+		return true;
 	}
 
 	public void setLocal(boolean local) {

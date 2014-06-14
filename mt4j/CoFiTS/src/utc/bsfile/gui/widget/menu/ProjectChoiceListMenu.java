@@ -52,23 +52,20 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChild(m_pathArea);
 
 		//Add a connexion button
-		m_launchAgentsButton = new MTImageButton(applet, ImageManager.getInstance().load("connect-icon.png"));
-		
-		m_launchAgentsButton.setPositionGlobal(new Vector3D(getPosition(TransformSpace.GLOBAL).x, getPosition(TransformSpace.GLOBAL).y));
-		m_launchAgentsButton.setPickable(true);
-		m_launchAgentsButton.setEnabled(true);
+		m_launchAgentsButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButton.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButton.setSizeXYGlobal(iconWidth,  iconHeight);
 		
 		addChild(m_confirmButton);
 		addChild(m_launchAgentsButton);
 	}
 	
 	@Override
-	public void colorSelectedCell(MTGestureEvent ge) {
+	public void downLoadFile(MTGestureEvent ge) { // ne télécharge pas le fichier... (ne pas toucher au nom anyway)
 		// change the color of the selected cell
 		for (MTListCell cell : list.getListCellContainer().getCells()) {
 			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
 			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
-			System.out.println("PROJECTCHOICELISTMENU");
 		}
 	}
 
@@ -103,7 +100,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		return m_pathArea;
 	}
 	
-	public final MTImageButton getLaunchAgentsButton(){
+	public final MTSvgButton getLaunchAgentsButton(){
 		return m_launchAgentsButton;
 	}
 	
@@ -113,5 +110,5 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
-	protected MTImageButton m_launchAgentsButton;
+	protected MTSvgButton m_launchAgentsButton;
 }
