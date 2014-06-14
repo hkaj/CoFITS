@@ -33,19 +33,15 @@ public class AgentTestBoot {
 		// properties: main=false; gui = false;
 		Runtime rt = Runtime.instance();
 		ProfileImpl p = null;
-		ArrayList<CofitsGuiAgent> l = new ArrayList<CofitsGuiAgent>();
 		try {
 			p = new ProfileImpl(SECONDARY_PROPERTIES_FILE);
 			ContainerController  cc = rt.createAgentContainer(p);
 			AgentController cl = cc.createNewAgent("ClientAgent",
-					CofitsGuiAgent.class.getName(),new Object[]{l});
+					CofitsGuiAgent.class.getName(),new Object[]{});
 			cl.start();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		downloadProjectsArchitectureTest(l.get(0));
-		downloadFileTest(l.get(0));
 
 	}
 	
