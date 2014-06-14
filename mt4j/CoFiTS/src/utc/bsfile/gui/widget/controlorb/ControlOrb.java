@@ -50,7 +50,7 @@ public class ControlOrb extends MTEllipse {
 		
 		//Set the main color
 		m_color = MTColor.randomColor();
-		while( m_color.getR() > 200 && m_color.getG() > 200 && m_color.getB() > 200 ) {
+		while( m_color.getR() > 150 && m_color.getG() > 150 && m_color.getB() > 150 ) {
 			m_color = MTColor.randomColor();
 		}
 		setFillColor(m_color);

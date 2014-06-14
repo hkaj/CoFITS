@@ -23,6 +23,8 @@ import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel.ModelFilter;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
@@ -53,7 +55,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 
 		addChoiceListener(this);
 		setCloseVisible(true);
-		ButtonListener listener = new ButtonListener();
+		PickButtonListener listener = new PickButtonListener();
 
 		PositionSequencer position2 = new PositionSequencer(new Vector3D(x
 				- getSpacing() - iconWidth, y + getSpacing()), getSpacing(),
@@ -95,19 +97,11 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
-		// filterWindow.setFillColor(new MTColor(159, 182, 205, 200));
-		//filterWindow.setFillColor(new MTColor(70, 200, 200, 80));
 		filterWindow.setFillColor(new MTColor(34, 83, 120, 255));
-		//filterWindow.setStrokeColor(MTColor.BLACK);
 		filterWindow.setNoStroke(true);
 		filterWindow.removeAllGestureEventListeners();
-		// filterWindow.setStrokeColor(MTColor.YELLOW);
-		// filterWindow.setPositionGlobal(new Vector3D(-iconWidth, iconHeight));
 		filterWindow.setPositionRelativeToParent(new Vector3D(-iconWidth + 17,
 				iconHeight + 135));
-		// filterWindow.setPositionGlobal(new Vector3D(x - getSpacing() -
-		// iconWidth, y + getSpacing()
-		// * 2f + iconHeight));
 
 		filterWindow.addChild(pdfButton);
 		filterWindow.addChild(movieButton);
@@ -186,38 +180,43 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	public void choiceCancelled(ChoiceEvent choiceEvent) {
 	}
 
-	protected class ButtonListener implements IGestureEventListener {
+	protected class PickButtonListener implements IGestureEventListener {
 		public boolean processGestureEvent(MTGestureEvent ge) {
 			if (ge instanceof TapEvent) {
 				TapEvent tapEvent = (TapEvent) ge;
 				Object currentMenu = PickFileChooser.this.getModel()
 						.getCurrentMenu();
+				int currentLevel = ((ProjectArchitectureModel)getModel()).getCurrentLevel();
 				if (tapEvent.isTapped()) {
-
+					
+					// fichier contenant l'architecture du projet
+					File jsonFile = new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME);
+					ProjectArchitectureModel newModel;
+					
 					if (tapEvent.getTarget() == pdfButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.PDF_FILTER));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu,
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.PDF);
 						setFilterIconON(FilterName.PDF);
 					} else if (tapEvent.getTarget() == movieButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.VIDEO_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.VID));
 						setFilterIconON(FilterName.MPG);
 					} else if (tapEvent.getTarget() == imageButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.IMG_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.IMG));
 						setFilterIconON(FilterName.IMG);
 					} else if (tapEvent.getTarget() == htmlButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.HTML_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.WEB));
 						setFilterIconON(FilterName.HTML);
 					} else if (tapEvent.getTarget() == noFilterButton) {
-						PickFileChooser.this.setModel(new FileChooserModel(
-								(File) currentMenu,
-								FileExtensionFilter.NO_FILTER));
+						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, 
+								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.NONE));
 						setFilterIconON(FilterName.NO_FILTER);
 					}
 				}

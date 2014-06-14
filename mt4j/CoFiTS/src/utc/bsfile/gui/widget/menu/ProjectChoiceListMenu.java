@@ -1,9 +1,10 @@
 package utc.bsfile.gui.widget.menu;
 
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -13,9 +14,10 @@ import processing.core.PApplet;
 
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.gui.Theme;
+
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
-import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
@@ -27,7 +29,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChoiceListener(this);
 		
 		m_menuModel = model;
-		
+
 		//Add a confirmation button
 		m_confirmButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
 		int buttonSize = 40;
@@ -42,7 +44,6 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		Vector3D pathAreaPosition = new Vector3D(x + getSpacing() + 3, y + getSpacingX2() + getSpacedIconHeight() );
 		m_pathArea.setPositionGlobal(pathAreaPosition);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		System.out.println("LA POLISSE : "+sfont);
 		m_pathArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
 		m_pathArea.setText("Projects and sessions");
 		m_pathArea.removeAllGestureEventListeners();
@@ -53,14 +54,21 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChild(m_pathArea);
 
 		//Add a connexion button
-		m_launchAgentsButton = new MTImageButton(applet, ImageManager.getInstance().load("connect-icon.png"));
-		
-		m_launchAgentsButton.setPositionGlobal(new Vector3D(getPosition(TransformSpace.GLOBAL).x, getPosition(TransformSpace.GLOBAL).y));
-		m_launchAgentsButton.setPickable(true);
-		m_launchAgentsButton.setEnabled(true);
+		m_launchAgentsButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButton.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButton.setSizeXYGlobal(iconWidth,  iconHeight);
 		
 		addChild(m_confirmButton);
 		addChild(m_launchAgentsButton);
+	}
+	
+	@Override
+	public void downLoadFile(MTGestureEvent ge) { // ne t�l�charge pas le fichier... (ne pas toucher au nom anyway)
+		// change the color of the selected cell
+		for (MTListCell cell : list.getListCellContainer().getCells()) {
+			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
+			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+		}
 	}
 
 	@Override
@@ -93,7 +101,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		return m_pathArea;
 	}
 	
-	public final MTImageButton getLaunchAgentsButton(){
+	public final MTSvgButton getLaunchAgentsButton(){
 		return m_launchAgentsButton;
 	}
 
@@ -103,5 +111,5 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
-	protected MTImageButton m_launchAgentsButton;
+	protected MTSvgButton m_launchAgentsButton;
 }

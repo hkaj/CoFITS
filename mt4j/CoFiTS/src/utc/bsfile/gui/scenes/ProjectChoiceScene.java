@@ -101,7 +101,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
 					System.out.println("OK");
-					launchProjectChoiceScene();
+					launchProjectChoiceScene(projectList.getModel());
 					break;
 				default:
 					break;
@@ -130,7 +130,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	}
 	
 	
-	protected void launchProjectChoiceScene() {
+	protected void launchProjectChoiceScene(IMenuModel model) {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
 		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);

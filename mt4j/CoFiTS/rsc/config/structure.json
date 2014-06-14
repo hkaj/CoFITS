@@ -22,25 +22,58 @@
 				"last-modified" : "20-04-2014 15:12:23"
 			}
 		},
-		"session_15_04_14" :
+		"session_20_04_14" : 
 		{
-			"nom_de_fichier_1" :
+			"innov.pdf" :
 			{
-				"name" : "nom_de_fichier_1",
-				"local" : true,
-				"last-modified" : "20-04-2014 15:12:23"
+				"name" : "innov.pdf",
+				"local" : true
 			},
-			"nom_de_fichier_1" :
+			"utc.png" :
 			{
-				"name" : "nom_de_fichier_2",
-				"local" : true,
-				"last-modified" : "20-04-2014 15:12:23"
+				"name" : "utc.png",
+				"local" : true
 			},
-			"nom_de_fichier_1" :
+			"nf28.png" :
 			{
-				"name" : "nom_de_fichier_3",
-				"local" : true,
-				"last-modified" : "20-04-2014 15:12:23"
+				"name" : "nf28.png",
+				"local" : false
+			}
+		},
+		"session_22_04_14" : 
+		{
+			"innov.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"utc.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
+			},
+			"nf28.png" :
+			{
+				"name" : "nf28.png",
+				"local" : false
+			}
+		},
+		"session_30_04_14" :
+		{
+			"innov.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"utc.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
+			},
+			"nf28.png" :
+			{
+				"name" : "nf28.png",
+				"local" : false
 			}
 		}
 	}

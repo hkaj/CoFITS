@@ -48,7 +48,7 @@ public class Theme {
 			ITEM_BACKGROUND_COLOR = new MTColor(34, 83, 120, 255); // dark
 			ITEM_COLOR = new MTColor(22, 149, 163, 255); // normal
 			ITEM_LIGHT_COLOR = new MTColor(44, 220, 220, 255); // light
-			ACTIVE_COLOR = new MTColor(235, 127, 0, 255); // orange
+			ACTIVE_COLOR = new MTColor(235, 145, 0, 255); // orange
 			BACKGROUND_COLOR = new MTColor(50, 50, 50, 255); // dark grey
 			GREEN_COLOR = new MTColor(51, 204, 51, 255);
 			

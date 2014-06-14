@@ -32,11 +32,13 @@ import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
+import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
+
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs) {
 		this(mtApplication, name, model, orbs, false);
 	}
@@ -100,7 +102,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			processInputForOrb(cOrb);
 		}
 		
-		//addPickFileChooser();
+		m_model = model;
 	}
 	
 	protected void processInputForOrb(final ControlOrb orb) {
