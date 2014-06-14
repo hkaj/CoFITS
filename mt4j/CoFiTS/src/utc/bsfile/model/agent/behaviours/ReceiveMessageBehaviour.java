@@ -35,7 +35,7 @@ public class ReceiveMessageBehaviour extends CyclicBehaviour {
 	}
 
 	private void manageInformMessage(ACLMessage message) {
-		if (m_agent.getReceiveFileBehaviours().containsKey(message.getConversationId())){
+		if (!message.getConversationId().equals("")){
 			//The message is about a part of file to receive
 			m_agent.propagatePartFileMessage(message);
 		} else {

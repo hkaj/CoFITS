@@ -8,12 +8,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import utc.bsfile.main.CofitsDesignScene;
 import utc.bsfile.model.agent.action.SelectPickAction;
+import utc.bsfile.model.agent.behaviours.ManageReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
 import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import jade.core.AID;
 import jade.core.NotFoundException;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 import jade.domain.DFService;
@@ -31,15 +33,10 @@ public class CofitsGuiAgent extends GuiAgent {
 
 	@Override
 	protected void setup() {
-		super.setup();
-		CofitsDesignScene scene = (CofitsDesignScene) getArguments()[0];
-		addPropertyChangeListener(scene);
-		
+		super.setup();		
 		firePropertyChange("Agent Created", null, this);
 		
-		addBehaviour(new LaunchPickBehaviour(scene));
-		addBehaviour(new ReceiveMessageBehaviour(this));
-		
+		addBehaviour(new ReceiveMessageBehaviour(this));		
 	}
 
 	@Override
@@ -94,14 +91,12 @@ public class CofitsGuiAgent extends GuiAgent {
 	 */
 	public void createNewReceiveFileBehaviour(ACLMessage message) {
 		String conversationId = message.getConversationId();
-		if (m_receiveFileBehaviours.get(conversationId) == null){
+		if (m_manageReceiveFileBehaviours.get(conversationId) == null){
 			LinkedBlockingQueue<ACLMessage> newQueue = new LinkedBlockingQueue<ACLMessage>();
-			ReceiveFile newReceiveFileBehav = new ReceiveFile(this, message, newQueue);
+			ManageReceiveFile newManageReceiveFileBehav = new ManageReceiveFile(this, message, newQueue);
 			
-			newReceiveFileBehav = (ReceiveFile) m_threadedBehaviourFactory.wrap(newReceiveFileBehav); 
-			m_receiveFileBehaviours.put(conversationId, newReceiveFileBehav);
-			m_receiveFileMessagesQueues.put(conversationId, newQueue);
-			newReceiveFileBehav.initSequentialBehaviour();
+			Behaviour b = m_threadedBehaviourFactory.wrap(newManageReceiveFileBehav); 
+			addBehaviour(b);
 		} else {
 			System.err.println("Behaviour with the conversation id : " + conversationId + " already exists");
 		}
@@ -124,7 +119,7 @@ public class CofitsGuiAgent extends GuiAgent {
 			}
 
 			//Wake up the behaviour
-			m_receiveFileBehaviours.get(conversationId).notifySelf();
+			m_manageReceiveFileBehaviours.get(conversationId).notifySelf();
 		} else {
 			System.err.println("Agreement message might have not been received yet for conversation id : " + conversationId);
 			putBack(message);
@@ -139,19 +134,32 @@ public class CofitsGuiAgent extends GuiAgent {
 	 */
 	public void receiveFileBehaviourEnd(ReceiveFile receiveFile) {
 		String conversationId = receiveFile.getConversationId();
-		m_receiveFileBehaviours.remove(conversationId);
+		m_manageReceiveFileBehaviours.remove(conversationId);
 		m_receiveFileMessagesQueues.remove(conversationId);
 		
 		firePropertyChange("File Received", null, receiveFile.getFilename());
 		
 		//Interrupt the thread
 		//TODO Check whether this step is needed or not
-		try {
-			m_threadedBehaviourFactory.interrupt(receiveFile);
-		} catch (NotFoundException e) {
-			System.err.println("Unabled to interrupt receive file thread with conversation id : " + conversationId);
-			e.printStackTrace();
-		}
+//		try {
+//			m_threadedBehaviourFactory.interrupt(receiveFile);
+//		} catch (NotFoundException e) {
+//			System.err.println("Unabled to interrupt receive file thread with conversation id : " + conversationId);
+//			e.printStackTrace();
+//		}
+	}
+	
+	
+	public void addMessageQueue(String conversationId,
+			LinkedBlockingQueue<ACLMessage> queue) {
+		m_receiveFileMessagesQueues.put(conversationId, queue);
+		
+	}
+	
+	
+	public void addManageDownloadBehaviour(String conversationId,
+			ManageReceiveFile manageReceiveFile) {
+		m_manageReceiveFileBehaviours.put(conversationId, manageReceiveFile);		
 	}
 	
 	
@@ -164,8 +172,8 @@ public class CofitsGuiAgent extends GuiAgent {
 		ServiceDescription sd = new ServiceDescription();
 		DFAgentDescription[] result = null;
 		
-		sd.setType("ReceiverAgent");
-		sd.setName("receiver");
+		sd.setType("ProjectManagement");
+		sd.setName("DocumentService");
 		template.addServices(sd);
 		
 		try {
@@ -186,15 +194,15 @@ public class CofitsGuiAgent extends GuiAgent {
 		firePropertyChange("projectsArchitectureRootNode changed", oldValue, m_projectsArchitectureRootNode);		
 	}
 	
-	public Map<String, ReceiveFile> getReceiveFileBehaviours(){
-		return m_receiveFileBehaviours;
+	public Map<String, ManageReceiveFile> getManageReceiveFileBehaviours(){
+		return m_manageReceiveFileBehaviours;
 	}
 	
 	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
-	private Map<String, ReceiveFile> m_receiveFileBehaviours = new HashMap<String, ReceiveFile>();
+	private Map<String, ManageReceiveFile> m_manageReceiveFileBehaviours = new HashMap<String, ManageReceiveFile>();
 	private Map<String, LinkedBlockingQueue<ACLMessage> > m_receiveFileMessagesQueues = new HashMap<String, LinkedBlockingQueue<ACLMessage> >();
 	private ThreadedBehaviourFactory m_threadedBehaviourFactory = new ThreadedBehaviourFactory();
 
