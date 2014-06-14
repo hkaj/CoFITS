@@ -108,30 +108,9 @@ public class TwoLinkedJsonNode implements TreeNode {
 	 * @return true if the local, parent and children names are the same for the 2 nodes
 	 */
 	public boolean compare(TwoLinkedJsonNode node) {
-		
-		boolean tmp = true;
-		int index = 0;
-		if ( m_name.equals(node.getName())) {
-			
-			if( getParentTwoLinkedJsonNode() == null && node.getParentTwoLinkedJsonNode() == null ) {
-				return true;
-			}
-			
-			if ( m_parent != null ) {
-				if ( m_parent.getName().equals(node.getParentTwoLinkedJsonNode().getName()))  {
-					if (m_children.size() == node.getChildren().size()) {
-						for ( TwoLinkedJsonNode jsonNode : getChildren()) {
-							if ( !jsonNode.getName().equals( jsonNode.getChildren().get(index).getName() ) ) {
-								tmp = false;
-							}
-							index++;
-						}
-						return tmp;
-					}
-				}
-			}
+		if ( m_name.equals(node.getName()) ) {
+			return true;
 		}
-		
 		return false;
 	}
 

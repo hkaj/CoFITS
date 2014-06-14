@@ -3,7 +3,6 @@ package utc.bsfile.gui.widget.menu;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.util.MT4jSettings;
@@ -15,7 +14,6 @@ import processing.core.PApplet;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
-import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {

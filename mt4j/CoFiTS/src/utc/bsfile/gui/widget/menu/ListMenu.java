@@ -26,10 +26,12 @@ import org.mt4j.util.math.Vector3D;
 import processing.core.PApplet;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
+import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.gui.widget.pick.PickMTList;
 import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
@@ -332,11 +334,14 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
-				closeButton.setVisible(closeButton.isEnabled());
-				backButton.setVisible(false);
-			} else {
-				backButton.setVisible(true);
+			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
+			if (menuModel instanceof ProjectArchitectureModel) {
+				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
+					closeButton.setVisible(closeButton.isEnabled());
+					backButton.setVisible(false);
+				} else {
+					backButton.setVisible(true);
+				}
 			}
 		}
 
@@ -354,8 +359,27 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				
 				cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // list element stroke color
 				cell.setStrokeWeight(2);
-
-				list.addListElement(cell);
+				
+				if (this instanceof PickFileChooser){
+					// apply filter
+					if(getModel() instanceof ProjectArchitectureModel) {
+						String[] filter = ((ProjectArchitectureModel)getModel()).getFilter();
+						String name = "";
+						if ( filter != null ) {
+							for ( String ext : filter ) {
+								name = ((TwoLinkedJsonNode)choice).getName();
+								if ( name.substring(name.length()-3, name.length()).equals(ext) ){
+									list.addListElement(cell);
+									break;
+								}
+							}
+						} else {
+							list.addListElement(cell);
+						}
+					}
+				} else {
+					list.addListElement(cell);
+				}
 			}
 		}
 		if (nbItems > 5) {
@@ -377,11 +401,11 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
+			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
+			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
-				//closeButton.setVisible(false);
 				backButton.setVisible(true);
 			}
 		}
@@ -547,25 +571,10 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 			projectString = "";
 			pathString = "\\";
 		}
-		//pathString = pathString.substring(0, pathString.length() - ((TwoLinkedJsonNode)getModel().getCurrentMenu()).getName().length() - 1);
 		if ( pathField != null ) pathField.setText( pathString );
 	}
 	
-//	protected void setPath(File choice) {
-//		//-------------------------------------------------------------------------
-//		// Max : update of the current path
-//		if ( ((File)choice).getPath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH) )) {
-//			pathString = "\\server\\";
-//		} else {
-//			pathString = "\\server" + ((File)choice).getAbsolutePath().substring(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH).length()); // cut the beginning of the path
-//		}
-//		if ( pathString.length() > 30 ) {
-//			pathString = pathString.substring(0, 28) + "...";
-//		}
-//		if ( pathField != null ) pathField.setText( pathString );
-//		//-------------------------------------------------------------------------
-//	}
-	
+	@SuppressWarnings("unused")
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		super.processGestureEvent(ge);
 		
@@ -574,7 +583,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				if (((TapEvent) ge).isTapped()) {
 					MTListCell listCell = (MTListCell) ge.getTarget();
 					Object choice = listCell.getUserData(CHOICE);
-					File fileChoice;
+					File fileChoice = null;
 					
 					if (choice instanceof TwoLinkedJsonNode){
 						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
@@ -598,10 +607,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						if (!cFile.isLocal()) {
 							downLoadFile(ge);
 						}
-						
-						//TODO : dire à la scène de traiter cette ouverture de fichier
-						// connexion ? hors connexion ?
-						// présent sur la table ? non présent ?
 						
 						//Destroy the list after opening a file
 						if (ListMenu.this.mustBeDestroy()){
