@@ -41,18 +41,18 @@ public class DispatchBehaviour extends CyclicBehaviour
 					System.out.println(message.getContent());
 					switch((String)req.get("action"))
 					{
-//					case "CREATE_PROJECT":
-//						this.myAgent.addBehaviour(new CreateProjectBehaviour(req,message)); // TODO
-//						break;
-//					case "REMOVE_PROJECT":
-//						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message)); // TODO
-//						break;
+					case "CREATE_PROJECT":
+						this.myAgent.addBehaviour(new CreateProjectBehaviour(req,message)); // TODO
+						break;
+					case "REMOVE_PROJECT":
+						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message)); // TODO
+						break;
 					case "UPLOAD_FILE":
 						this.myAgent.addBehaviour(new UploadBehaviour(req, message));
 						break;
-//					case "REMOVE_FILE":
-//						this.myAgent.addBehaviour(new RemoveFileBehaviour(req, message)); //TODO
-//						break;
+					case "REMOVE_FILE":
+						this.myAgent.addBehaviour(new RemoveFileBehaviour(req, message)); //TODO
+						break;
 					case "DOWNLOAD_FILE":
 						this.myAgent.addBehaviour(new DownloadBehaviour(req, message));
 						break;
@@ -68,12 +68,12 @@ public class DispatchBehaviour extends CyclicBehaviour
 //					case "REMOVE_USER" :
 //						this.myAgent.addBehaviour(new RemoveUserBehaviour(req, message));
 //						break;
-//					case "CREATE_SESSION":
-//						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message)); //TODO
-//						break;
-//					case "REMOVE_SESSION":
-//						this.myAgent.addBehaviour(new RemoveSessionBehaviour(req, message)); //TODO
-//						break;
+					case "CREATE_SESSION":
+						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message)); //TODO
+						break;
+					case "REMOVE_SESSION":
+						this.myAgent.addBehaviour(new RemoveSessionBehaviour(req, message)); //TODO
+						break;
 					default:
 						break;
 					}
