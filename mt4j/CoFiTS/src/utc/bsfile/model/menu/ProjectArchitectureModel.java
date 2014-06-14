@@ -1,10 +1,8 @@
 package utc.bsfile.model.menu;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.util.Enumeration;
 
-import utc.bsfile.util.FileExtensionFilter;
 import utc.bsfile.util.JsonManager;
 
 public class ProjectArchitectureModel implements IMenuModel {
@@ -17,16 +15,16 @@ public class ProjectArchitectureModel implements IMenuModel {
 	
 	public static final String[] IMG_FILTER = new String[]{"bmp", "png", "jpg", "jpeg"};
 	public static final String[] VIDEO_FILTER = new String[]{"mov", "mpeg", "mpg", "m4v", "wmv", "mp4","avi"};
-	public static final String PDF_FILTER = "pdf";
+	public static final String[] PDF_FILTER = new String[]{"pdf"};
 	public static final String[] HTML_FILTER = new String[]{"html", "htm"};
 	
-	public enum ModelFilter {
-		PDF,
-		IMG,
-		VID,
-		WEB,
-		NONE
-	}
+//	public enum ModelFilter {
+//		PDF,
+//		IMG,
+//		VID,
+//		WEB,
+//		NONE
+//	}
 
 	//Constructors
 	public ProjectArchitectureModel(File jsonFile){
@@ -49,14 +47,15 @@ public class ProjectArchitectureModel implements IMenuModel {
 	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode node, int maxLevel) {
 		m_currentLevel = 0;
 		m_maxLevel = maxLevel;
+		m_filter = null;
 		
 		//Parse the Json file and transform it to a TwoLinkedJsonNode tree		
 		m_start = new TwoLinkedJsonNode(JsonManager.getInstance().createJsonNode(jsonFile), "", true);
 		m_current = node;
 	}
 	
-	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode current, int maxLevel, ModelFilter filter) {
-		m_currentLevel = 0;
+	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode current, int currentLevel, int maxLevel, String[] filter) {
+		m_currentLevel = currentLevel;
 		m_maxLevel = maxLevel;
 		m_filter = filter;
 		
@@ -101,6 +100,8 @@ public class ProjectArchitectureModel implements IMenuModel {
 			}
 			
 			m_current = (TwoLinkedJsonNode) current;
+			System.out.println("CURRENT LEVEL : " + m_currentLevel);
+			System.out.println("MAX LEVEL : " + m_maxLevel);
 		}
 	}
 
@@ -161,11 +162,14 @@ public class ProjectArchitectureModel implements IMenuModel {
 		return m_currentLevel;
 	}
 	
+	public String[] getFilter() {
+		return m_filter;
+	}
 	
 	//Members
 	protected TwoLinkedJsonNode m_current;
 	protected TwoLinkedJsonNode m_start;
-	protected ModelFilter m_filter;
+	protected String[] m_filter;
 	protected int m_currentLevel;
 	protected int m_maxLevel;
 	

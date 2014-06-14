@@ -27,7 +27,6 @@ import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import utc.bsfile.gui.Theme;
 import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.model.menu.IMenuModel;
@@ -108,6 +107,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 
 	private MTSvgButton downloadingIcon;
 	private MTSvgButton downloadingIconArrows;
+	private MTSvgButton m_launchAgentsButton;
 
 	public PApplet applet;
 	
@@ -146,6 +146,12 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		actionButton = createIconButton(savedPosition, "action-icon-on.png", listener);
 		actionButton.setWidthXYGlobal(75);
 		actionButton.setHeightXYGlobal(35);
+		
+		//Add a connexion button
+		m_launchAgentsButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButton.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButton.setSizeXYGlobal(iconWidth,  iconHeight);
+		
 		cancelActionButton = createIconButton(savedPosition, "action-icon-off.png", listener);
 		cancelActionButton.setWidthXYGlobal(75);
 		cancelActionButton.setHeightXYGlobal(35);
@@ -197,6 +203,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		addChild(downloadingIconArrows);
 		//addChild(actionButton);
 		//addChild(parentButton);
+		addChild(m_launchAgentsButton);
 		addChild(pathField);
 		
 		rotationAnimation.start();
@@ -205,17 +212,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		
 	}
 	
-//	public void displayDownloadingAnimation() {
-//		if(!downloadingIcon.isVisible()){
-//			downloadingIcon.setVisible(true);
-//			downloadingIconArrows.setVisible(true);
-//		} else {
-//			downloadingIcon.setVisible(false);
-//			downloadingIconArrows.setVisible(false);
-//		}
-//	}
-	
-	public void projectHasToBeRefresh() {
+	public void projectHasToBeRefreshed() {
 		downloadingIcon.setVisible(true);
 	}
 	
@@ -344,7 +341,6 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	public FileChooserModel getFileChooserModel() {
 		return (FileChooserModel) this.getModel();
 	}
-
 	
 	/**
 	 * Define the behavior for tapping on any button on fileChooser
@@ -352,6 +348,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	 */
 	protected class ButtonListener implements IGestureEventListener {
 		
+		@SuppressWarnings("unused")
 		public boolean processGestureEvent(MTGestureEvent ge) {
 
 			if (ge instanceof TapEvent) {

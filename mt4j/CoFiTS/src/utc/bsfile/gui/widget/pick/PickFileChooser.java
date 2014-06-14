@@ -14,22 +14,21 @@ import processing.core.PApplet;
 import utc.bsfile.gui.widget.image.MTIMAGE;
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.FileChooser;
-import utc.bsfile.util.PositionSequencer;
-import utc.bsfile.util.PositionSequencer.Orientation;
-import utc.bsfile.util.PropertyManager;
 import utc.bsfile.gui.widget.metadata.MTMetadata;
 import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
 import utc.bsfile.model.image.IMAGEModel;
-import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
-import utc.bsfile.model.menu.ProjectArchitectureModel.ModelFilter;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
 import utc.bsfile.util.FileExtensionFilter;
+import utc.bsfile.util.JsonManager;
+import utc.bsfile.util.PositionSequencer;
+import utc.bsfile.util.PositionSequencer.Orientation;
+import utc.bsfile.util.PropertyManager;
 
 public class PickFileChooser extends FileChooser implements ChoiceListener {
 	private MTRectangle filterWindow;
@@ -68,32 +67,33 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 				"filter-pdf-icon.png", listener);
 		pdfButton_activated = createIconButton(position2.getPosition(),
 				"filter-pdf-icon-on.png", listener);
+		pdfButton_activated.setEnabled(false);
 		position2.nextPosition(pdfButton);
 		movieButton = createIconButton(position2.getPosition(),
 				"filter-mpg-icon.png", listener);
 		movieButton_activated = createIconButton(position2.getPosition(),
 				"filter-mpg-icon-on.png", listener);
+		movieButton_activated.setEnabled(false);
 		position2.nextPosition(movieButton);
 		imageButton = createIconButton(position2.getPosition(),
 				"filter-img-icon.png", listener);
 		imageButton_activated = createIconButton(position2.getPosition(),
 				"filter-img-icon-on.png", listener);
+		imageButton_activated.setEnabled(false);
 		position2.nextPosition(imageButton);
 		htmlButton = createIconButton(position2.getPosition(),
 				"filter-html-icon.png", listener);
 		htmlButton_activated = createIconButton(position2.getPosition(),
 				"filter-html-icon-on.png", listener);
+		htmlButton_activated.setEnabled(false);
 		position2.nextPosition(htmlButton);
 		noFilterButton = createIconButton(position2.getPosition(),
 				"no-filter-icon.png", listener);
 		noFilterButton_activated = createIconButton(position2.getPosition(),
 				"no-filter-icon-on.png", listener);
+		noFilterButton_activated.setEnabled(false);
 		position2.nextPosition(noFilterButton);
 
-		
-		
-		
-		
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
@@ -181,44 +181,51 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	}
 
 	protected class PickButtonListener implements IGestureEventListener {
+		@SuppressWarnings("static-access")
 		public boolean processGestureEvent(MTGestureEvent ge) {
 			if (ge instanceof TapEvent) {
 				TapEvent tapEvent = (TapEvent) ge;
-				Object currentMenu = PickFileChooser.this.getModel()
-						.getCurrentMenu();
-				int currentLevel = ((ProjectArchitectureModel)getModel()).getCurrentLevel();
+				Object currentMenu = PickFileChooser.this.getModel().getCurrentMenu();
+				int currentLvl = ((ProjectArchitectureModel)getModel()).getCurrentLevel();
+				System.out.println("CURRENT LVL : " + currentLvl);
 				if (tapEvent.isTapped()) {
 					
 					// fichier contenant l'architecture du projet
 					File jsonFile = new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME);
-					ProjectArchitectureModel newModel;
+					ProjectArchitectureModel newModel = null;
 					
 					if (tapEvent.getTarget() == pdfButton) {
 						newModel = new ProjectArchitectureModel(jsonFile, 
-								(TwoLinkedJsonNode) currentMenu,
-								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.PDF);
+								(TwoLinkedJsonNode) currentMenu, currentLvl,
+								ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.PDF_FILTER);
 						setFilterIconON(FilterName.PDF);
+						
 					} else if (tapEvent.getTarget() == movieButton) {
-						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
-								(TwoLinkedJsonNode) currentMenu, 
-								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.VID));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, currentLvl,
+								ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.VIDEO_FILTER);
 						setFilterIconON(FilterName.MPG);
+						
 					} else if (tapEvent.getTarget() == imageButton) {
-						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
-								(TwoLinkedJsonNode) currentMenu, 
-								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.IMG));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, currentLvl,
+								ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.IMG_FILTER);
 						setFilterIconON(FilterName.IMG);
+						
 					} else if (tapEvent.getTarget() == htmlButton) {
-						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
-								(TwoLinkedJsonNode) currentMenu, 
-								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.WEB));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, currentLvl,
+								ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.HTML_FILTER);
 						setFilterIconON(FilterName.HTML);
+						
 					} else if (tapEvent.getTarget() == noFilterButton) {
-						PickFileChooser.this.setModel(new ProjectArchitectureModel(jsonFile, 
-								(TwoLinkedJsonNode) currentMenu, 
-								ProjectArchitectureModel.FILE_LEVEL, ModelFilter.NONE));
+						newModel = new ProjectArchitectureModel(jsonFile, 
+								(TwoLinkedJsonNode) currentMenu, currentLvl,
+								ProjectArchitectureModel.FILE_LEVEL, null);
 						setFilterIconON(FilterName.NO_FILTER);
 					}
+					
+					setModel(newModel);
 				}
 			}
 
