@@ -33,6 +33,7 @@ import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.pick.PickFileChooser;
+import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
 import utc.bsfile.model.menu.IMenuModel;
@@ -172,7 +173,8 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
 		final PickFileChooser pick;
-		pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
+		m_model.getProjectsArchitectureRootNode().displayConsole(0);
+		pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)pick).updateOrientation(location.x, location.y);
@@ -193,6 +195,8 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 				return false;
 			}
 		});
+		
+		pick.addChoiceListener(this);
 	}
 
 	
@@ -213,13 +217,15 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	
 	@Override
-	protected void processFileDownloaded(String filename) {
-		super.processFileDownloaded(filename);
+	protected void processFileDownloaded(int id) {
+		super.processFileDownloaded(id);
 		
+		CofitsFile coFile = m_model.getFile(id);
+		String filename = coFile.getFilename();
 		File file = new File(filename);
-		if(m_filesToOpen.containsKey(file.getAbsolutePath())){
-			m_filesToOpen.get(file.getAbsolutePath()).createFileViewer(file);
-			m_filesToOpen.remove(file.getAbsolutePath());
+		if(m_filesToOpen.containsKey(filename)){
+			m_filesToOpen.get(filename).createFileViewer(file);
+			m_filesToOpen.remove(filename);
 		}
 	}
 	
@@ -227,8 +233,10 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
 		final File file = new File(choiceEvent.getChoice());
-		String filename = file.getAbsolutePath();	//TODO Check whether the filename is good or not
+		String filename = file.getPath();	//TODO Check whether the filename is good or not
 		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
+		
+		System.out.println(filename);
 		
 		if (m_model.getFile(filename).isLocal()){	
 			fileChooser.createFileViewer(file);

@@ -6,11 +6,11 @@ import jade.core.behaviours.SequentialBehaviour;
 
 public class ReceiveFile extends SequentialBehaviour {
 
-	public ReceiveFile(Agent a, String conversationId, String filename) {
+	public ReceiveFile(Agent a, String conversationId, int id) {
 		super(a);
 		m_agent = (CofitsGuiAgent) a;
 		m_conversationId = conversationId;
-		m_filename = filename;
+		m_id = id;
 	}
 
 	@Override
@@ -21,10 +21,10 @@ public class ReceiveFile extends SequentialBehaviour {
 	
 	//Getters
 	public String getConversationId() {return m_conversationId;}
-	public String getFilename() {return m_filename;}
+	public int getId() {return m_id;}
 		
 	//Members
 	private CofitsGuiAgent m_agent;
 	private String m_conversationId;
-	private String m_filename;
+	private int m_id;
 }

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import utc.bsfile.model.agent.CofitsGuiAgent;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
@@ -27,6 +28,8 @@ public class CofitsModel {
 	public CofitsModel() {
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.JSON_STRUCTURE_FILENAME));
 		m_projectsArchitectureRootNode = new TwoLinkedJsonNode(jsonNode, "root", true);
+		generateFilesMap();
+		//m_projectsArchitectureRootNode.displayConsole(0);
 	}
 	
 	
@@ -64,8 +67,8 @@ public class CofitsModel {
 	}
 	
 	
-	public void fileReceived(String filename) {
-		firePropertyChange("File Received", null, filename);		
+	public void fileReceived(int id) {
+		firePropertyChange("File Received", null, id);		
 	}
 	
 	
@@ -119,7 +122,9 @@ public class CofitsModel {
 		for (TwoLinkedJsonNode projectNodes : m_projectsArchitectureRootNode.getChildren()){
 			for (TwoLinkedJsonNode sessionNodes : projectNodes.getChildren()){
 				for (TwoLinkedJsonNode fileNode : sessionNodes.getChildren()){	
-					m_files.add(new CofitsFile(fileNode));
+					if (fileNode.getCurrent() instanceof ObjectNode){
+						m_files.add(new CofitsFile(fileNode));
+					}
 				}
 			}
 		}
@@ -172,6 +177,15 @@ public class CofitsModel {
 	public final CofitsFile getFile(String filename){
 		for (CofitsFile file : m_files){
 			if (file.getFilename().equals(filename)){
+				return file;
+			}
+		}
+		return null;
+	}
+	
+	public final CofitsFile getFile(int id){
+		for (CofitsFile file : m_files){
+			if (file.getId() == id){
 				return file;
 			}
 		}

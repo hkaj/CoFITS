@@ -20,7 +20,7 @@ public class ManageReceiveFile extends OneShotBehaviour {
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(m_initialMessage.getContent());
 		
 		m_nbPartExpected = jsonNode.path("number_of_messages").asInt();
-		m_filename = "foo";	//TODO set the right filename from file id
+		m_id = jsonNode.path("file_id").asInt();
 		
 		m_partsReceivedBehaviours = new Vector<ReceivePartOfFile>(m_nbPartExpected);
 		m_newMessages = queue;
@@ -35,7 +35,7 @@ public class ManageReceiveFile extends OneShotBehaviour {
 	
 	private void startReceiveFileBehaviour(){
 		//Create the ReceiveFileBehaviour
-		m_receiveFileBehaviour = new ReceiveFile(myAgent, getConversationId(), m_filename);
+		m_receiveFileBehaviour = new ReceiveFile(myAgent, getConversationId(), m_id);
 		
 		//Add the sub behaviours
 		for(ReceivePartOfFile behaviour : m_partsReceivedBehaviours){
@@ -57,8 +57,9 @@ public class ManageReceiveFile extends OneShotBehaviour {
 			
 			//The thread had been activated, a new message is available
 			ACLMessage message = m_newMessages.poll();
+			System.out.println(message.getConversationId());
 			int index = Integer.parseInt(message.getEnvelope().getComments()) - 1;
-			m_partsReceivedBehaviours.add(index, new ReceivePartOfFile(myAgent, message, m_filename));
+			m_partsReceivedBehaviours.add(index, new ReceivePartOfFile(myAgent, message, m_id));
 			++m_nbPartReceived;
 		}
 		
@@ -84,16 +85,16 @@ public class ManageReceiveFile extends OneShotBehaviour {
 	
 	//Getters & Setters
 	public final String getConversationId(){return m_initialMessage.getConversationId();}
-	public final String getFilename(){return m_filename;}	//TODO Set the right filename
+	public final int getId(){return m_id;}
 	
 	//Members
 	private ACLMessage m_initialMessage;
 	private int m_nbPartReceived = 0;
 	private int m_nbPartExpected;
-	private String m_filename;
 	private Vector<ReceivePartOfFile> m_partsReceivedBehaviours;
 	private LinkedBlockingQueue<ACLMessage> m_newMessages = new LinkedBlockingQueue<ACLMessage>();
 	private CofitsGuiAgent m_agent;
 	private ReceiveFile m_receiveFileBehaviour;
+	private int m_id;
 
 }

@@ -34,7 +34,10 @@ public class TwoLinkedJsonNode implements TreeNode {
 						child.setName(child.getCurrent().get("date").asText());
 					}
 					
-					addChild(child, false);
+					if (child.getCurrent().isArray())
+						addChildren(child.getChildren(), false);
+					else
+						addChild(child, false);
 				}
 			}
 			
@@ -54,7 +57,10 @@ public class TwoLinkedJsonNode implements TreeNode {
 					}
 					
 					//Working only if arrays are not directly nested in another array
-					addChild(child, false);
+//					if (child.getCurrent().isArray())
+//						addChildren(child.getChildren(), false);
+//					else
+						addChild(child, false);
 				}
 				
 			}
@@ -217,6 +223,16 @@ public class TwoLinkedJsonNode implements TreeNode {
 	}
 	
 	
+	public void displayConsole(int currentLevel){
+		String toDisplay = "";
+		for (int i = 0; i < currentLevel; i++)
+			toDisplay += "____";
+		System.out.println(toDisplay + m_name);
+		for (TwoLinkedJsonNode child : m_children){
+			child.displayConsole(currentLevel + 1);
+		}
+	}
+	
 	//Getters & Setters
 	public String getName(){
 		return m_name;
@@ -238,6 +254,7 @@ public class TwoLinkedJsonNode implements TreeNode {
 	public void setName(String name) {
 		m_name = name;		
 	}
+	
 
 public TwoLinkedJsonNode getParentTwoLinkedJsonNode() {
 		return m_parent;

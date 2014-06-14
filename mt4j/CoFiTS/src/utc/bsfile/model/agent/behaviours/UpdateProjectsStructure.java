@@ -3,6 +3,7 @@ package utc.bsfile.model.agent.behaviours;
 import java.nio.file.FileSystems;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.FilePathManager;
@@ -41,8 +42,10 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 				
 				for (TwoLinkedJsonNode newProjectNode : newNodeTree.getChildren()){	
 					for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){
-						String path = initialPath + newProjectNode.getName() + separator + newSessionNode.getName() + separator;
-						FilePathManager.getInstance().createFolder(path);
+						if (newSessionNode.getCurrent() instanceof ObjectNode){
+							String path = initialPath + newProjectNode.getName() + separator + newSessionNode.getName() + separator;
+							FilePathManager.getInstance().createFolder(path);
+						}
 					}
 				}
 			}

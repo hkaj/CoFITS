@@ -166,12 +166,10 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 
 
 	@Override
-	protected void processFileDownloaded(String filename) {
-		super.processFileDownloaded(filename);
+	protected void processFileDownloaded(int id) {
+		super.processFileDownloaded(id);
 		
 	}
-	
-	
 	
 	//Members
 	ProjectChoiceListMenu m_list;

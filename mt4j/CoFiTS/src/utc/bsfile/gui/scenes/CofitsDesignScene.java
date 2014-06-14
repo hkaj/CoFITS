@@ -110,12 +110,13 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		if (evt.getPropertyName().equals("projectsArchitectureRootNode changed")){
 			//TODO set the new model for pickFileChooserOpened
 		} else if (evt.getPropertyName().equals("File Received")){
-			processFileDownloaded((String)evt.getNewValue());
+			processFileDownloaded((int)evt.getNewValue());
 		}
 	}
 	
-	protected void processFileDownloaded(String filename){
-		m_model.getFile(filename).setLocal(true);
+	protected void processFileDownloaded(int id){
+		System.out.println(id);
+		m_model.getFile(id).setLocal(true);
 	}
 
 	

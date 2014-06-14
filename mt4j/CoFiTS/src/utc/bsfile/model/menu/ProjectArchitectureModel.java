@@ -98,8 +98,6 @@ public class ProjectArchitectureModel implements IMenuModel {
 			}
 			
 			m_current = (TwoLinkedJsonNode) current;
-			System.out.println("CURRENT LEVEL : " + m_currentLevel);
-			System.out.println("MAX LEVEL : " + m_maxLevel);
 		}
 	}
 
@@ -163,6 +161,8 @@ public class ProjectArchitectureModel implements IMenuModel {
 	public String[] getFilter() {
 		return m_filter;
 	}
+	
+	public int getMaxLevel(){return m_maxLevel;}
 	
 	//Members
 	protected TwoLinkedJsonNode m_current;

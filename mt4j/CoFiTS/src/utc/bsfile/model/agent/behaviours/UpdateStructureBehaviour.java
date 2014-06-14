@@ -100,9 +100,22 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			String initialPath = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
 			initialPath += initialPath.charAt(initialPath.length() - 1) == separator.charAt(0) ? separator : "";
 			
-			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){			
-				String path = initialPath + newProjectNode.getName() + separator + newSessionNode.getName() + separator;
-				FilePathManager.getInstance().createFolder(path);
+			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){		
+				if (newSessionNode.getCurrent() instanceof ObjectNode){
+					String path = initialPath + newProjectNode.getName() + separator + newSessionNode.getName() + separator;
+					FilePathManager.getInstance().createFolder(path);
+				}
+			}
+			
+			//Set local parameter
+			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){	
+				for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
+					if (newFileNode.getCurrent() instanceof ObjectNode){
+						ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
+						newJsonNode.put("local", false);
+						newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
+					}
+				}
 			}
 		}
 		
@@ -154,6 +167,15 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			path += oldProjectNode.getName() + separator + newSessionNode.getName() + separator;
 			
 			FilePathManager.getInstance().createFolder(path);
+			
+			//Set local parameter
+			for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
+				if (newFileNode.getCurrent() instanceof ObjectNode){
+					ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
+					newJsonNode.put("local", false);
+					newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
+				}
+			}
 		}
 		
 	}
@@ -188,9 +210,12 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			}
 			
 			//Add the local field to newNode from oldNode
-			ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
-			newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
-			newFileNode.addChild(new TwoLinkedJsonNode(oldFileNode.getCurrent().path("local"), "local"), false);
+			if (newFileNode.getCurrent() instanceof ObjectNode){
+				System.out.println("oldfilenode : " + oldFileNode);
+				ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
+				newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
+				newFileNode.addChild(new TwoLinkedJsonNode(oldFileNode.getCurrent().path("local"), "local"), false);
+			}
 		}
 		
 	}

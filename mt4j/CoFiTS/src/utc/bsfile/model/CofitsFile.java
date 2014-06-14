@@ -1,5 +1,6 @@
 package utc.bsfile.model;
 
+import java.nio.file.FileSystems;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +36,14 @@ public class CofitsFile {
 	
 	public final String getFilename() {
 		return m_node.getName();
+	}
+	
+	public final String getFilepath(){
+		TwoLinkedJsonNode session = m_node.getParentTwoLinkedJsonNode();
+		TwoLinkedJsonNode project = session.getParentTwoLinkedJsonNode();
+		String separator = FileSystems.getDefault().getSeparator();
+		
+		return project.getName() + separator + session.getName() + separator + getFilename();
 	}
 	
 	public final void setFilename(String filename) {

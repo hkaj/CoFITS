@@ -121,7 +121,7 @@ public class CofitsGuiAgent extends GuiAgent {
 		m_manageReceiveFileBehaviours.remove(conversationId);
 		m_receiveFileMessagesQueues.remove(conversationId);
 		
-		m_model.fileReceived(receiveFile.getFilename());
+		m_model.fileReceived(receiveFile.getId());
 		
 		//Interrupt the thread
 		//TODO Check whether this step is needed or not
