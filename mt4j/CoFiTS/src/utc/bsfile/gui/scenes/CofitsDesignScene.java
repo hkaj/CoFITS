@@ -53,7 +53,7 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		this.setClearColor(new MTColor(50, 50, 50, 255));
 		
 		//TODO construct the node somewhere
-	
+		
 		initManager();
 	}
 

@@ -97,12 +97,32 @@ public class TwoLinkedJsonNode implements TreeNode {
 			addChild(node, doAddInJsonNodeTree);
 		}
 	}
+	
+	
+	public void removeChild(String name){
+		for (int i = 0; i < m_children.size(); ++i){
+			if (m_children.get(i).getName().equals(name)){
+				m_children.remove(i);
+			}
+		}
+	}
 
+	
 	//Implements TreeNode interface
 	@Override
 	public TreeNode getChildAt(int childIndex) {
 		if (childIndex < m_children.size() && childIndex >= 0)
 			return m_children.get(childIndex);
+		return null;
+	}
+	
+	public TwoLinkedJsonNode getChild(String name){
+		for (TwoLinkedJsonNode child : m_children){
+			if (child.getName().equals(name)) {
+				return child;
+			}
+		}
+		
 		return null;
 	}
 
@@ -182,15 +202,6 @@ public class TwoLinkedJsonNode implements TreeNode {
 		}
 		
 		m_children.clear();		
-	}
-	
-	
-	public TwoLinkedJsonNode getChild(String field){
-		for (TwoLinkedJsonNode child : m_children){
-			if (child.getName().equals(field))
-				return child;
-		}
-		return null;
 	}
 	
 	

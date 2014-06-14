@@ -20,6 +20,7 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -43,8 +44,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures) {
 		super(mtApplication, name, model, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
-		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
-
+		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
 		// set orbs orientables for the present scene
 		for (ControlOrb orb : orbs) {
@@ -165,7 +165,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.getInstance().JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
+		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);

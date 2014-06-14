@@ -8,11 +8,13 @@ import utc.bsfile.model.agent.behaviours.ManageReceiveFile;
 import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.agent.behaviours.ReceiveFile;
 import utc.bsfile.model.agent.behaviours.ReceiveMessageBehaviour;
-import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
 import utc.bsfile.model.agent.behaviours.RequestProjectsArchitecture;
 import jade.core.AID;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
+
+import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
+import jade.core.NotFoundException;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -27,9 +29,11 @@ public class CofitsGuiAgent extends GuiAgent {
 	public static final int DOWNLOAD_FILE = 1;
 
 	@Override
-	protected void setup() {	
-		super.setup();		
+	protected void setup() {
+		super.setup();
 		
+		registerToDF();
+
 		m_model = (CofitsModel) getArguments()[0];	
 		m_model.setAgent(this);
 		
@@ -45,7 +49,7 @@ public class CofitsGuiAgent extends GuiAgent {
 		}
 	}
 
-	
+
 	/**
 	 * @param message - Agreement message for downloading file
 	 * Creates a new Threaded behaviour in order to receive a file
@@ -60,6 +64,27 @@ public class CofitsGuiAgent extends GuiAgent {
 			addBehaviour(b);
 		} else {
 			System.err.println("Behaviour with the conversation id : " + conversationId + " already exists");
+		}
+	}
+	
+	
+	/**
+	 * 	The agent registers to the AMS
+	 */
+	private void registerToDF() {
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("table");
+		sd.setName("TATIN");
+		
+		dfd.addServices(sd);
+		
+		try{
+			DFService.register(this, dfd);
+		} catch (FIPAException e){
+			e.printStackTrace();
 		}
 	}
 	
@@ -85,7 +110,6 @@ public class CofitsGuiAgent extends GuiAgent {
 			System.err.println("Agreement message might have not been received yet for conversation id : " + conversationId);
 			putBack(message);
 		}
-		
 	}
 	
 	

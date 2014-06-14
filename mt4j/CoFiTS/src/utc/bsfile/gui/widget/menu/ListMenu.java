@@ -535,7 +535,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		super.processGestureEvent(ge);
-		
+
 		if (m_areCellsEnabled){
 			if (ge instanceof TapEvent) {
 				if (((TapEvent) ge).isTapped()) {

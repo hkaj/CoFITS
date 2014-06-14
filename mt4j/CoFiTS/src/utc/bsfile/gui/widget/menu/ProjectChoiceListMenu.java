@@ -10,6 +10,9 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
@@ -72,7 +75,6 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_confirmButton.setVisible(false);		
 	}
 	
-
 	//Getters
 	public final TwoLinkedJsonNode getSelectedNode(){
 		return m_selectedNode;
@@ -94,7 +96,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	public final MTImageButton getLaunchAgentsButton(){
 		return m_launchAgentsButton;
 	}
-	
+
 
 	//Members
 	protected TwoLinkedJsonNode m_selectedNode;
