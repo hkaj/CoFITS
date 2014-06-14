@@ -108,6 +108,10 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	private MTSvgButton downloadingIcon;
 	private MTSvgButton downloadingIconArrows;
 	private MTSvgButton m_launchAgentsButton;
+	
+	public MTSvgButton getLaunchAgentsButton(){
+		return m_launchAgentsButton;
+	}
 
 	public PApplet applet;
 	
@@ -212,11 +216,14 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		
 	}
 	
-	public void projectHasToBeRefreshed() {
+	
+	public void projectHasToBeRefresh(TwoLinkedJsonNode architecture) {
+		m_newArchitecture = architecture;
 		downloadingIcon.setVisible(true);
 	}
 	
 	public void projectRefreshed() {
+		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newArchitecture, ProjectArchitectureModel.FILE_LEVEL));
 		downloadingIcon.setVisible(false);
 	}
 	
@@ -320,7 +327,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 
 		CofitsFile file = new CofitsFile(nodeChoice);
 		if ( file.isFile() ) {
-			//ajout de l'icone de présence en local ou non
+			//ajout de l'icone de prï¿½sence en local ou non
 			MTSvgButton localIcon;
 			if ( file.isLocal() ) {
 				localIcon = new MTSvgButton(getRenderer(), MT4jSettings.getInstance().getDefaultSVGPath() + "local-icon.svg");
@@ -410,7 +417,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	}
 
 	/**
-	 * Détruire le dernier composant (le local icon) et le remplacer par l'animation
+	 * Dï¿½truire le dernier composant (le local icon) et le remplacer par l'animation
 	 * se trouvant dans un unique composant.
 	 */
 	@Override
@@ -459,6 +466,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	
 	//Members
 	private TwoLinkedJsonNode m_start;
+	private TwoLinkedJsonNode m_newArchitecture;
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {

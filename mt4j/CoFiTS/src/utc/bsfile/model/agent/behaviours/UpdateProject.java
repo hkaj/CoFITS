@@ -23,6 +23,7 @@ public class UpdateProject extends UpdateStructureBehaviour {
 			TwoLinkedJsonNode localProjectNode = architectureNode.getChild(projectNode.getName());
 			
 			if (messageContentNode.getChild("name") != null){
+				//The case where localProjectNoe is null is managed in mergeProjects
 				mergeProjects(localProjectNode, projectNode);
 				m_agent.getModel().changeProject(projectNode);
 			} else {

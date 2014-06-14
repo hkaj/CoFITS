@@ -20,7 +20,9 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 	@Override
 	public void action() {		
 		//Create JsonNode from content of message
-		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(m_message.getContent());
+		JsonNode messageJsonNode = JsonManager.getInstance().createJsonNode(m_message.getContent());
+		JsonNode jsonNode = messageJsonNode.path("list");
+		System.out.println("New Architecture : " + m_message.getContent());
 		
 		if (jsonNode != null){
 			

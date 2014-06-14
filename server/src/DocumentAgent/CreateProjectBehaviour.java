@@ -3,6 +3,7 @@ package DocumentAgent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -103,7 +104,7 @@ public class CreateProjectBehaviour extends OneShotBehaviour {
 		}
 		try {
 			reply.setContent(mapper.writeValueAsString(content));
-		} catch (JsonProcessingException e) {
+		} catch (IOException e){
 			e.printStackTrace();
 		}
 		this.myAgent.send(reply);

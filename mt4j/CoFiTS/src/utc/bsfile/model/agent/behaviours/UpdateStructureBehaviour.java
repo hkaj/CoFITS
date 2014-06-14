@@ -177,7 +177,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 					Date newDate = formatter.parse(newFileNode.getCurrent().path("last-modified").asText());
 					
 					if (oldDate.before(newDate)){
-						//TODO Behaviour to download the file
+						m_agent.addBehaviour(new RequestDownloadFile(m_agent,oldFileNode.getCurrent().path("id").asInt()));
 						System.out.println("Let's download the files !");
 					}
 					

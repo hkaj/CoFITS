@@ -31,6 +31,7 @@ public abstract class CofitsDesignScene extends AbstractScene implements Propert
 		super(mtApplication, name);
 		
 		m_model = model;
+		model.addPropertyChangeListener(this);
 		
 		//Add the orbs to the list of Orbs
 		for (ControlOrb orb : orbs){

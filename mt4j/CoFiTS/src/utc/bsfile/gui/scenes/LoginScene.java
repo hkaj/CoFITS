@@ -344,7 +344,6 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		super.propertyChange(evt);
-		System.out.println("Something changed");
 	}
 		
 

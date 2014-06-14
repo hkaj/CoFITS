@@ -2,6 +2,7 @@ package utc.bsfile.gui.scenes;
 
 import java.beans.PropertyChangeEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,8 @@ import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProc
 import org.mt4j.input.inputProcessors.componentProcessors.panProcessor.PanProcessorTwoFingers;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
 import org.mt4j.input.inputProcessors.globalProcessors.CursorTracer;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -34,6 +37,7 @@ import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.Constants;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
@@ -167,11 +171,28 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		m_pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
+		final PickFileChooser pick;
+		pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(new File(PropertyManager.JSON_STRUCTURE_FILENAME),ProjectArchitectureModel.FILE_LEVEL), m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
-		m_pick.translate(location, TransformSpace.GLOBAL);
-		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
-		getCanvas().addChild(m_pick);
+		pick.translate(location, TransformSpace.GLOBAL);
+		((PickFileChooser)pick).updateOrientation(location.x, location.y);
+		getCanvas().addChild(pick);
+		m_pickFileChoosers.add(pick);
+		
+		pick.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+			@Override
+			public boolean processGestureEvent(MTGestureEvent evt) {
+				switch (evt.getId()) {
+				case TapEvent.GESTURE_ENDED :
+					m_model.launchAgentContainer();
+					pick.getLaunchAgentsButton().setEnabled(false);
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		});
 	}
 
 	
@@ -179,8 +200,15 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		super.propertyChange(evt);
-		if (evt.getPropertyName().equals(Constants.OPEN_PICK))	
-			playPickFileChooser(new Vector3D(400, 200));
+		if (evt.getPropertyName().equals("Project changed")){
+			for (PickFileChooser pick : m_pickFileChoosers){
+				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue());
+			}
+		} else if (evt.getPropertyName().equals("Architecture changed")) {
+			for (PickFileChooser pick : m_pickFileChoosers){
+				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue());
+			}
+		}
 	}
 	
 	
@@ -226,7 +254,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	
 	//Members
-	AbstractShape m_pick;
+	protected List<PickFileChooser> m_pickFileChoosers = new ArrayList<PickFileChooser>();
 	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
 
 }

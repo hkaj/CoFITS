@@ -14,7 +14,6 @@ import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.ThreadedBehaviourFactory;
 
 import utc.bsfile.model.agent.behaviours.RequestDownloadFile;
-import jade.core.NotFoundException;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;

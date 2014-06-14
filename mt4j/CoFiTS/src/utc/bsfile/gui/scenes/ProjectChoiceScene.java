@@ -21,6 +21,7 @@ import utc.bsfile.gui.widget.menu.ProjectChoiceListMenu;
 import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 
 public class ProjectChoiceScene extends CofitsDesignScene {
 
@@ -92,16 +93,15 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void playProjectAndSessionsList(Vector3D position, ControlOrb orb) {
 		//Create the model from Json File
 		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
-		final ProjectChoiceListMenu projectList = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
-		projectList.setMustBeDestroy(false);
+		m_list = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
+		m_list.setMustBeDestroy(false);
 		
-		projectList.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		m_list.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
-					System.out.println("OK");
-					launchProjectChoiceScene(projectList.getModel());
+					launchProjectChoiceScene(m_list.getModel());
 					break;
 				default:
 					break;
@@ -110,13 +110,13 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			}
 		});
 		
-		projectList.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		m_list.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
 					m_model.launchAgentContainer();
-					projectList.getLaunchAgentsButton().setEnabled(false);
+					m_list.getLaunchAgentsButton().setEnabled(false);
 					break;
 				default:
 					break;
@@ -125,7 +125,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			}
 		});
 		
-		getCanvas().addChild(projectList);
+		getCanvas().addChild(m_list);
 
 	}
 	
@@ -154,7 +154,14 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
-		super.propertyChange(evt);		
+		super.propertyChange(evt);
+		if (evt.getPropertyName().equals("Architecture changed")){
+			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL);
+			m_list.changeModel(model);
+		} else if (evt.getPropertyName().equals("Project changed")){
+			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL);
+			m_list.changeModel(model);
+		}
 	}
 
 
@@ -167,6 +174,6 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	
 	
 	//Members
-	
+	ProjectChoiceListMenu m_list;
 
 }

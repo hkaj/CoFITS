@@ -35,15 +35,16 @@ public class ReceiveMessageBehaviour extends CyclicBehaviour {
 	}
 
 	private void manageInformMessage(ACLMessage message) {
-		if (!message.getConversationId().equals("")){
+		if (message.getConversationId() != null && !message.getConversationId().equals("")){
 			//The message is about a part of file to receive
 			m_agent.propagatePartFileMessage(message);
 		} else {
 			JsonNode messageContentNode = JsonManager.getInstance().createJsonNode(message.getContent());
-
+			System.out.println(messageContentNode);
 			if (messageContentNode.path("action").asText().equals("LIST")) {
+				System.out.println("received");
 				myAgent.addBehaviour(new UpdateProjectsStructure(myAgent, message));
-			} else {
+			} else if (messageContentNode.path("action").asText().equals("LIST_PROJECT")) {
 				m_agent.addBehaviour(new UpdateProject(myAgent, message));
 			}			
 		}

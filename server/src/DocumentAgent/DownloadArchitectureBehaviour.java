@@ -53,7 +53,7 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 			
 		}
 		Map<String, Object> content = new HashMap<String, Object>();
-		content.put("action", "LIST_PROJECT");
+		content.put("action", "LIST");
 		content.put("list", projectMap);
 		try {
 			reply.setContent(mapper.writeValueAsString(content));

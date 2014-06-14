@@ -71,7 +71,7 @@ public class CofitsModel {
 	
 	public void changeProjectArchitecture(TwoLinkedJsonNode newArchitectureNode, TwoLinkedJsonNode oldArchitectureNode) {		
 		//Fire the changes to the views
-		firePropertyChange("projectsArchitectureRootNode changed", oldArchitectureNode, newArchitectureNode);
+		firePropertyChange("Architecture changed", oldArchitectureNode, newArchitectureNode);
 		
 		//The new node replace the old one
 		m_projectsArchitectureRootNode = newArchitectureNode;
@@ -89,14 +89,14 @@ public class CofitsModel {
 		//Get the old project node
 		TwoLinkedJsonNode oldProjectNode = m_projectsArchitectureRootNode.getChild(newProjectNode.getName());
 		
-		//Fire the changes to the views		
-		firePropertyChange("Project changed", oldProjectNode, newProjectNode);
-		
 		//Set the new node in the architecture to replace the old one
 		m_projectsArchitectureRootNode.removeChild(oldProjectNode.getName());
 		m_projectsArchitectureRootNode.addChild(newProjectNode, false);
 		
 		generateFilesMap();
+		
+		//Fire the changes to the views		
+		firePropertyChange("Project changed", null, m_projectsArchitectureRootNode);
 		
 		//Save the new Json File
 		saveJsonStructureFile();
@@ -106,6 +106,7 @@ public class CofitsModel {
 	public void removeProject(TwoLinkedJsonNode oldProjectNode) {
 		m_projectsArchitectureRootNode.removeChild(oldProjectNode.getName());
 		oldProjectNode.releaseTree();
+		firePropertyChange("Project changed", oldProjectNode, m_projectsArchitectureRootNode);
 		generateFilesMap();
 	}
 	

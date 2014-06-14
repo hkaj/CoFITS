@@ -104,6 +104,11 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	public final MTSvgButton getLaunchAgentsButton(){
 		return m_launchAgentsButton;
 	}
+	
+	public void changeModel(IMenuModel model) {
+		setModel(model);
+		m_selectedNode = null;
+	}
 
 
 	//Members
