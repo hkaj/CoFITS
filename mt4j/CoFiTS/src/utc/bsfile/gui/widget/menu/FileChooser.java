@@ -124,12 +124,6 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 			IMenuModel model, TwoLinkedJsonNode start) {
 		super(applet, x, y, width, nbItem, model);
 		
-		m_start = start;
-		
-		if (model instanceof ProjectArchitectureModel){
-			model.setCurrentMenu(m_start);
-		}
-		
 		//---------------------------------------------------------------------------
 		this.pathField = new MTTextArea(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight());
 		if ( pathString.length() > 30 ) {
@@ -504,7 +498,6 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	
 	
 	//Members
-	private TwoLinkedJsonNode m_start;
 	private TwoLinkedJsonNode m_newArchitecture;
 
 	@Override

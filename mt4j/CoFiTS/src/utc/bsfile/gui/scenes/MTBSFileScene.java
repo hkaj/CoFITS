@@ -173,7 +173,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_sessionOnOpeningFileChooser, m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
+		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_sessionOnOpeningFileChooser, ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.SESSION_LEVEL),m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)pick).updateOrientation(location.x, location.y);
@@ -281,6 +281,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			TwoLinkedJsonNode sessionNode = projectNode.getChild(session);
 			if (sessionNode != null){
 				m_sessionOnOpeningFileChooser = sessionNode;
+				System.out.println("SESSION NODE " + sessionNode.getName());
 			}
 		}
 	}

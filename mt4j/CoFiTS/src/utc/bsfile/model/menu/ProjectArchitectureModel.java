@@ -17,14 +17,6 @@ public class ProjectArchitectureModel implements IMenuModel {
 	public static final String[] VIDEO_FILTER = new String[]{"mov", "mpeg", "mpg", "m4v", "wmv", "mp4","avi"};
 	public static final String[] PDF_FILTER = new String[]{"pdf"};
 	public static final String[] HTML_FILTER = new String[]{"html", "htm"};
-	
-//	public enum ModelFilter {
-//		PDF,
-//		IMG,
-//		VID,
-//		WEB,
-//		NONE
-//	}
 
 	//Constructors
 	public ProjectArchitectureModel(File jsonFile){
@@ -44,12 +36,14 @@ public class ProjectArchitectureModel implements IMenuModel {
 		m_current = m_start;
 	}
 	
-	public ProjectArchitectureModel(TwoLinkedJsonNode start, TwoLinkedJsonNode current, int maxLevel) {
+	public ProjectArchitectureModel(TwoLinkedJsonNode start, TwoLinkedJsonNode current, int maxLevel, int currentLevel) {
 		m_currentLevel = 0;
 		m_filter = null;
 		m_maxLevel = maxLevel;	
 		m_start = start;
 		m_current = current;
+		System.out.println("OPENING : " + m_current.getName());
+		System.out.println("ROOT : " + m_start.getName());
 	}
 	
 	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode current, int currentLevel, int maxLevel, String[] filter) {
