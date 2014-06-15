@@ -25,7 +25,7 @@ public abstract class UpdateStructureBehaviour extends OneShotBehaviour {
 	
 protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, TwoLinkedJsonNode newArchitectureNode){
 	
-		newArchitectureNode.displayConsole(0);
+//		newArchitectureNode.displayConsole(0);
 //		System.out.println();System.out.println();
 		
 		
@@ -124,7 +124,6 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			}
 			
 			//Set local parameter
-			System.out.println("LOCAL Bis achievement");
 			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){	
 				for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
 					if (newFileNode.getChild("id") != null){
@@ -222,7 +221,6 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			
 		} else {
 			if (oldFileNode.getCurrent().path("local").asBoolean()){
-				System.out.println(oldFileNode.getCurrent().path("local").asBoolean());
 				//Check whether the file on the table is up to date or not
 				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");	
 			 
@@ -243,10 +241,8 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			
 			//Add the local field to newNode from oldNode
 			if (newFileNode.getChild("id") != null){
-				System.out.println("oldfilenode : " + oldFileNode);
 				ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
 				newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
-				System.out.println("there " + oldFileNode.getCurrent().path("local").asBoolean() );
 				newFileNode.addChild(new TwoLinkedJsonNode(oldFileNode.getCurrent().path("local"), "local"), false);
 			}
 		}

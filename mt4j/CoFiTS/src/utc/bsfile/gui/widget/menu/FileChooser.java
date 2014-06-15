@@ -246,14 +246,15 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	}
 	
 	
-	public void projectHasToBeRefresh(TwoLinkedJsonNode architecture) {
+	public void projectHasToBeRefresh(TwoLinkedJsonNode architecture, TwoLinkedJsonNode session) {
 		m_newArchitecture = architecture;
+		m_newSessionOpenning = session;
 		downloadingIconArrows.setVisible(true);
 		downloadingIcon.setEnabled(true);
 	}
 	
 	public void projectRefreshed() {
-		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newArchitecture, ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.PROJECT_LEVEL));
+		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newSessionOpenning, ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.FILE_LEVEL));
 		updateList();
 		downloadingIconArrows.setVisible(false);
 		downloadingIcon.setEnabled(false);
@@ -497,12 +498,13 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	}
 	
 	
-	//Members
-	private TwoLinkedJsonNode m_newArchitecture;
-
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	//Members
+	private TwoLinkedJsonNode m_newArchitecture;
+	private TwoLinkedJsonNode m_newSessionOpenning;
 }
