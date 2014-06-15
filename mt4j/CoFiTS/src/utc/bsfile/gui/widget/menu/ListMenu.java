@@ -601,6 +601,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						fileChoice = (File) choice;
 					}
 	
+					System.out.println("MAX : " + ((ProjectArchitectureModel)menuModel).getMaxLevel() + " CURRENT : " + ((ProjectArchitectureModel)menuModel).getCurrentLevel());
+					
 					if (this.menuModel.hasChoices(choice)) {
 						//A folder had been tapped
 						this.menuModel.setCurrentMenu(choice);

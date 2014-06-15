@@ -32,7 +32,6 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 			
 			if (oldNodeTree != null){
 				//Merge the trees and process modification in memory
-				System.out.println("HERE");
 				mergeArchitectureTrees(oldNodeTree, newNodeTree);
 			} else {				
 				//Create the folders

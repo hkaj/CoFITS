@@ -36,14 +36,12 @@ public class ProjectArchitectureModel implements IMenuModel {
 		m_current = m_start;
 	}
 	
-	public ProjectArchitectureModel(TwoLinkedJsonNode start, TwoLinkedJsonNode current, int maxLevel, int currentLevel) {
-		m_currentLevel = 0;
+	public ProjectArchitectureModel(TwoLinkedJsonNode root, TwoLinkedJsonNode current, int maxLevel, int currentLevel) {
+		m_currentLevel = currentLevel;
 		m_filter = null;
 		m_maxLevel = maxLevel;	
-		m_start = start;
+		m_start = root;
 		m_current = current;
-		System.out.println("OPENING : " + m_current.getName());
-		System.out.println("ROOT : " + m_start.getName());
 	}
 	
 	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode current, int currentLevel, int maxLevel, String[] filter) {

@@ -31,7 +31,7 @@ import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;
 
-public class PickFileChooser extends FileChooser implements ChoiceListener {
+public class PickFileChooser extends FileChooser {
 	private MTRectangle filterWindow;
 
 	//private MTImageButton pdfButton;
@@ -63,7 +63,6 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	public PickFileChooser(PApplet applet, int x, int y, float width, int nbItem, IMenuModel model, TwoLinkedJsonNode start) {
 		super(applet, x, y, width, nbItem, model, start);
 
-		addChoiceListener(this);
 		setCloseVisible(true);
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
@@ -130,15 +129,6 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	}
 
 	/**
-	 * create a widget corresponding to the selected file type either create the
-	 * widget on this thread or using agent thread
-	 */
-	@Override
-	public void choiceSelected(ChoiceEvent choiceEvent) {
-
-	}
-
-	/**
 	 * @param filepath
 	 */
 	public void createFileViewer(final File filepath) {
@@ -190,10 +180,6 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			metaWidget.setPositionGlobal(getCenterPointGlobal());
 			getParent().addChild(metaWidget);
 		}
-	}
-
-	@Override
-	public void choiceCancelled(ChoiceEvent choiceEvent) {
 	}
 
 	protected class PickButtonListener implements IGestureEventListener {

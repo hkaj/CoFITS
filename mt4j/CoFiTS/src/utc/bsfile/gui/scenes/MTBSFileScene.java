@@ -50,6 +50,14 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures, String project, String session) {
 		super(mtApplication, name, model, orbs, doCleanGestures);
+		
+		m_model = model;
+		m_projectOnChooserOpening = project;
+		m_sessionOnChooserOpening = session;
+		
+		//Download the files in the selected session
+		downloadSessionFiles();
+		
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
@@ -106,9 +114,6 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		for (ControlOrb cOrb : orbs ) {
 			processInputForOrb(cOrb);
 		}
-		
-		m_model = model;
-		setSessionOnOpeningFileChooser(project, session);
 	}
 	
 	protected void processInputForOrb(final ControlOrb orb) {
@@ -173,7 +178,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_sessionOnOpeningFileChooser, ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.SESSION_LEVEL),m_model.getProjectsArchitectureRootNode());
+		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), getSessionOnOpeningFileChooser(), ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)pick).updateOrientation(location.x, location.y);
@@ -211,13 +216,14 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		super.propertyChange(evt);
 		if (evt.getPropertyName().equals("Project changed")){
 			for (PickFileChooser pick : m_pickFileChoosers){
-				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue());
+				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue(), getSessionOnOpeningFileChooser());
 			}
 		} else if (evt.getPropertyName().equals("Architecture changed")) {
 			for (PickFileChooser pick : m_pickFileChoosers){
-				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue());
+				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue(), getSessionOnOpeningFileChooser());
 			}
 		} else if (evt.getPropertyName().equals("Agent created")) {
+			downloadSessionFiles();
 			for(PickFileChooser pick : m_pickFileChoosers){
 				if (pick != null){
 					pick.getLaunchAgentsButtonOff().setEnabled(false);
@@ -230,6 +236,18 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	}
 	
 	
+	private void downloadSessionFiles() {
+		int sessionId = getSessionOnOpeningFileChooser().getCurrent().path("id").asInt();
+		if (m_model.isConnected()){
+			for(CofitsFile coFile : m_model.getFiles()){
+				if (coFile.getSessionId() == sessionId && !coFile.isLocal()){
+					System.out.println("DOWNLOAD : " + coFile.getFilename());
+					m_model.downloadFile(coFile.getId());
+				}
+			}
+		}
+	}
+
 	@Override
 	protected void processFileDownloaded(int id) {
 		super.processFileDownloaded(id);
@@ -275,21 +293,23 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	//Getters & Setters
 	public final Map<String, PickFileChooser> getFilesToOpen(){return m_filesToOpen;}
 	public void addFileToOpen(String filename, PickFileChooser fileChooser) {m_filesToOpen.put(filename, fileChooser);}
-	public void setSessionOnOpeningFileChooser(String project, String session){
-		TwoLinkedJsonNode projectNode = m_model.getProjectsArchitectureRootNode().getChild(project);
+	public TwoLinkedJsonNode getSessionOnOpeningFileChooser(){
+		TwoLinkedJsonNode projectNode = m_model.getProjectsArchitectureRootNode().getChild(m_projectOnChooserOpening);
 		if (projectNode != null){
-			TwoLinkedJsonNode sessionNode = projectNode.getChild(session);
+			TwoLinkedJsonNode sessionNode = projectNode.getChild(m_sessionOnChooserOpening);
 			if (sessionNode != null){
-				m_sessionOnOpeningFileChooser = sessionNode;
-				System.out.println("SESSION NODE " + sessionNode.getName());
+				return sessionNode;
 			}
 		}
+		
+		return null;
 	}
 	
 	
 	//Members
 	protected List<PickFileChooser> m_pickFileChoosers = new ArrayList<PickFileChooser>();
 	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
-	protected TwoLinkedJsonNode m_sessionOnOpeningFileChooser;
+	protected String m_projectOnChooserOpening;
+	protected String m_sessionOnChooserOpening;
 
 }
