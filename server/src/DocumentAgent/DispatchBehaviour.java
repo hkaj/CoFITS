@@ -43,9 +43,9 @@ public class DispatchBehaviour extends CyclicBehaviour
 					case "CREATE_PROJECT":
 						this.myAgent.addBehaviour(new CreateProjectBehaviour(req,message));
 						break;
-//					case "REMOVE_PROJECT":
-//						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message)); // TODO
-//						break;
+					case "REMOVE_PROJECT":
+						this.myAgent.addBehaviour(new RemoveProjectBehaviour(req,message));
+						break;
 					case "UPLOAD_FILE": // gerer la mise a jour d'un fichier et l'envoi du CONFIRM/REFUSE
 						this.myAgent.addBehaviour(new UploadBehaviour(req, message));
 						break;
@@ -70,9 +70,9 @@ public class DispatchBehaviour extends CyclicBehaviour
 					case "CREATE_SESSION":
 						this.myAgent.addBehaviour(new CreateSessionBehaviour(req, message));
 						break;
-//					case "REMOVE_SESSION":
-//						this.myAgent.addBehaviour(new RemoveSessionBehaviour(req, message)); //TODO
-//						break;
+					case "REMOVE_SESSION":
+						this.myAgent.addBehaviour(new RemoveSessionBehaviour(req, message)); //TODO
+						break;
 					default:
 						break;
 					}
