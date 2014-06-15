@@ -17,8 +17,6 @@
  ***********************************************************************/
 package utc.bsfile.gui.widget.pick;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +39,7 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.Theme;
 
 /**
  * The Class MTList. A list component to add MTListCell objects to.
@@ -248,16 +247,19 @@ public class PickMTList extends MTClipRectangle {
 		int height = 465;
 		scrollBar = new MTRectangle(applet, 10, height);
 		scrollBar.setPositionRelativeToParent(new Vector3D(285, 150));
-		scrollBar.setFillColor(new MTColor(140, 210, 210, 240));
-		scrollBar.setStrokeColor(MTColor.BLACK);
+		//scrollBar.setFillColor(new MTColor(140, 210, 210, 240));
+		//scrollBar.setStrokeColor(MTColor.BLACK);
+		scrollBar.setNoFill(true);
+		scrollBar.setNoStroke(true);
 
 		float buttonHeight = (7*height)/nbItems;
 		if (buttonHeight < 10) {
 			buttonHeight = 10;
 		}
 		scrollButton = new MTRectangle(applet, 10, buttonHeight);
-		scrollButton.setFillColor(MTColor.BLACK);
-		scrollButton.setStrokeColor(MTColor.BLACK);
+		scrollButton.setFillColor(Theme.BACKGROUND_COLOR);
+		//scrollButton.setStrokeColor(MTColor.BLACK);
+		scrollButton.setNoStroke(true);
 		scrollBar.addChild(scrollButton);
 		scrollBar.removeAllGestureEventListeners();
 		scrollButton.removeAllGestureEventListeners();

@@ -25,7 +25,6 @@ import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
 import utc.bsfile.util.FileExtensionFilter;
-import utc.bsfile.util.JsonManager;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;

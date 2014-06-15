@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="600px"
-	 height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
-<g id="Calque_1">
+<svg version="1.1" id="Calque_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="600px" height="600px" viewBox="0 0 600 600" enable-background="new 0 0 600 600" xml:space="preserve">
+<g id="Calque_1_1_">
 </g>
-<g id="Calque_4">
-	<path fill="#1695A3" d="M366.064,283.483L300,349.549l-66.064-66.065h41.291v-99.097h49.548v99.097H366.064z M300,349.549H176.129
-		v66.064h247.742v-66.064H300z M407.355,382.581h-33.033v-16.517h33.033V382.581z"/>
-</g>
+<rect x="374.322" y="366.064" fill="#1695A3" width="33.033" height="16.517"/>
+<path fill="#1695A3" d="M300,109.5c-105.21,0-190.5,85.29-190.5,190.5S194.79,490.5,300,490.5S490.5,405.21,490.5,300
+	S405.21,109.5,300,109.5z M423.87,415.61H176.13V349.55H300l-66.06-66.07h41.29v-99.09h49.55v99.09h41.279L300,349.55h123.87V415.61
+	z"/>
+<rect x="176.13" y="349.55" fill="#225378" width="247.74" height="66.061"/>
+<polygon fill="#225378" points="366.06,283.48 300,349.55 233.94,283.48 275.23,283.48 275.23,184.39 324.78,184.39 324.78,283.48 
+	"/>
 </svg>

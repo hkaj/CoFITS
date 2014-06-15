@@ -5,6 +5,7 @@ import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
@@ -60,10 +61,21 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	
 	@Override
 	public void downLoadFile(MTGestureEvent ge) { // ne télécharge pas le fichier... (ne pas toucher au nom anyway)
-		// change the color of the selected cell
-		for (MTListCell cell : list.getListCellContainer().getCells()) {
-			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
-			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+		
+		if (ge instanceof TapEvent) {
+			if (((TapEvent) ge).isTapped()) {
+				switch (ge.getId()) {
+				case TapEvent.GESTURE_ENDED :
+					// change the color of the selected cell
+					for (MTListCell cell : list.getListCellContainer().getCells()) {
+						cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
+						if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+					}
+					break;
+				default:
+					break;
+				}
+			}
 		}
 	}
 

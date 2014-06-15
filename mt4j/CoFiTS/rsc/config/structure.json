@@ -20,6 +20,36 @@
 				"name" : "nf28.png",
 				"local" : false,
 				"last-modified" : "20-04-2014 15:12:23"
+			},
+			"cctvvmb.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"jajajaja.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
+			},
+			"trololo.png" :
+			{
+				"name" : "nf28.png",
+				"local" : false
+			},
+			"cctvvmb2.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"jajajaja2.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
+			},
+			"trololo2.png" :
+			{
+				"name" : "nf28.png",
+				"local" : false
 			}
 		},
 		"session_20_04_14" : 
@@ -74,6 +104,19 @@
 			{
 				"name" : "nf28.png",
 				"local" : false
+			}
+		},
+		"session_02_05_14" : 
+		{
+			"innov.pdf" :
+			{
+				"name" : "innov.pdf",
+				"local" : true
+			},
+			"utc.png" :
+			{
+				"name" : "utc.png",
+				"local" : true
 			}
 		}
 	}

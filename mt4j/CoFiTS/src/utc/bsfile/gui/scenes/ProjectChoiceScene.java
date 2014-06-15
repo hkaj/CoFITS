@@ -134,6 +134,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
 		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);
+		
 		//Add the scene to the mt application
 		getMTApplication().addScene(mtbsFileScene);
 		
@@ -161,7 +162,6 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	@Override
 	protected void processFileDownloaded(String filename) {
 		super.processFileDownloaded(filename);
-		
 	}
 	
 	
