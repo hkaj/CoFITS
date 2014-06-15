@@ -103,3 +103,4 @@ Un diagramme des tables est disponible dans le dossier **about**.
 - ~~Mettre l'extension des documents dans name et une meta donnée dans type.~~
 - Implementer un UNSUBSCRIBE pour que les agents puissent cesser de suivre un projet.
 - Repondre par un CONFIRM ou REFUSE a un upload de fichier.
+- Gerer la mise a jour d'un document et l'envoi du CONFIRM/REFUSE
