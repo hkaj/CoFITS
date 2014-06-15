@@ -16,59 +16,53 @@ import Constants.DataBaseConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RemoveSessionBehaviour extends OneShotBehaviour {
-	private HashMap<String, String> request;
-	private ACLMessage message;
+public class RemoveProjectBehaviour extends OneShotBehaviour {
+	final private HashMap<String, String> request;
+	final private ACLMessage message;
 
-	public RemoveSessionBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		this.request = req;
-		this.message = msg;
+	public RemoveProjectBehaviour(HashMap<String, String> request,
+			ACLMessage message) {
+		this.request = request;
+		this.message = message;
 	}
-	
+
 	@Override
 	public void action() {
-		ArrayList<Integer> files = null;
+		ArrayList<Integer> sessions = null;
 		ObjectMapper mapper = new ObjectMapper();
 		HashMap<String, String> content = null;
 		String login = request.get("login");
 		String proj = request.get("project_id");
-		String session = request.get("session_id");
-		String getFilesReq = "SELECT document FROM mobilizedin WHERE session='"
-				+ session + "';";
+		String getSessionReq = "SELECT id FROM sessions WHERE project='" + proj
+				+ "';";
 		Connection conn = null;
 		Statement s = null;
 		ResultSet res = null;
 		try {
 			conn = this.createConnection();
 			s = conn.createStatement();
-			res = s.executeQuery(getFilesReq);
-			files = new ArrayList<Integer>();
+			res = s.executeQuery(getSessionReq);
+			sessions = new ArrayList<Integer>();
 			while (res.next()) {
-				files.add(res.getInt("document"));
+				sessions.add(res.getInt("id"));
 			}
 			s.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		RemoveSessionSeqBehaviour removeSessionSeq = new RemoveSessionSeqBehaviour();
-		for (int file : files) {
+		RemoveProjectSeqBehaviour removeProjectSeq = new RemoveProjectSeqBehaviour();
+		for (int session : sessions) {
 			ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+			msg.setSender(this.message.getSender());
 			mapper = new ObjectMapper();
 			content = new HashMap<String, String>();
-			content.put("action", "REMOVE_FILE");
+			content.put("action", "REMOVE_SESSION");
 			content.put("login", login);
 			content.put("project_id", proj);
-			content.put("session_id", session);
-			content.put("file_id", String.valueOf(file));
-			try {
-				msg.setContent(mapper.writeValueAsString(content));
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-			msg.setSender(this.message.getSender());
-			removeSessionSeq.addSubBehaviour(new RemoveFileBehaviour(content,
-					msg));
+			content.put("session_id", String.valueOf(session));
+			removeProjectSeq.addSubBehaviour(new RemoveSessionBehaviour(
+					content, msg));
 		}
 		ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
 		msg.setSender(this.message.getSender());
@@ -77,16 +71,14 @@ public class RemoveSessionBehaviour extends OneShotBehaviour {
 		content.put("action", "REMOVE_SESSION");
 		content.put("login", login);
 		content.put("project_id", proj);
-		content.put("session_id", session);
 		try {
 			msg.setContent(mapper.writeValueAsString(content));
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
-		RemoveSessionSimpleBehaviour removeSessionSimple = new RemoveSessionSimpleBehaviour(
-				content, msg);
-		removeSessionSeq.addSubBehaviour(removeSessionSimple);
-		myAgent.addBehaviour(removeSessionSeq);
+		removeProjectSeq.addSubBehaviour(new RemoveProjectSimpleBehaviour(
+				content, msg));
+		myAgent.addBehaviour(removeProjectSeq);
 	}
 
 	private Connection createConnection() throws SQLException {

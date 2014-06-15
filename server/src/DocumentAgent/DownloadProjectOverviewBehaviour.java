@@ -70,14 +70,19 @@ public class DownloadProjectOverviewBehaviour extends OneShotBehaviour {
 			}
 			ObjectMapper mapper = new ObjectMapper();
 			proj = this.getProject(project_id);
-			projStruct = new HashMap<String, Object>();
-			projStruct.put("name", proj.getName());
-			projStruct.put("creator", proj.getCreator());
-			projStruct.put("description", proj.getDescription());
-			projStruct.put("sessions", getSessions(proj.getId()));
+			HashMap<String, Object> project = new HashMap<String, Object>();
+			project.put(project_id, "");
+			if (proj != null) {
+				projStruct = new HashMap<String, Object>();
+				projStruct.put("name", proj.getName());
+				projStruct.put("creator", proj.getCreator());
+				projStruct.put("description", proj.getDescription());
+				projStruct.put("sessions", getSessions(proj.getId()));
+				project.put(project_id, projStruct);
+			}
 			Map<String, Object> content = new HashMap<String, Object>();
 			content.put("action", "LIST_PROJECT");
-			content.put("list", projStruct);
+			content.put("list", project);
 			try {
 				reply.setContent(mapper.writeValueAsString(content));
 			} catch (IOException e) {

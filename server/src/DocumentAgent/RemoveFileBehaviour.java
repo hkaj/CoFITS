@@ -80,7 +80,7 @@ public class RemoveFileBehaviour extends OneShotBehaviour {
 	private void removeFileFromSystem(int fileId, int session, String project) {
 		Connection conn = null;
 		Statement s = null;
-		String fileName = ""; 
+		String fileName = "";
 		String getFileName = "SELECT name FROM documents WHERE id='" + fileId
 				+ "';";
 		try {
@@ -88,7 +88,7 @@ public class RemoveFileBehaviour extends OneShotBehaviour {
 			s = conn.createStatement();
 			ResultSet res = s.executeQuery(getFileName);
 			res.next();
-			fileName = res.getString("name"); 			
+			fileName = res.getString("name");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +98,12 @@ public class RemoveFileBehaviour extends OneShotBehaviour {
 			Files.delete(path);
 		} catch (NoSuchFileException e) {
 			e.printStackTrace();
-			System.out.println("This file doesn't seem to exist, please check the path.");
+			System.out
+					.println("This file doesn't seem to exist, please check the path.");
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out.println("There seems to be permission issues with this file, please contact the administrator.");
+			System.out
+					.println("There seems to be permission issues with this file, please contact the administrator.");
 		}
 	}
 
@@ -119,7 +121,7 @@ public class RemoveFileBehaviour extends OneShotBehaviour {
 		content.put("login", "TATIN");
 		try {
 			msg.setContent(mapper.writeValueAsString(content));
-		} catch (IOException e) {
+		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
 		myAgent.send(msg);

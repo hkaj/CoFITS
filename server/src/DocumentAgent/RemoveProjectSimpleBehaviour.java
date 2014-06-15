@@ -1,9 +1,5 @@
 package DocumentAgent;
 
-import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.lang.acl.ACLMessage;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,21 +8,24 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Constants.DataBaseConstants;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RemoveSessionSimpleBehaviour extends OneShotBehaviour {
+import Constants.DataBaseConstants;
+import jade.core.AID;
+import jade.core.behaviours.OneShotBehaviour;
+import jade.lang.acl.ACLMessage;
 
-	private HashMap<String, String> request;
-	private ACLMessage message;
+public class RemoveProjectSimpleBehaviour extends OneShotBehaviour {
 	private DocumentAgent docAgent;
+	final private HashMap<String, String> request;
+	final private ACLMessage message;
 
-	public RemoveSessionSimpleBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		this.request = req;
-		this.message = msg;
-		this.docAgent = (DocumentAgent) myAgent;
+	public RemoveProjectSimpleBehaviour(HashMap<String, String> request,
+			ACLMessage message) {
+		this.request = request;
+		this.message = message;
+		docAgent = (DocumentAgent) myAgent;
 	}
 
 	@Override
@@ -35,12 +34,12 @@ public class RemoveSessionSimpleBehaviour extends OneShotBehaviour {
 		HashMap<String, String> content = null;
 		String login = request.get("login");
 		String proj = request.get("project_id");
-		String session = request.get("session_id");
 		String checkLoginReq = "SELECT admin FROM involvedIn WHERE login = '"
 				+ login + "' and project = '" + proj + "';";
-		String removeSessionReq = "DELETE * FROM sessions WHERE id='" + session
+		String removeProjReq = "DELETE * FROM projects WHERE id='" + proj
 				+ "';";
-
+		String removeInvolvedReq = "DELETE * FROM involvedIn WHERE project='"
+				+ proj + "';";
 		Connection conn = null;
 		Statement s = null;
 		ResultSet res = null;
@@ -53,46 +52,46 @@ public class RemoveSessionSimpleBehaviour extends OneShotBehaviour {
 				if (!admin.equals("t")) {
 					content = new HashMap<String, String>();
 					System.out.println("An unauthorized user (" + login
-							+ ") tried to delete a session!");
+							+ ") tried to delete a project!");
 					ACLMessage reply = this.message.createReply();
 					reply.setPerformative(ACLMessage.REFUSE);
-					content.put("session_id", session);
+					content.put("project_id", proj);
 					content.put("state", "UNCHANGED");
 					content.put("reason",
-							"You have to be the project administrator to remove this session.");
-					reply.setContent(mapper.writeValueAsString(content));
+							"You have to be a project administrator to remove this project.");
 					myAgent.send(reply);
 					return;
 				}
 			}
-			s.executeUpdate(removeSessionReq);
+			s.executeUpdate(removeInvolvedReq);
+			s.executeUpdate(removeProjReq);
 			s.close();
 			conn.close();
-		} catch (JsonProcessingException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.notifySubscribers(proj);
+		notifySubscribers(proj);
 	}
-
-	// Notify the project subscribers that the session has been deleted.
-	private void notifySubscribers(String proj) {
-		ObjectMapper mapper = new ObjectMapper();
-		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		for (AID aid : docAgent.getSubscribers(proj)) {
-			msg.addReplyTo(aid);
+	
+	// Notify the project subscribers that the project has been deleted.
+		private void notifySubscribers(String proj) {
+			ObjectMapper mapper = new ObjectMapper();
+			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+			for (AID dest : docAgent.getSubscribers(proj)) {
+				msg.addReplyTo(dest);
+			}
+			HashMap<String, String> projStruct = new HashMap<String, String>();
+			projStruct.put(proj, "");
+			HashMap<String, Object> req = new HashMap<String, Object>();
+			req.put("action", "LIST_PROJECT");
+			req.put("list", projStruct);
+			try {
+				msg.setContent(mapper.writeValueAsString(req));
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+			myAgent.send(msg);
 		}
-		msg.addReceiver(myAgent.getAID());
-		HashMap<String, String> content = new HashMap<String, String>();
-		content.put("action", "LIST_PROJECT");
-		content.put("project", proj);
-		content.put("login", "TATIN");
-		try {
-			msg.setContent(mapper.writeValueAsString(content));
-		} catch (JsonProcessingException e) {
-			e.printStackTrace();
-		}
-		myAgent.send(msg);
-	}
 
 	private Connection createConnection() throws SQLException {
 		Connection conn = null;
