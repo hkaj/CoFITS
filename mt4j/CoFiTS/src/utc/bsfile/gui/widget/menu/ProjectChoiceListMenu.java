@@ -41,7 +41,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_pathArea = new MTTextArea(applet);
 		Vector3D pathAreaPosition = new Vector3D(x + getSpacing() + 3, y + getSpacingX2() + getSpacedIconHeight() );
 		m_pathArea.setPositionGlobal(pathAreaPosition);
-		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
+		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
 		m_pathArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
 		m_pathArea.setText("Projects and sessions");
 		m_pathArea.removeAllGestureEventListeners();

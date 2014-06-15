@@ -12,6 +12,7 @@ import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+//import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
@@ -327,6 +328,17 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 
 		return imageButton;
 	}
+	
+	public MTSvgButton createSvgIconButton(Vector3D position, String imageFilename, IGestureEventListener listener) {
+		MTSvgButton svgButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + imageFilename);
+		svgButton.setWidthXYGlobal(iconWidth);
+		svgButton.setHeightXYGlobal(choiceViewHeight);
+		svgButton.setPositionGlobal(new Vector3D(position.x, position.y));
+		svgButton.removeAllGestureEventListeners();
+		svgButton.addGestureListener(TapProcessor.class, listener);
+
+		return svgButton;
+	}
 
 	public void updateList() {
 		emptyList();
@@ -334,9 +346,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
 			if (menuModel instanceof ProjectArchitectureModel) {
-				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
+				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
 					closeButton.setVisible(closeButton.isEnabled());
 					backButton.setVisible(false);
 				} else {
@@ -401,8 +412,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
-			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
+			System.out.println(((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).getName());
+			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
@@ -480,7 +491,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	protected MTComponent makeChoiceView(Object choice) {
 		MTTextArea textArea = new MTTextArea(getRenderer(), 0, 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 18, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 15, MTColor.BLACK, true));
 		textArea.setText(choice.toString());
 		textArea.setNoFill(true);
 		textArea.setNoStroke(true);
@@ -544,8 +555,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	//-----------------------------------------------------------
 	
 	protected void setPath(TwoLinkedJsonNode choice) {
-		//-------------------------------------------------------------------------
-		// Max : update of the current path
 		if ( choice == getModel().getStartMenu() ) {
 			pathString = "\\";
 		} else {
@@ -560,7 +569,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 			pathString = pathString.substring(0, 28) + "...";
 		}
 		if ( pathField != null ) pathField.setText( pathString );
-		//-------------------------------------------------------------------------
 	}
 	
 	protected void setPathToParent() {
@@ -588,7 +596,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					if (choice instanceof TwoLinkedJsonNode){
 						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
 						fileChoice = new File(node.getName());
-						if (pathField != null) setPath(node);
+						if (pathField != null && node.getNotLeafChildCount() > 0) setPath(node); System.out.println("children : "+node.getChildCount());;
 					} else {
 						fileChoice = (File) choice;
 					}
