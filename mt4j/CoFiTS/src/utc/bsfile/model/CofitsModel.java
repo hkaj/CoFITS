@@ -29,6 +29,12 @@ public class CofitsModel {
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.JSON_STRUCTURE_FILENAME));
 		m_projectsArchitectureRootNode = new TwoLinkedJsonNode(jsonNode, "root", true);
 		generateFilesMap();
+		
+		//Set the current downloading variable for files to false
+		for (CofitsFile coFile : m_files){
+			coFile.setDownloading(false);
+		}
+		
 		//m_projectsArchitectureRootNode.displayConsole(0);
 	}
 	
