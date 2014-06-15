@@ -273,7 +273,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		//Add a title to the list Menu
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
-		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, MTColor.WHITE);
+		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 16, MTColor.WHITE);
 		MTTextField title = new MTTextField(getMTApplication(), 2, 8, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
 		
 		title.setNoStroke(true);

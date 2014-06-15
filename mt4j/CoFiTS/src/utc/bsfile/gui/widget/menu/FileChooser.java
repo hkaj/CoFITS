@@ -344,8 +344,8 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 				+ iconWidth, 0,
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
-		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 14, MTColor.BLACK, true));
+		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 15, MTColor.BLACK, true));
 		
 		if ( nodeChoice.getName().length() <= 20 ){
 			textArea.setText(nodeChoice.getName());
