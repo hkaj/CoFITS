@@ -55,6 +55,9 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		m_projectOnChooserOpening = project;
 		m_sessionOnChooserOpening = session;
 		
+		//Download the files in the selected session
+		downloadSessionFiles();
+		
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
@@ -220,6 +223,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue(), getSessionOnOpeningFileChooser());
 			}
 		} else if (evt.getPropertyName().equals("Agent created")) {
+			downloadSessionFiles();
 			for(PickFileChooser pick : m_pickFileChoosers){
 				if (pick != null){
 					pick.getLaunchAgentsButtonOff().setEnabled(false);
@@ -232,6 +236,18 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	}
 	
 	
+	private void downloadSessionFiles() {
+		int sessionId = getSessionOnOpeningFileChooser().getCurrent().path("id").asInt();
+		if (m_model.isConnected()){
+			for(CofitsFile coFile : m_model.getFiles()){
+				if (coFile.getSessionId() == sessionId && !coFile.isLocal()){
+					System.out.println("DOWNLOAD : " + coFile.getFilename());
+					m_model.downloadFile(coFile.getId());
+				}
+			}
+		}
+	}
+
 	@Override
 	protected void processFileDownloaded(int id) {
 		super.processFileDownloaded(id);

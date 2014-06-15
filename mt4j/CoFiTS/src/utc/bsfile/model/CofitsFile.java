@@ -76,6 +76,16 @@ public class CofitsFile {
 		node.remove("local");
 		node.put("local", local);
 	}
+	
+	
+	public String getProjectId(){
+		return m_node.getParentTwoLinkedJsonNode().getParentTwoLinkedJsonNode().getName();
+	}
+	
+	
+	public int getSessionId(){
+		return m_node.getParentTwoLinkedJsonNode().getCurrent().path("id").asInt();
+	}
 
 	//Members
 	private TwoLinkedJsonNode m_node;
