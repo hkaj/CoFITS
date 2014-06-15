@@ -70,10 +70,10 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 			res = new BinaryContent(Files.readAllBytes(path));
 			reply.setByteSequenceContent(res.getContent());
 			reply.setEnvelope(envelop);
+			reply.setPerformative(ACLMessage.INFORM);
+			this.myAgent.send(reply);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		reply.setPerformative(ACLMessage.INFORM);
-		this.myAgent.send(reply);
 	}
 }
