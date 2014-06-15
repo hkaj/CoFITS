@@ -107,10 +107,15 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 
 	private MTSvgButton downloadingIcon;
 	private MTSvgButton downloadingIconArrows;
-	private MTSvgButton m_launchAgentsButton;
+	private MTSvgButton m_launchAgentsButtonOff;
+	private MTSvgButton m_launchAgentsButtonOn;
 	
-	public MTSvgButton getLaunchAgentsButton(){
-		return m_launchAgentsButton;
+	public MTSvgButton getLaunchAgentsButtonOff(){
+		return m_launchAgentsButtonOff;
+	}
+	
+	public MTSvgButton getLaunchAgentsButtonOn(){
+		return m_launchAgentsButtonOn;
 	}
 
 	public PApplet applet;
@@ -152,16 +157,22 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		actionButton.setHeightXYGlobal(35);
 		
 		//Add a connexion button
-		m_launchAgentsButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
-		m_launchAgentsButton.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
-		m_launchAgentsButton.setSizeXYGlobal(iconWidth,  iconHeight);
+		launchAgentButtonCreation(applet, x, y);
 		
 		cancelActionButton = createIconButton(savedPosition, "action-icon-off.png", listener);
 		cancelActionButton.setWidthXYGlobal(75);
 		cancelActionButton.setHeightXYGlobal(35);
 		
+		
+		
+		
+		
+		
+		
+		//DOWNLOADIND ICON
+		
 		downloadingIcon = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-center.svg");
-		downloadingIcon.setPositionGlobal(new Vector3D(x + getSpacing() + 60 + getSpacingX2(), y + getSpacing() + 22));
+		downloadingIcon.setPositionGlobal(new Vector3D(x + getSpacing() + 110 + getSpacingX2(), y + getSpacing() + 20));
 		downloadingIcon.removeAllGestureEventListeners();
 		downloadingIcon.setWidthXYGlobal(20);
 		downloadingIcon.setHeightXYGlobal(20);
@@ -176,10 +187,10 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		});
 		
 		downloadingIconArrows = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "downloading-icon-arrows.svg");
-		downloadingIconArrows.setPositionGlobal(new Vector3D(x + getSpacing() + 60 + getSpacingX2(), y + getSpacing() + 22));
+		downloadingIconArrows.setPositionGlobal(new Vector3D(x + getSpacing() + 110 + getSpacingX2(), y + getSpacing() + 20));
 		downloadingIconArrows.removeAllGestureEventListeners();
-		downloadingIconArrows.setWidthXYGlobal(45);
-		downloadingIconArrows.setHeightXYGlobal(45);
+		downloadingIconArrows.setWidthXYGlobal(40);
+		downloadingIconArrows.setHeightXYGlobal(40);
 		downloadingIconArrows.setVisible(false);
 		
 		MultiPurposeInterpolator interpolator = new MultiPurposeInterpolator(0, 100, 1000, 0.0f, 1.0f, -1);
@@ -191,6 +202,15 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 			 }
 		});
 
+		
+		
+		
+		projectHasToBeRefresh(null);
+		
+		
+		
+		
+		
 		PositionSequencer disabledBottomPosition = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing() + calcHeightUntilListBottom(nbItem) -4 ), Orientation.HORIZONTAL);
 		disabledShareButton = createIconButton(disabledBottomPosition.getPosition(), "disabledShare-icon.png", listener);
 		disabledBottomPosition.nextPosition(disabledShareButton);
@@ -207,13 +227,31 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		addChild(downloadingIconArrows);
 		//addChild(actionButton);
 		//addChild(parentButton);
-		addChild(m_launchAgentsButton);
 		addChild(pathField);
 		
 		rotationAnimation.start();
 		
 		//projectHasToBeRefresh();
 		
+	}
+
+	/**
+	 * @param applet
+	 * @param x
+	 * @param y
+	 */
+	private void launchAgentButtonCreation(PApplet applet, int x, int y) {
+		m_launchAgentsButtonOff = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButtonOff.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOff.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOff);
+		
+		m_launchAgentsButtonOn = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect-on.svg");
+		m_launchAgentsButtonOn.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOn.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOn);
 	}
 	
 	

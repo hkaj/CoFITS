@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
+import org.mt4j.components.TransformSpace;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
@@ -110,13 +111,19 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 			}
 		});
 		
-		m_list.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		//Manage connection button
+		boolean isConnected = m_model.isConnected();
+		m_list.getLaunchAgentsButtonOff().setEnabled(!isConnected);
+		m_list.getLaunchAgentsButtonOff().setVisible(!isConnected);
+		m_list.getLaunchAgentsButtonOn().setVisible(isConnected);
+		m_list.getLaunchAgentsButtonOn().setEnabled(false);
+		
+		m_list.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
 					m_model.launchAgentContainer();
-					m_list.getLaunchAgentsButton().setEnabled(false);
 					break;
 				default:
 					break;
@@ -161,6 +168,11 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 		} else if (evt.getPropertyName().equals("Project changed")){
 			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL);
 			m_list.changeModel(model);
+		} else if (evt.getPropertyName().equals("Agent created")) {
+			m_list.getLaunchAgentsButtonOff().setEnabled(false);
+			m_list.getLaunchAgentsButtonOff().setVisible(false);
+			
+			m_list.getLaunchAgentsButtonOn().setVisible(true);
 		}
 	}
 

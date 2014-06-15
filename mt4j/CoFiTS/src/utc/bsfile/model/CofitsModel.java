@@ -194,8 +194,10 @@ public class CofitsModel {
 		return null;
 	}
 	
-	public void setAgent(CofitsGuiAgent agent) {this.m_agent = agent;} //TODO find a way to only let the agent access this method
-	
+	public void setAgent(CofitsGuiAgent agent) {this.m_agent = agent; firePropertyChange("Agent created", null, null);} //TODO find a way to only let the agent access this method
+	public boolean isConnected() {
+		return m_agent != null;
+	}
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;

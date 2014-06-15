@@ -1,5 +1,6 @@
 package utc.bsfile.gui.widget.menu;
 
+import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
@@ -11,11 +12,9 @@ import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
-
 import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.gui.Theme;
-
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.PropertyManager;
@@ -54,12 +53,29 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChild(m_pathArea);
 
 		//Add a connexion button
-		m_launchAgentsButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
-		m_launchAgentsButton.setPositionGlobal(new Vector3D(x + getSpacing() + 40 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
-		m_launchAgentsButton.setSizeXYGlobal(iconWidth,  iconHeight);
+		launchButtonAgentCreation(applet, x, y);
 		
 		addChild(m_confirmButton);
-		addChild(m_launchAgentsButton);
+	}
+
+	/**
+	 * @param applet
+	 * @param x
+	 * @param y
+	 */
+	public void launchButtonAgentCreation(PApplet applet, float x, float y) {
+		//Off button
+		m_launchAgentsButtonOff = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButtonOff.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOff.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOff);
+		
+		m_launchAgentsButtonOn = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect-on.svg");
+		m_launchAgentsButtonOn.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOn.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOn);
 	}
 	
 	@Override
@@ -101,8 +117,12 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		return m_pathArea;
 	}
 	
-	public final MTSvgButton getLaunchAgentsButton(){
-		return m_launchAgentsButton;
+	public final MTSvgButton getLaunchAgentsButtonOff(){
+		return m_launchAgentsButtonOff;
+	}
+	
+	public final MTSvgButton getLaunchAgentsButtonOn(){
+		return m_launchAgentsButtonOn;
 	}
 	
 	public void changeModel(IMenuModel model) {
@@ -116,5 +136,6 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
-	protected MTSvgButton m_launchAgentsButton;
+	private MTSvgButton m_launchAgentsButtonOn;
+	private MTSvgButton m_launchAgentsButtonOff;
 }

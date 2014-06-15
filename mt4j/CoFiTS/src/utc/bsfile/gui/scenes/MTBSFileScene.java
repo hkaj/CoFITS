@@ -179,13 +179,19 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		getCanvas().addChild(pick);
 		m_pickFileChoosers.add(pick);
 		
-		pick.getLaunchAgentsButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		//Manage connection button
+		boolean isConnected = m_model.isConnected();
+		pick.getLaunchAgentsButtonOff().setEnabled(!isConnected);
+		pick.getLaunchAgentsButtonOff().setVisible(!isConnected);
+		pick.getLaunchAgentsButtonOn().setVisible(isConnected);
+		pick.getLaunchAgentsButtonOn().setEnabled(false);
+		
+		pick.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
 				case TapEvent.GESTURE_ENDED :
 					m_model.launchAgentContainer();
-					pick.getLaunchAgentsButton().setEnabled(false);
 					break;
 				default:
 					break;
@@ -209,6 +215,15 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		} else if (evt.getPropertyName().equals("Architecture changed")) {
 			for (PickFileChooser pick : m_pickFileChoosers){
 				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue());
+			}
+		} else if (evt.getPropertyName().equals("Agent created")) {
+			for(PickFileChooser pick : m_pickFileChoosers){
+				if (pick != null){
+					pick.getLaunchAgentsButtonOff().setEnabled(false);
+					pick.getLaunchAgentsButtonOff().setVisible(false);
+					
+					pick.getLaunchAgentsButtonOn().setVisible(true);
+				}
 			}
 		}
 	}
