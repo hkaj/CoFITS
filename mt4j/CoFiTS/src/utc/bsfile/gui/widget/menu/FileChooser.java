@@ -176,12 +176,13 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 		downloadingIcon.removeAllGestureEventListeners();
 		downloadingIcon.setWidthXYGlobal(20);
 		downloadingIcon.setHeightXYGlobal(20);
-		downloadingIcon.setVisible(false);
+		downloadingIcon.setVisible(true);	
+		downloadingIcon.setEnabled(false);
+		
 		downloadingIcon.addGestureListener(TapProcessor.class, new IGestureEventListener() {
-			
 			@Override
 			public boolean processGestureEvent(MTGestureEvent ge) {
-				playArrowsRotation();
+				projectRefreshed();
 				return false;
 			}
 		});
@@ -202,10 +203,6 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 			 }
 		});
 
-		
-		
-		
-		projectHasToBeRefresh(null);
 		
 		
 		
@@ -257,12 +254,16 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	
 	public void projectHasToBeRefresh(TwoLinkedJsonNode architecture) {
 		m_newArchitecture = architecture;
-		downloadingIcon.setVisible(true);
+		downloadingIconArrows.setVisible(true);
+		downloadingIcon.setEnabled(true);
 	}
 	
 	public void projectRefreshed() {
 		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newArchitecture, ProjectArchitectureModel.FILE_LEVEL));
-		downloadingIcon.setVisible(false);
+		updateList();
+		downloadingIconArrows.setVisible(false);
+		downloadingIcon.setEnabled(false);
+		m_newArchitecture = null;
 	}
 	
 	public void playArrowsRotation() {

@@ -85,7 +85,7 @@ public class CofitsModel {
 		saveJsonStructureFile();
 		
 		//Release the old tree
-		oldArchitectureNode.releaseTree();
+//		oldArchitectureNode.releaseTree();
 	}
 	
 	
