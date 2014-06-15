@@ -3,4 +3,4 @@ INSERT INTO InvolvedIn(login, project, admin) VALUES
 ('cbellier','projet_nf26_0', FALSE),
 ('cbellier','projet_ia04_0', TRUE),
 ('mdaragon','projet_ia04_0', FALSE),
-('cmoulin','projet_nf28_1', TRUE);
+('cmoulin','projet_nf11_0', TRUE);
