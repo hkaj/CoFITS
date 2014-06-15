@@ -170,6 +170,11 @@ public class CofitsGuiAgent extends GuiAgent {
 	}
 	
 	
+	public boolean hasReceiveFileBehaviour(String conversationId){
+		return m_manageReceiveFileBehaviours.containsKey(conversationId);
+	}
+	
+	
 	//Getters & Setters
 	public CofitsModel getModel() {
 		return m_model;
