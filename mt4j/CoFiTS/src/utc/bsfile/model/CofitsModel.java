@@ -68,7 +68,8 @@ public class CofitsModel {
 	
 	
 	public void fileReceived(int id) {
-		firePropertyChange("File Received", null, id);		
+		firePropertyChange("File Received", null, id);
+		saveJsonStructureFile();
 	}
 	
 	
@@ -109,6 +110,7 @@ public class CofitsModel {
 	public void removeProject(TwoLinkedJsonNode oldProjectNode) {
 		m_projectsArchitectureRootNode.removeChild(oldProjectNode.getName());
 		oldProjectNode.releaseTree();
+		saveJsonStructureFile();
 		firePropertyChange("Project changed", oldProjectNode, m_projectsArchitectureRootNode);
 		generateFilesMap();
 	}

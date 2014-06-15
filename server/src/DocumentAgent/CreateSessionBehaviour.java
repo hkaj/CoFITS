@@ -4,6 +4,7 @@ import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -66,7 +67,11 @@ public class CreateSessionBehaviour extends OneShotBehaviour {
 					content.put("session_id", Integer.toString(sessionId));
 					content.put("reason", "");
 					content.put("state", "CREATED");
+					try{
 					reply.setContent(mapper.writeValueAsString(content));
+					} catch (IOException e){
+						e.printStackTrace();
+					}
 				} else {
 					System.out
 							.println("[CREATE_SESSION FAIL] The session has failed to be created.");
@@ -85,7 +90,7 @@ public class CreateSessionBehaviour extends OneShotBehaviour {
 						"reason",
 						"You are not part of this project, please ask the administrator of the project to add you.");
 			}
-		} catch (JsonProcessingException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
