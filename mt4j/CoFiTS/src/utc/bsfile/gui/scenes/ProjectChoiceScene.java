@@ -166,10 +166,10 @@ public class ProjectChoiceScene extends CofitsDesignScene implements ChoiceListe
 	public void propertyChange(PropertyChangeEvent evt) {
 		super.propertyChange(evt);
 		if (evt.getPropertyName().equals("Architecture changed")){
-			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL);
+			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL, ProjectArchitectureModel.PROJECT_LEVEL);
 			m_list.changeModel(model);
 		} else if (evt.getPropertyName().equals("Project changed")){
-			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL);
+			ProjectArchitectureModel model = new ProjectArchitectureModel((TwoLinkedJsonNode)evt.getNewValue(), (TwoLinkedJsonNode)evt.getNewValue(), ProjectArchitectureModel.SESSION_LEVEL, ProjectArchitectureModel.PROJECT_LEVEL);
 			m_list.changeModel(model);
 		} else if (evt.getPropertyName().equals("Agent created")) {
 			m_list.getLaunchAgentsButtonOff().setEnabled(false);

@@ -253,7 +253,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	}
 	
 	public void projectRefreshed() {
-		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newArchitecture, ProjectArchitectureModel.FILE_LEVEL));
+		setModel(new ProjectArchitectureModel(m_newArchitecture, m_newArchitecture, ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.PROJECT_LEVEL));
 		updateList();
 		downloadingIconArrows.setVisible(false);
 		downloadingIcon.setEnabled(false);
