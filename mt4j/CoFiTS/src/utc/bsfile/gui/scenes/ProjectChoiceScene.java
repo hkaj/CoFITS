@@ -18,13 +18,15 @@ import org.mt4j.sceneManagement.transition.FadeTransition;
 import org.mt4j.util.math.Vector3D;
 
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu.ChoiceEvent;
 import utc.bsfile.gui.widget.menu.ProjectChoiceListMenu;
 import utc.bsfile.model.CofitsModel;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.ProjectArchitectureModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 
-public class ProjectChoiceScene extends CofitsDesignScene {
+public class ProjectChoiceScene extends CofitsDesignScene implements ChoiceListener {
 
 	private final static boolean DO_CLEAN_GESTURES = true;
 	
@@ -96,6 +98,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
 		m_list = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
 		m_list.setMustBeDestroy(false);
+		m_list.addChoiceListener(this);
 		
 		m_list.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
@@ -140,7 +143,7 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	protected void launchProjectChoiceScene(IMenuModel model) {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
-		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES);
+		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES, m_projectChosenName, m_sessionChosenName);
 		//Add the scene to the mt application
 		getMTApplication().addScene(mtbsFileScene);
 		
@@ -176,6 +179,22 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 		}
 	}
 
+	
+	@Override
+	public void choiceSelected(ChoiceEvent choiceEvent) {
+		m_sessionChosenName = choiceEvent.getChoice();
+		if(((TwoLinkedJsonNode) m_list.getCurrentNode()).getParent()!= null){
+			m_projectChosenName = ((TwoLinkedJsonNode) m_list.getCurrentNode()).getName();		
+		}
+	}
+
+
+	@Override
+	public void choiceCancelled(ChoiceEvent choiceEvent) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 	@Override
 	protected void processFileDownloaded(int id) {
@@ -185,5 +204,6 @@ public class ProjectChoiceScene extends CofitsDesignScene {
 	
 	//Members
 	ProjectChoiceListMenu m_list;
-
+	String m_sessionChosenName = null;
+	String m_projectChosenName = null;
 }

@@ -460,7 +460,7 @@ public class FileChooser extends ListMenu implements PropertyChangeListener
 	 * se trouvant dans un unique composant.
 	 */
 	@Override
-	public void downLoadFile(MTGestureEvent ge) {
+	public void selectedCell(MTGestureEvent ge) {
 		
 		MTListCell listCell = (MTListCell) ge.getTarget();
 		MTComponent comp = listCell.getChildByIndex(listCell.getChildCount() - 1); // dernier composant de la listCell

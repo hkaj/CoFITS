@@ -1,6 +1,5 @@
 package utc.bsfile.gui.widget.menu;
 
-import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
@@ -79,7 +78,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	}
 	
 	@Override
-	public void downLoadFile(MTGestureEvent ge) { // ne t�l�charge pas le fichier... (ne pas toucher au nom anyway)
+	public void selectedCell(MTGestureEvent ge) { // ne t�l�charge pas le fichier... (ne pas toucher au nom anyway)
 		// change the color of the selected cell
 		for (MTListCell cell : list.getListCellContainer().getCells()) {
 			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
@@ -129,6 +128,10 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		setModel(model);
 		m_selectedNode = null;
 	}
+	
+	public Object getCurrentNode() {
+		return getModel().getCurrentMenu();
+	}
 
 
 	//Members
@@ -138,4 +141,5 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	protected MTTextArea m_pathArea;
 	private MTSvgButton m_launchAgentsButtonOn;
 	private MTSvgButton m_launchAgentsButtonOff;
+	
 }

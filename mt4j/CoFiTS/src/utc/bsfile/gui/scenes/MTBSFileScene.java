@@ -44,11 +44,11 @@ import utc.bsfile.util.PropertyManager;
 public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs) {
-		this(mtApplication, name, model, orbs, false);
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, String project, String session) {
+		this(mtApplication, name, model, orbs, false, project, session);
 	}
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures) {
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, CofitsModel model, List<ControlOrb> orbs, boolean doCleanGestures, String project, String session) {
 		super(mtApplication, name, model, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
 		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
@@ -108,6 +108,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		}
 		
 		m_model = model;
+		setSessionOnOpeningFileChooser(project, session);
 	}
 	
 	protected void processInputForOrb(final ControlOrb orb) {
@@ -172,7 +173,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
+		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_sessionOnOpeningFileChooser, m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)pick).updateOrientation(location.x, location.y);
@@ -234,8 +235,9 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		super.processFileDownloaded(id);
 		
 		CofitsFile coFile = m_model.getFile(id);
-		String filename = coFile.getFilename();
-		File file = new File(filename);
+		String filepath = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH) + coFile.getFilepath();
+		String filename = coFile.getFilename(); 
+		File file = new File(filepath);
 		if(m_filesToOpen.containsKey(filename)){
 			m_filesToOpen.get(filename).createFileViewer(file);
 			m_filesToOpen.remove(filename);
@@ -273,10 +275,20 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	//Getters & Setters
 	public final Map<String, PickFileChooser> getFilesToOpen(){return m_filesToOpen;}
 	public void addFileToOpen(String filename, PickFileChooser fileChooser) {m_filesToOpen.put(filename, fileChooser);}
+	public void setSessionOnOpeningFileChooser(String project, String session){
+		TwoLinkedJsonNode projectNode = m_model.getProjectsArchitectureRootNode().getChild(project);
+		if (projectNode != null){
+			TwoLinkedJsonNode sessionNode = projectNode.getChild(session);
+			if (sessionNode != null){
+				m_sessionOnOpeningFileChooser = sessionNode;
+			}
+		}
+	}
 	
 	
 	//Members
 	protected List<PickFileChooser> m_pickFileChoosers = new ArrayList<PickFileChooser>();
 	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
+	protected TwoLinkedJsonNode m_sessionOnOpeningFileChooser;
 
 }

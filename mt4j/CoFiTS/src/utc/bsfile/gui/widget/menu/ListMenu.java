@@ -605,7 +605,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 						// Is the file locally present ?
 						CofitsFile cFile = new CofitsFile((TwoLinkedJsonNode)choice);
 						if (!cFile.isLocal()) {
-							downLoadFile(ge);
+							selectedCell(ge);
 						}
 						
 						//Destroy the list after opening a file
@@ -620,7 +620,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		return false;
 	}
 	
-	public void downLoadFile(MTGestureEvent ge) {System.out.println("LISTMENU");}
+	public void selectedCell(MTGestureEvent ge) {System.out.println("LISTMENU");}
 
 	/**
 	 * @author claude
