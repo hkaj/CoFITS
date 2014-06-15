@@ -188,7 +188,7 @@ public class FontManager {
 		
 		IFont font = this.getCachedFont(fontAbsoultePath, fontSize,	fillColor, antiAliased);
 		if (font != null){
-			System.out.println("Using cached font (" + fontFileName + ")");
+//			System.out.println("Using cached font (" + fontFileName + ")");
 			return font;
 		}
 		

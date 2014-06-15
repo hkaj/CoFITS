@@ -127,6 +127,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 	 * @param filepath
 	 */
 	public void createFileViewer(final File filepath) {
+		System.out.println(filepath);
 		if (FileExtensionFilter.IMG_FILTER.accept(filepath)) {
 			IMAGEModel img = new IMAGEModel(filepath.getAbsolutePath());
 			MTIMAGE image = new MTIMAGE(getRenderer(), img);

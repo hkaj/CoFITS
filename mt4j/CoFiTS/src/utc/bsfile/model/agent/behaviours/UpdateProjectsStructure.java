@@ -23,7 +23,6 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 		//Create JsonNode from content of message
 		JsonNode messageJsonNode = JsonManager.getInstance().createJsonNode(m_message.getContent());
 		JsonNode jsonNode = messageJsonNode.path("list");
-		System.out.println("New Architecture : " + m_message.getContent());
 		
 		if (jsonNode != null){
 			
@@ -33,6 +32,7 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 			
 			if (oldNodeTree != null){
 				//Merge the trees and process modification in memory
+				System.out.println("HERE");
 				mergeArchitectureTrees(oldNodeTree, newNodeTree);
 			} else {				
 				//Create the folders
@@ -48,9 +48,24 @@ public class UpdateProjectsStructure extends UpdateStructureBehaviour {
 						}
 					}
 				}
+				
+				
+				//Set local parameter
+				System.out.println("LOCAL achievement");
+				for (TwoLinkedJsonNode newProjectNode : newNodeTree.getChildren()){
+					for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){	
+						for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
+							if (newFileNode.getChild("id") != null){
+								ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
+								newJsonNode.put("local", false);
+								newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
+							}
+						}
+					}
+				}
 			}
 		
-			
+			//Update the architecture in the model
 			m_agent.getModel().changeProjectArchitecture(newNodeTree, oldNodeTree);
 		} 
 

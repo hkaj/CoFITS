@@ -172,9 +172,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		//TODO pass project node chosen by user as last argument
-		final PickFileChooser pick;
-		m_model.getProjectsArchitectureRootNode().displayConsole(0);
-		pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
+		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), m_model.getProjectsArchitectureRootNode(), ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
 		//location.translate(new Vector3D(-100,0));
 		pick.translate(location, TransformSpace.GLOBAL);
 		((PickFileChooser)pick).updateOrientation(location.x, location.y);
@@ -233,16 +231,17 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	@Override
 	public void choiceSelected(ChoiceEvent choiceEvent) {
 		final File file = new File(choiceEvent.getChoice());
-		String filename = file.getPath();	//TODO Check whether the filename is good or not
+		String name = file.getPath();
+		String filename = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH) + m_model.getFile(name).getFilepath();
 		PickFileChooser fileChooser = (PickFileChooser) choiceEvent.getListMenu();
 		
 		System.out.println(filename);
 		
-		if (m_model.getFile(filename).isLocal()){	
-			fileChooser.createFileViewer(file);
+		if (m_model.getFile(name).isLocal()){	
+			fileChooser.createFileViewer(new File(filename));
 		} else {
-			int fileId = m_model.getFile(filename).getId();
-			addFileToOpen(filename, fileChooser);
+			int fileId = m_model.getFile(name).getId();
+			addFileToOpen(name, fileChooser);
 			
 			m_model.downloadFile(fileId);
 		}

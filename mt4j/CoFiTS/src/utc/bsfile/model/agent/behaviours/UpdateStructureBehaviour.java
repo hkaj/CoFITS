@@ -24,10 +24,15 @@ public abstract class UpdateStructureBehaviour extends OneShotBehaviour {
 	
 	
 protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, TwoLinkedJsonNode newArchitectureNode){
+	
+		newArchitectureNode.displayConsole(0);
+//		System.out.println();System.out.println();
+		
 		
 		for (TwoLinkedJsonNode newProjectNode : newArchitectureNode.getChildren()){
-			
 			TwoLinkedJsonNode oldProjectNode = null;
+			
+			//Find the old node
 			for (TwoLinkedJsonNode oldNode : oldArchitectureNode.getChildren()){
 				if (oldNode.getName().equals(newProjectNode.getName())){
 					oldProjectNode = oldNode;
@@ -36,7 +41,6 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			}
 			
 			mergeProjects(oldProjectNode, newProjectNode);
-			
 		}
 		
 		//If the session is on the device but not on server, delete it
@@ -62,20 +66,32 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 	
 	protected void mergeProjects(TwoLinkedJsonNode oldProjectNode, TwoLinkedJsonNode newProjectNode) {
 		
+//		System.out.println("PROJECT");
+//		newProjectNode.displayConsole(0);
+//		System.out.println();System.out.println();
+		
 		//Check if the projects exists in the old tree
 		if (oldProjectNode != null){
 			
 			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){
-				
-				TwoLinkedJsonNode oldSessionNode = null;
-				for (TwoLinkedJsonNode oldNode : oldProjectNode.getChildren()){
-					if (oldNode.getName().equals(newSessionNode.getName())){
-						oldSessionNode = oldNode;
-						break;
+				if (newSessionNode.getChild("id") != null){
+					int newId = newSessionNode.getCurrent().path("id").asInt();
+//					System.out.println("    New Session : "+ newSessionNode.getName());
+					TwoLinkedJsonNode oldSessionNode = null;
+					
+					for (TwoLinkedJsonNode oldNode : oldProjectNode.getChildren()){
+						if (oldNode.getChild("id") != null){
+//							System.out.println("Old session : " + oldNode.getName());
+							if (oldNode.getCurrent().path("id").asInt() == newId){
+								oldSessionNode = oldNode;
+//								System.out.println();
+								break;						
+							}
+						}
 					}
+					
+					mergeSessions(oldSessionNode, newSessionNode);
 				}
-				
-				mergeSessions(oldSessionNode, newSessionNode);
 				
 			}
 			
@@ -108,9 +124,10 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			}
 			
 			//Set local parameter
+			System.out.println("LOCAL Bis achievement");
 			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){	
 				for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
-					if (newFileNode.getCurrent() instanceof ObjectNode){
+					if (newFileNode.getChild("id") != null){
 						ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
 						newJsonNode.put("local", false);
 						newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
@@ -124,22 +141,36 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 
 	protected void mergeSessions(TwoLinkedJsonNode oldSessionNode, TwoLinkedJsonNode newSessionNode) {
 		
+//		System.out.println("SESSION");
+//		newSessionNode.displayConsole(0);
+//		System.out.println(oldSessionNode);
+//		System.out.println();System.out.println();
+		
 		//Check if the sessions exists in the old tree
 		if (oldSessionNode != null){
 			
 			//Merge each file
 			for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
-				TwoLinkedJsonNode oldFileNode = null;
-				for (TwoLinkedJsonNode oldNode : oldSessionNode.getChildren()){
-					if (oldNode.getName().equals(newFileNode.getName())){
-						oldFileNode = oldNode;
-						break;
+				if (newFileNode.getChild("id") != null){
+					int newId = newFileNode.getCurrent().path("id").asInt();
+					TwoLinkedJsonNode oldFileNode = null;
+					
+	//				System.out.println("    new node : " + newFileNode.getName());
+					for (TwoLinkedJsonNode oldNode : oldSessionNode.getChildren()){
+						if (oldNode.getChild("id") != null){
+	//					System.out.println("old node : "+oldNode.getName());
+							if (oldNode.getCurrent().path("id").asInt() == newId){
+								oldFileNode = oldNode;
+								break;
+							}
+						}
 					}
+				
+					mergeFiles(oldFileNode, newFileNode);
 				}
 				
-				mergeFiles(oldFileNode, newFileNode);
-				
-			}
+			}			
+			
 			
 			//If the file is on the device but not on server, delete it
 			for (TwoLinkedJsonNode oldFileNode : oldSessionNode.getChildren()){
@@ -170,7 +201,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			
 			//Set local parameter
 			for (TwoLinkedJsonNode newFileNode : newSessionNode.getChildren()){
-				if (newFileNode.getCurrent() instanceof ObjectNode){
+				if (newFileNode.getChild("id") != null){
 					ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
 					newJsonNode.put("local", false);
 					newFileNode.addChild(new TwoLinkedJsonNode(newJsonNode.path("local"), "local"), true);
@@ -191,6 +222,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			
 		} else {
 			if (oldFileNode.getCurrent().path("local").asBoolean()){
+				System.out.println(oldFileNode.getCurrent().path("local").asBoolean());
 				//Check whether the file on the table is up to date or not
 				SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");	
 			 
@@ -210,10 +242,11 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			}
 			
 			//Add the local field to newNode from oldNode
-			if (newFileNode.getCurrent() instanceof ObjectNode){
+			if (newFileNode.getChild("id") != null){
 				System.out.println("oldfilenode : " + oldFileNode);
 				ObjectNode newJsonNode = (ObjectNode) newFileNode.getCurrent();
 				newJsonNode.put("local", oldFileNode.getCurrent().path("local").asBoolean());
+				System.out.println("there " + oldFileNode.getCurrent().path("local").asBoolean() );
 				newFileNode.addChild(new TwoLinkedJsonNode(oldFileNode.getCurrent().path("local"), "local"), false);
 			}
 		}

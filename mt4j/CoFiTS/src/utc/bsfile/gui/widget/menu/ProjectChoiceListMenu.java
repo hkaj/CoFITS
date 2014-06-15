@@ -67,7 +67,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		// change the color of the selected cell
 		for (MTListCell cell : list.getListCellContainer().getCells()) {
 			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
-			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+//			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
 		}
 	}
 
