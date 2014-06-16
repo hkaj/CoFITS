@@ -236,6 +236,15 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 					pick.getLaunchAgentsButtonOn().setVisible(true);
 				}
 			}
+		} else if (evt.getPropertyName().equals("Agent died")){
+			for(PickFileChooser pick : m_pickFileChoosers){
+				if (pick != null){
+					pick.getLaunchAgentsButtonOff().setEnabled(true);
+					pick.getLaunchAgentsButtonOff().setVisible(true);
+					
+					pick.getLaunchAgentsButtonOn().setVisible(false);
+				}
+			}
 		}
 	}
 	

@@ -62,6 +62,11 @@ public class CofitsModel {
 	}
 	
 	
+	public void agentShutDown() {
+		firePropertyChange("Agent died", null, null);
+	}
+	
+	
 	public void downloadFile(int fileId) {
 		GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
 		event.addParameter(fileId);
@@ -204,6 +209,7 @@ public class CofitsModel {
 	public boolean isConnected() {
 		return m_agent != null;
 	}
+	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;

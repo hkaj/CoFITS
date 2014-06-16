@@ -176,6 +176,11 @@ public class ProjectChoiceScene extends CofitsDesignScene implements ChoiceListe
 			m_list.getLaunchAgentsButtonOff().setVisible(false);
 			
 			m_list.getLaunchAgentsButtonOn().setVisible(true);
+		} else if (evt.getPropertyName().equals("Agent died")){
+			m_list.getLaunchAgentsButtonOff().setEnabled(true);
+			m_list.getLaunchAgentsButtonOff().setVisible(true);
+			
+			m_list.getLaunchAgentsButtonOn().setVisible(false);
 		}
 	}
 
