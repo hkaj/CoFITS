@@ -67,9 +67,11 @@ public class CofitsModel {
 	}
 	
 	
-	public void downloadFile(int fileId) {
+	public void downloadFile(int fileId, int sessionId, String projectId) {
 		GuiEvent event = new GuiEvent(this, CofitsGuiAgent.DOWNLOAD_FILE);
 		event.addParameter(fileId);
+		event.addParameter(sessionId);
+		event.addParameter(projectId);
 		if (m_agent != null){
 			m_agent.postGuiEvent(event);
 		} else {

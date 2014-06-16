@@ -262,7 +262,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			for(CofitsFile coFile : m_model.getFiles()){
 				if (coFile.getSessionId() == sessionId && !coFile.isLocal()){
 					System.out.println("DOWNLOAD : " + coFile.getFilename());
-					m_model.downloadFile(coFile.getId());
+					m_model.downloadFile(coFile.getId(), coFile.getSessionId(), coFile.getProjectId());
 				}
 			}
 		}
@@ -300,10 +300,14 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 		if (m_model.getFile(name).isLocal()){	
 			fileChooser.createFileViewer(new File(filename));
 		} else {
-			int fileId = m_model.getFile(name).getId();
+			CofitsFile coFile = m_model.getFile(name);
+			int fileId = coFile.getId();
+			int sessionId = coFile.getSessionId();
+			String projectId = coFile.getProjectId();
+			
 			addFileToOpen(name, fileChooser);
 			
-			m_model.downloadFile(fileId);
+			m_model.downloadFile(fileId,sessionId,projectId);
 		}
 
 	}

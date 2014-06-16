@@ -13,9 +13,11 @@ import jade.lang.acl.ACLMessage;
 
 public class RequestDownloadFile extends OneShotBehaviour {
 
-	public RequestDownloadFile(Agent a, int fileId) {
+	public RequestDownloadFile(Agent a, String projectId, int sessionId, int fileId) {
 		super(a);
 		m_fileId = fileId;
+		m_sessionId = sessionId;
+		m_projectId = projectId;
 		m_agent = (CofitsGuiAgent) a;
 	}
 
@@ -38,7 +40,13 @@ public class RequestDownloadFile extends OneShotBehaviour {
 		
 		jsonMap.put("action", "DOWNLOAD_FILE");
 		jsonMap.put("file_id", Integer.toString(m_fileId));
+		jsonMap.put("session_id", Integer.toString(m_sessionId));
+		jsonMap.put("project_id", m_projectId);
 		jsonMap.put("login", "TATIN");
+		
+		System.out.println("Project id : " + m_projectId);
+		System.out.println("Session id : " + m_sessionId);
+		System.out.println("File id : " + m_fileId);
 		
 		try {
 			mapper.writeValue(stringWriter, jsonMap);
@@ -55,5 +63,7 @@ public class RequestDownloadFile extends OneShotBehaviour {
 	
 	//Members
 	private int m_fileId;
+	private int m_sessionId;
+	private String m_projectId;
 	private CofitsGuiAgent m_agent;
 }

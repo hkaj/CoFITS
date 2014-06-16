@@ -44,8 +44,10 @@ public class CofitsGuiAgent extends GuiAgent {
 	protected void onGuiEvent(GuiEvent evt) {
 		if (evt.getType() == DOWNLOAD_FILE){
 			int fileId = (Integer) evt.getParameter(0);
+			int sessionId = (Integer) evt.getParameter(1);
+			String projectId = (String) evt.getParameter(2);
 			System.out.println("IDDDDDDD" + fileId);
-			addBehaviour(new RequestDownloadFile(this, fileId));
+			addBehaviour(new RequestDownloadFile(this, projectId, sessionId, fileId));
 		}
 	}
 
