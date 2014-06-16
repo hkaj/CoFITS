@@ -11,7 +11,7 @@ JADE and Android applications for file exchange with MT4j-based devices.
 
 __Compiling:__
 
-First, make sure that __lib/__ contains all the necessary libraries. Then, just type in:
+First, make sure that __lib/__ contains all the necessary libraries (jade, jackson and postgresql 9.3 jdbc). Then, just type in:
 
 ```
 $ cd CoFITS/server
