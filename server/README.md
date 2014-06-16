@@ -56,6 +56,10 @@ Et enfin redemarrer le serveur :
 /etc/init.d/postgresql restart
 ```
 
+(ou sous Windows) :
+```
+"C:\...\9.3\bin\pg_ctl.exe" restart -D "C:\...9.3\data" -m fast
+```
 Une fois que le serveur a redemarre, essayons de se connecter avec l'utilisateur postgres :
 
 ```
