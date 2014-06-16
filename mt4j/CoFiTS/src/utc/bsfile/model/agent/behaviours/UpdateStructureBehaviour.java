@@ -118,7 +118,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			
 			for (TwoLinkedJsonNode newSessionNode : newProjectNode.getChildren()){		
 				if (newSessionNode.getCurrent() instanceof ObjectNode){
-					String path = initialPath + newProjectNode.getName() + separator + newSessionNode.getName() + separator;
+					String path = initialPath + newProjectNode.getName() + separator + Integer.toString(newSessionNode.getCurrent().path("id").asInt()) + separator;
 					FilePathManager.getInstance().createFolder(path);
 				}
 			}
@@ -194,7 +194,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 			String separator = FileSystems.getDefault().getSeparator();
 			String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
 			path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
-			path += oldProjectNode.getName() + separator + newSessionNode.getName() + separator;
+			path += oldProjectNode.getName() + separator + newSessionNode.getCurrent().path("id").asInt() + separator;
 			
 			FilePathManager.getInstance().createFolder(path);
 			
@@ -276,7 +276,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 		String separator = FileSystems.getDefault().getSeparator();
 		String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
 		path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
-		path += oldProjectNode.getName() + separator + oldSessionNode.getName();
+		path += oldProjectNode.getName() + separator + oldSessionNode.getCurrent().path("id").asInt();
 		
 		System.out.println("Session path to delete : " + path);
 		
@@ -295,7 +295,7 @@ protected void mergeArchitectureTrees(TwoLinkedJsonNode oldArchitectureNode, Two
 		String separator = FileSystems.getDefault().getSeparator();
 		String path = PropertyManager.getInstance().getDirProperty(PropertyManager.FILE_PATH);
 		path += path.charAt(path.length() - 1) == separator.charAt(0) ? separator : "";
-		path += oldProjectNode.getName() + separator + oldSessionNode.getName() + separator + oldFileNode.getName();
+		path += oldProjectNode.getName() + separator + oldSessionNode.getCurrent().path("id").asInt() + separator + oldFileNode.getName();
 		
 		FilePathManager.getInstance().deletePath(path);
 	}
