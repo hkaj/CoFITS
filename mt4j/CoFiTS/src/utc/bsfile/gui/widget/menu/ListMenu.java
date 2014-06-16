@@ -548,36 +548,60 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	}
 	
 	//-----------------------------------------------------------
-	protected String pathString = "\\";
+	protected String pathString = java.nio.file.FileSystems.getDefault().getSeparator();
 	protected String projectString = "";
 	protected String sessionString = "";
-	public  MTTextArea pathField;
+	protected  MTTextArea pathField;
 	//-----------------------------------------------------------
 	
+	public void setProjectString(String pro){projectString = pro;}
+	public void setSessionString(String sess){sessionString = sess;}
+	
+	
 	protected void setPath(TwoLinkedJsonNode choice) {
+		String name = choice.getName();
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
 		if ( choice == getModel().getStartMenu() ) {
-			pathString = "\\";
+			pathString = separator;
 		} else {
-			if ( projectString.equals("")){
-				projectString = "\\" + choice.getName();
-			} else if ( sessionString.equals("")) {
-				sessionString = "\\" + choice.getName();
-			}
-			pathString = projectString + sessionString;
+			addStringToPathArea(name);
 		}
+		
+		reformatPathArea();
+	}
+
+	/**
+	 * 
+	 */
+	public void reformatPathArea() {
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 28) + "...";
 		}
 		if ( pathField != null ) pathField.setText( pathString );
 	}
+
+	/**
+	 * @param name
+	 * @param separator
+	 */
+	public void addStringToPathArea(String name) {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
+		if ( projectString.equals("")){
+			projectString = separator + name;
+		} else if ( sessionString.equals("")) {
+			sessionString = separator + name;
+		}
+		pathString = projectString + sessionString;
+	}
 	
 	protected void setPathToParent() {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
 		if ( !sessionString.equals("") ) {
 			sessionString = "";
 			pathString = projectString;
 		} else if ( !projectString.equals("") ) {
 			projectString = "";
-			pathString = "\\";
+			pathString = separator;
 		}
 		if ( pathField != null ) pathField.setText( pathString );
 	}

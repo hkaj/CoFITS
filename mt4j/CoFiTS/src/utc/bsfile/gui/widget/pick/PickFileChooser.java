@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
+import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
@@ -306,6 +307,10 @@ public class PickFileChooser extends FileChooser {
 				filterWindow.removeChild(noFilterButton_activated);
 				break;
 		}
+	}
+
+	public MTTextArea getPathField() {
+		return pathField;
 	}
 
 }
