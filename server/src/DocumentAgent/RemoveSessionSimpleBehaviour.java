@@ -1,31 +1,20 @@
 package DocumentAgent;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-
-import Constants.DataBaseConstants;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+nimport com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RemoveSessionSimpleBehaviour extends OneShotBehaviour {
-
-	private HashMap<String, String> request;
-	private ACLMessage message;
-	private DocumentAgent docAgent;
+public class RemoveSessionSimpleBehaviour extends AbstractServerBehaviour {
 
 	public RemoveSessionSimpleBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		this.request = req;
-		this.message = msg;
-		this.docAgent = (DocumentAgent) myAgent;
+		super(req, msg);
 	}
 
 	@Override
@@ -91,14 +80,5 @@ public class RemoveSessionSimpleBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		myAgent.send(msg);
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

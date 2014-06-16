@@ -1,7 +1,6 @@
 package DocumentAgent;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
@@ -10,29 +9,20 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-
-import Constants.DataBaseConstants;
 import Constants.RequestConstants;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class RemoveFileBehaviour extends OneShotBehaviour {
-
-	private HashMap<String, String> request;
-	private ACLMessage message;
-	private DocumentAgent docAgent;
+public class RemoveFileBehaviour extends AbstractServerBehaviour {
 
 	public RemoveFileBehaviour(HashMap<String, String> request,
 			ACLMessage message) {
-		this.request = request;
-		this.message = message;
-		this.docAgent = (DocumentAgent) myAgent;
+		super(request, message);
 	}
 
 	@Override
@@ -150,14 +140,5 @@ public class RemoveFileBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		return isAdmin;
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }
