@@ -41,11 +41,12 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 	@Override
 	public void action() {
 		int fileId = Integer.parseInt(this.request.get("file_id"));
-		String project_id = this.request.get("project_id");
-		String session_id = this.request.get("session_id");
 		Document document = new Document(fileId);
+		String project_id = document.getProject();
+		int session_id = document.getSession();
+		
 		Path path = Paths.get(RequestConstants.documentAgentDirectory,
-				project_id, session_id, document.getName());
+				project_id, String.valueOf(session_id), document.getName());
 
 		// Send a confirmation message
 		ACLMessage reply = this.message.createReply();
