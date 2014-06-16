@@ -1,29 +1,22 @@
 package DocumentAgent;
 
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
 import utils.projectNameEncoder;
-import Constants.DataBaseConstants;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CreateProjectBehaviour extends OneShotBehaviour {
-
-	private HashMap<String, String> request;
-	private ACLMessage message;
+public class CreateProjectBehaviour extends AbstractLightBehaviour {
 
 	public CreateProjectBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		this.message = msg;
-		this.request = req;
+		super(req, msg);
 	}
 
 	@Override
@@ -107,14 +100,5 @@ public class CreateProjectBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		this.myAgent.send(reply);
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

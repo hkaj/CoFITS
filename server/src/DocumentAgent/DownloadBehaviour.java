@@ -1,7 +1,5 @@
 package DocumentAgent;
 
-import jade.core.Agent;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.FIPAAgentManagement.Envelope;
 import jade.lang.acl.ACLMessage;
 
@@ -10,32 +8,17 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.HashMap;
 
-import Constants.DataBaseConstants;
 import Constants.RequestConstants;
 import ModelObjects.BinaryContent;
 import ModelObjects.Document;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class DownloadBehaviour extends OneShotBehaviour {
-	private final HashMap<String, String> request;
-	private final ACLMessage message;
-
+public final class DownloadBehaviour extends AbstractLightBehaviour {
 	public DownloadBehaviour(HashMap<String, String> request, ACLMessage message) {
-		this.request = request;
-		this.message = message;
-	}
-
-	public DownloadBehaviour(Agent a, HashMap<String, String> request,
-			ACLMessage message) {
-		super(a);
-		this.request = request;
-		this.message = message;
+		super(request, message);
 	}
 
 	@Override
@@ -44,7 +27,7 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		Document document = new Document(fileId);
 		String project_id = document.getProject();
 		int session_id = document.getSession();
-		
+
 		Path path = Paths.get(RequestConstants.documentAgentDirectory,
 				project_id, String.valueOf(session_id), document.getName());
 
@@ -83,14 +66,5 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	protected Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

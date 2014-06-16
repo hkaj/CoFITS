@@ -1,11 +1,9 @@
 package DocumentAgent;
 
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,21 +11,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import Constants.DataBaseConstants;
 import ModelObjects.Project;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class DownloadArchitectureBehaviour extends OneShotBehaviour {
+public class DownloadArchitectureBehaviour extends AbstractLightBehaviour {
 
-	final HashMap<String, String> request;
-	final ACLMessage message;
 	ArrayList<Project> projects;
 
 	public DownloadArchitectureBehaviour(HashMap<String, String> request,
 			ACLMessage message) {
-		this.request = request;
-		this.message = message;
+		super(request, message);
 	}
 
 	@Override
@@ -128,14 +122,5 @@ public class DownloadArchitectureBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 		return files;
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }
