@@ -86,8 +86,20 @@ public class CofitsFile {
 	public int getSessionId(){
 		return m_node.getParentTwoLinkedJsonNode().getCurrent().path("id").asInt();
 	}
+	
+	
+	public boolean isDownloading(){
+		return m_node.getCurrent().path("currently-downloading").asBoolean();
+	}
+	
+	
+	public void setDownloading(boolean down){
+		ObjectNode node = (ObjectNode) m_node.getCurrent();
+		node.remove("currently-downloading");
+		node.put("currently-downloading", down);
+	}
 
 	//Members
-	private TwoLinkedJsonNode m_node;
+	private TwoLinkedJsonNode m_node;	
 
 }

@@ -12,6 +12,7 @@ import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+//import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
@@ -128,6 +129,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	 */
 	private HashSet<ChoiceListener> listeners;
 	private PApplet applet;
+	protected boolean m_destroyed = false;
+	
+	public boolean isDestroyed(){return m_destroyed;}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
 			IMenuModel model) {
@@ -135,7 +139,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		float height = calcHeight(nbItem);
 		Theme.getTheme().applyStyle(StyleID.DEFAULT, this);
 		this.setAnchor(PositionAnchor.UPPER_LEFT);
-
+		
 		this.menuModel = model;
 		this.mustBeDestroy = false;
 
@@ -157,6 +161,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 								ChoiceEvent choiceEvent = new ChoiceEvent(ListMenu.this, null);
 								for (ChoiceListener listener : ListMenu.this.listeners)
 									listener.choiceCancelled(choiceEvent);
+									m_destroyed = true;
 									ListMenu.this.destroy();
 							}
 						}
@@ -327,6 +332,17 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 
 		return imageButton;
 	}
+	
+	public MTSvgButton createSvgIconButton(Vector3D position, String imageFilename, IGestureEventListener listener) {
+		MTSvgButton svgButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + imageFilename);
+		svgButton.setWidthXYGlobal(iconWidth);
+		svgButton.setHeightXYGlobal(choiceViewHeight);
+		svgButton.setPositionGlobal(new Vector3D(position.x, position.y));
+		svgButton.removeAllGestureEventListeners();
+		svgButton.addGestureListener(TapProcessor.class, listener);
+
+		return svgButton;
+	}
 
 	public void updateList() {
 		emptyList();
@@ -334,9 +350,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
 			if (menuModel instanceof ProjectArchitectureModel) {
-				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
+				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
 					closeButton.setVisible(closeButton.isEnabled());
 					backButton.setVisible(false);
 				} else {
@@ -401,8 +416,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			//if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
-			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).compare((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getStartMenu()) ) {
+			System.out.println(((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).getName());
+			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
@@ -480,7 +495,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	protected MTComponent makeChoiceView(Object choice) {
 		MTTextArea textArea = new MTTextArea(getRenderer(), 0, 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 18, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 15, MTColor.BLACK, true));
 		textArea.setText(choice.toString());
 		textArea.setNoFill(true);
 		textArea.setNoStroke(true);
@@ -537,39 +552,60 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	}
 	
 	//-----------------------------------------------------------
-	protected String pathString = "\\";
+	protected String pathString = java.nio.file.FileSystems.getDefault().getSeparator();
 	protected String projectString = "";
 	protected String sessionString = "";
-	public  MTTextArea pathField;
+	protected  MTTextArea pathField;
 	//-----------------------------------------------------------
 	
+	public void setProjectString(String pro){projectString = pro;}
+	public void setSessionString(String sess){sessionString = sess;}
+	
+	
 	protected void setPath(TwoLinkedJsonNode choice) {
-		//-------------------------------------------------------------------------
-		// Max : update of the current path
+		String name = choice.getName();
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
 		if ( choice == getModel().getStartMenu() ) {
-			pathString = "\\";
+			pathString = separator;
 		} else {
-			if ( projectString.equals("")){
-				projectString = "\\" + choice.getName();
-			} else if ( sessionString.equals("")) {
-				sessionString = "\\" + choice.getName();
-			}
-			pathString = projectString + sessionString;
+			addStringToPathArea(name);
 		}
+		
+		reformatPathArea();
+	}
+
+	/**
+	 * 
+	 */
+	public void reformatPathArea() {
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 28) + "...";
 		}
 		if ( pathField != null ) pathField.setText( pathString );
-		//-------------------------------------------------------------------------
+	}
+
+	/**
+	 * @param name
+	 * @param separator
+	 */
+	public void addStringToPathArea(String name) {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
+		if ( projectString.equals("")){
+			projectString = separator + name;
+		} else if ( sessionString.equals("")) {
+			sessionString = separator + name;
+		}
+		pathString = projectString + sessionString;
 	}
 	
 	protected void setPathToParent() {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
 		if ( !sessionString.equals("") ) {
 			sessionString = "";
 			pathString = projectString;
 		} else if ( !projectString.equals("") ) {
 			projectString = "";
-			pathString = "\\";
+			pathString = separator;
 		}
 		if ( pathField != null ) pathField.setText( pathString );
 	}
@@ -588,7 +624,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					if (choice instanceof TwoLinkedJsonNode){
 						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
 						fileChoice = new File(node.getName());
-						if (pathField != null) setPath(node);
+						if (pathField != null && node.getNotLeafChildCount() > 0) setPath(node); System.out.println("children : "+node.getChildCount());;
 					} else {
 						fileChoice = (File) choice;
 					}

@@ -94,53 +94,54 @@ public class ProjectChoiceScene extends CofitsDesignScene implements ChoiceListe
 	 * @param orb - The orb which list will be attached to
 	 */
 	protected void playProjectAndSessionsList(Vector3D position, ControlOrb orb) {
-		//Create the model from Json File
-		IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
-		m_list = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
-		m_list.setMustBeDestroy(false);
-		m_list.addChoiceListener(this);
-		
-		m_list.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
-			@Override
-			public boolean processGestureEvent(MTGestureEvent evt) {
-				switch (evt.getId()) {
-				case TapEvent.GESTURE_ENDED :
-					launchProjectChoiceScene(m_list.getModel());
-					break;
-				default:
-					break;
+		if (m_list == null || m_list.isDestroyed()){
+			//Create the model from Json File
+			IMenuModel model = new ProjectArchitectureModel(new File("rsc/config/structure.json"), ProjectArchitectureModel.SESSION_LEVEL);
+			m_list = new ProjectChoiceListMenu(getMTApplication(), (int) position.x, (int) position.y, 200, 5, model);
+			m_list.setMustBeDestroy(false);
+			m_list.addChoiceListener(this);
+			
+			m_list.getConfirmButton().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+				@Override
+				public boolean processGestureEvent(MTGestureEvent evt) {
+					switch (evt.getId()) {
+					case TapEvent.GESTURE_ENDED :
+						launchMTBSFileScene(m_list.getModel());
+						break;
+					default:
+						break;
+					}
+					return false;
 				}
-				return false;
-			}
-		});
-		
-		//Manage connection button
-		boolean isConnected = m_model.isConnected();
-		m_list.getLaunchAgentsButtonOff().setEnabled(!isConnected);
-		m_list.getLaunchAgentsButtonOff().setVisible(!isConnected);
-		m_list.getLaunchAgentsButtonOn().setVisible(isConnected);
-		m_list.getLaunchAgentsButtonOn().setEnabled(false);
-		
-		m_list.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
-			@Override
-			public boolean processGestureEvent(MTGestureEvent evt) {
-				switch (evt.getId()) {
-				case TapEvent.GESTURE_ENDED :
-					m_model.launchAgentContainer();
-					break;
-				default:
-					break;
+			});
+			
+			//Manage connection button
+			boolean isConnected = m_model.isConnected();
+			m_list.getLaunchAgentsButtonOff().setEnabled(!isConnected);
+			m_list.getLaunchAgentsButtonOff().setVisible(!isConnected);
+			m_list.getLaunchAgentsButtonOn().setVisible(isConnected);
+			m_list.getLaunchAgentsButtonOn().setEnabled(false);
+			
+			m_list.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+				@Override
+				public boolean processGestureEvent(MTGestureEvent evt) {
+					switch (evt.getId()) {
+					case TapEvent.GESTURE_ENDED :
+						m_model.launchAgentContainer();
+						break;
+					default:
+						break;
+					}
+					return false;
 				}
-				return false;
-			}
-		});
-		
-		getCanvas().addChild(m_list);
-
+			});
+			
+			getCanvas().addChild(m_list);
+		}
 	}
 	
 	
-	protected void launchProjectChoiceScene(IMenuModel model) {
+	protected void launchMTBSFileScene(IMenuModel model) {
 		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
 		//Save the current scene on the scene stack before changing
 		MTBSFileScene mtbsFileScene = new MTBSFileScene(getMTApplication(), "Project Choice Scene", m_model, m_orbs, DO_CLEAN_GESTURES, m_projectChosenName, m_sessionChosenName);
@@ -176,6 +177,11 @@ public class ProjectChoiceScene extends CofitsDesignScene implements ChoiceListe
 			m_list.getLaunchAgentsButtonOff().setVisible(false);
 			
 			m_list.getLaunchAgentsButtonOn().setVisible(true);
+		} else if (evt.getPropertyName().equals("Agent died")){
+			m_list.getLaunchAgentsButtonOff().setEnabled(true);
+			m_list.getLaunchAgentsButtonOff().setVisible(true);
+			
+			m_list.getLaunchAgentsButtonOn().setVisible(false);
 		}
 	}
 

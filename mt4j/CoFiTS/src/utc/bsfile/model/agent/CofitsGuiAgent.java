@@ -175,6 +175,12 @@ public class CofitsGuiAgent extends GuiAgent {
 	}
 	
 	
+	@Override
+	protected void takeDown() {
+		m_model.agentShutDown();
+		super.takeDown();
+	}
+	
 	//Getters & Setters
 	public CofitsModel getModel() {
 		return m_model;

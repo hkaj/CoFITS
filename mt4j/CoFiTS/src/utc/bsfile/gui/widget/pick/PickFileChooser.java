@@ -2,8 +2,11 @@ package utc.bsfile.gui.widget.pick;
 
 import java.io.File;
 
+import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
+import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
@@ -25,7 +28,6 @@ import utc.bsfile.model.metadata.UnknownFile;
 import utc.bsfile.model.movie.MovieModel;
 import utc.bsfile.model.pdf.PDFModel;
 import utc.bsfile.util.FileExtensionFilter;
-import utc.bsfile.util.JsonManager;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;
@@ -33,17 +35,27 @@ import utc.bsfile.util.PropertyManager;
 public class PickFileChooser extends FileChooser {
 	private MTRectangle filterWindow;
 
-	private MTImageButton pdfButton;
-	private MTImageButton movieButton;
-	private MTImageButton imageButton;
-	private MTImageButton htmlButton;
-	private MTImageButton noFilterButton;
+	//private MTImageButton pdfButton;
+	private MTSvgButton pdfButton;
+	//private MTImageButton movieButton;
+	private MTSvgButton movieButton;
+	//private MTImageButton imageButton;
+	private MTSvgButton imageButton;
+	//private MTImageButton htmlButton;
+	private MTSvgButton htmlButton;
+	//private MTImageButton noFilterButton;
+	private MTSvgButton noFilterButton;
 	
-	private MTImageButton pdfButton_activated;
-	private MTImageButton movieButton_activated;
-	private MTImageButton imageButton_activated;
-	private MTImageButton htmlButton_activated;
-	private MTImageButton noFilterButton_activated;
+	//private MTImageButton pdfButton_activated;
+	private MTSvgButton pdfButton_activated;
+	//private MTImageButton movieButton_activated;
+	private MTSvgButton movieButton_activated;
+	//private MTImageButton imageButton_activated;
+	private MTSvgButton imageButton_activated;
+	//private MTImageButton htmlButton_activated;
+	private MTSvgButton htmlButton_activated;
+	//private MTImageButton noFilterButton_activated;
+	private MTSvgButton noFilterButton_activated;
 
 	public PickFileChooser(PApplet applet, IMenuModel model, TwoLinkedJsonNode start) {
 		this(applet, 0, 0, 300, 7, model, start);
@@ -53,46 +65,6 @@ public class PickFileChooser extends FileChooser {
 		super(applet, x, y, width, nbItem, model, start);
 
 		setCloseVisible(true);
-		PickButtonListener listener = new PickButtonListener();
-
-		PositionSequencer position2 = new PositionSequencer(new Vector3D(x
-				- getSpacing() - iconWidth, y + getSpacing()), getSpacing(),
-				Orientation.VERTICAL);
-
-		
-		
-		//Create the buttons on the left side for files filtering
-		pdfButton = createIconButton(position2.getPosition(),
-				"filter-pdf-icon.png", listener);
-		pdfButton_activated = createIconButton(position2.getPosition(),
-				"filter-pdf-icon-on.png", listener);
-		pdfButton_activated.setEnabled(false);
-		position2.nextPosition(pdfButton);
-		movieButton = createIconButton(position2.getPosition(),
-				"filter-mpg-icon.png", listener);
-		movieButton_activated = createIconButton(position2.getPosition(),
-				"filter-mpg-icon-on.png", listener);
-		movieButton_activated.setEnabled(false);
-		position2.nextPosition(movieButton);
-		imageButton = createIconButton(position2.getPosition(),
-				"filter-img-icon.png", listener);
-		imageButton_activated = createIconButton(position2.getPosition(),
-				"filter-img-icon-on.png", listener);
-		imageButton_activated.setEnabled(false);
-		position2.nextPosition(imageButton);
-		htmlButton = createIconButton(position2.getPosition(),
-				"filter-html-icon.png", listener);
-		htmlButton_activated = createIconButton(position2.getPosition(),
-				"filter-html-icon-on.png", listener);
-		htmlButton_activated.setEnabled(false);
-		position2.nextPosition(htmlButton);
-		noFilterButton = createIconButton(position2.getPosition(),
-				"no-filter-icon.png", listener);
-		noFilterButton_activated = createIconButton(position2.getPosition(),
-				"no-filter-icon-on.png", listener);
-		noFilterButton_activated.setEnabled(false);
-		position2.nextPosition(noFilterButton);
-
 
 		filterWindow = new MTRectangle(applet, x - getSpacing() - iconWidth, (y
 				+ getSpacing() * 2f + iconHeight) * 5);
@@ -101,6 +73,50 @@ public class PickFileChooser extends FileChooser {
 		filterWindow.removeAllGestureEventListeners();
 		filterWindow.setPositionRelativeToParent(new Vector3D(-iconWidth + 17,
 				iconHeight + 135));
+		
+		PickButtonListener listener = new PickButtonListener();
+		Vector3D position = new Vector3D(filterWindow.getPosition(TransformSpace.GLOBAL).x - filterWindow.getWidthXY(TransformSpace.GLOBAL)/2 + getSpacing() + 15,
+										 filterWindow.getPosition(TransformSpace.GLOBAL).y - filterWindow.getHeightXY(TransformSpace.GLOBAL)/2 + getSpacing() + 5 );
+		
+		pdfButton = createSvgIconButton(position, "newPDFFilterIcon.svg", listener);
+		pdfButton.setSizeXYGlobal(35,  40);
+		pdfButton_activated = createSvgIconButton(position, "newPDFFilterIconON.svg", listener);
+		pdfButton_activated.setSizeXYGlobal(35,  40);
+		pdfButton_activated.setEnabled(false);
+		
+		position.y += 40 + getSpacing();
+				
+		movieButton = createSvgIconButton(position, "newVIDFilterIcon.svg", listener);
+		movieButton.setSizeXYGlobal(37,  28);
+		movieButton_activated = createSvgIconButton(position, "newVIDFilterIconON.svg", listener);
+		movieButton_activated.setSizeXYGlobal(37,  28);
+		movieButton_activated.setEnabled(false);
+		
+		position.y += 40 + getSpacing();
+		
+		htmlButton = createSvgIconButton(position, "newWEBFilterIcon.svg", listener);
+		htmlButton.setSizeXYGlobal(35,  35);
+		htmlButton_activated = createSvgIconButton(position, "newWEBFilterIconON.svg", listener);
+		htmlButton_activated.setSizeXYGlobal(35,  35);
+		htmlButton_activated.setEnabled(false);
+		
+		position.y += 40 + getSpacing();
+		
+		imageButton = createSvgIconButton(position, "newIMGFilterIcon.svg", listener);
+		imageButton.setSizeXYGlobal(40,  35);
+		imageButton_activated = createSvgIconButton(position, "newIMGFilterIconON.svg", listener);
+		imageButton_activated.setSizeXYGlobal(40,  35);
+		imageButton_activated.setEnabled(false);
+		
+		position.y += 40 + getSpacing();
+		
+		noFilterButton = createSvgIconButton(position, "newNoFilterIcon.svg", listener);
+		noFilterButton.setSizeXYGlobal(35,  40);
+		noFilterButton_activated = createSvgIconButton(position, "newNoFilterIconON.svg", listener);
+		noFilterButton_activated.setSizeXYGlobal(35,  40);
+		noFilterButton_activated.setEnabled(false);
+		
+		position.y += 40 + getSpacing();
 
 		filterWindow.addChild(pdfButton);
 		filterWindow.addChild(movieButton);
@@ -291,6 +307,10 @@ public class PickFileChooser extends FileChooser {
 				filterWindow.removeChild(noFilterButton_activated);
 				break;
 		}
+	}
+
+	public MTTextArea getPathField() {
+		return pathField;
 	}
 
 }

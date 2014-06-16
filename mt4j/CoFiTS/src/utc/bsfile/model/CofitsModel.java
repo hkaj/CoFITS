@@ -29,6 +29,12 @@ public class CofitsModel {
 		JsonNode jsonNode = JsonManager.getInstance().createJsonNode(new File(PropertyManager.JSON_STRUCTURE_FILENAME));
 		m_projectsArchitectureRootNode = new TwoLinkedJsonNode(jsonNode, "root", true);
 		generateFilesMap();
+		
+		//Set the current downloading variable for files to false
+		for (CofitsFile coFile : m_files){
+			coFile.setDownloading(false);
+		}
+		
 		//m_projectsArchitectureRootNode.displayConsole(0);
 	}
 	
@@ -53,6 +59,11 @@ public class CofitsModel {
 	  	  } catch(Exception ex) {
 	  		  System.out.println("Main container not started");
 	  	  }
+	}
+	
+	
+	public void agentShutDown() {
+		firePropertyChange("Agent died", null, null);
 	}
 	
 	
@@ -198,6 +209,7 @@ public class CofitsModel {
 	public boolean isConnected() {
 		return m_agent != null;
 	}
+	
 	//Members
 	private PropertyChangeSupport m_pcs = new PropertyChangeSupport(this);
 	private TwoLinkedJsonNode m_projectsArchitectureRootNode;
