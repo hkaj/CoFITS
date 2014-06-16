@@ -43,7 +43,7 @@ public class CofitsFile {
 		TwoLinkedJsonNode project = session.getParentTwoLinkedJsonNode();
 		String separator = FileSystems.getDefault().getSeparator();
 		
-		return project.getName() + separator + session.getName() + separator + getFilename();
+		return project.getName() + separator + session.getCurrent().path("id").asInt() + separator + getFilename();
 	}
 	
 	public final void setFilename(String filename) {
