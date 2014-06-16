@@ -47,6 +47,7 @@ public class RequestDownloadFile extends OneShotBehaviour {
 		}
 		
 		messageToSend.setContent(stringWriter.toString());
+		System.out.println("THERE !!!!!!!!!!! " + messageToSend.getConversationId());
 		
 		myAgent.send(messageToSend);
 	}

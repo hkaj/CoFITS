@@ -39,6 +39,7 @@ public class ReceiveMessageBehaviour extends CyclicBehaviour {
 			//The message is about a part of file to receive
 			m_agent.propagatePartFileMessage(message);
 		} else {
+			System.out.println("RECEIIIIIVIE : " +message.getConversationId());
 			JsonNode messageContentNode = JsonManager.getInstance().createJsonNode(message.getContent());
 			System.out.println(messageContentNode);
 			if (messageContentNode.path("action").asText().equals("LIST")) {

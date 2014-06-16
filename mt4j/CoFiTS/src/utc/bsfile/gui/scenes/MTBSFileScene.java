@@ -280,6 +280,11 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 			m_filesToOpen.get(filename).createFileViewer(file);
 			m_filesToOpen.remove(filename);
 		}
+		
+		for(ControlOrb orb : m_pickFileChoosers.keySet()){
+			PickFileChooser pick = m_pickFileChoosers.get(orb);
+			pick.updateList();
+		}
 	}
 	
 	
