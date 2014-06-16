@@ -14,7 +14,6 @@ import java.util.HashMap;
 
 import Constants.DataBaseConstants;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class AddUserBehaviour extends OneShotBehaviour {
@@ -72,9 +71,9 @@ public class AddUserBehaviour extends OneShotBehaviour {
 		try {
 			reply.setContent(mapper.writeValueAsString(responseContent));
 			myAgent.send(reply);
-		} catch (IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	private void addUserToProject(String login, String project, String admin) {

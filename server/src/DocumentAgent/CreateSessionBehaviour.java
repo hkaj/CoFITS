@@ -15,7 +15,6 @@ import java.util.List;
 
 import Constants.DataBaseConstants;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CreateSessionBehaviour extends OneShotBehaviour {
@@ -67,9 +66,9 @@ public class CreateSessionBehaviour extends OneShotBehaviour {
 					content.put("session_id", Integer.toString(sessionId));
 					content.put("reason", "");
 					content.put("state", "CREATED");
-					try{
-					reply.setContent(mapper.writeValueAsString(content));
-					} catch (IOException e){
+					try {
+						reply.setContent(mapper.writeValueAsString(content));
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {

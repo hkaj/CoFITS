@@ -14,7 +14,6 @@ import java.util.Map;
 import utils.projectNameEncoder;
 import Constants.DataBaseConstants;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CreateProjectBehaviour extends OneShotBehaviour {
@@ -104,7 +103,7 @@ public class CreateProjectBehaviour extends OneShotBehaviour {
 		}
 		try {
 			reply.setContent(mapper.writeValueAsString(content));
-		} catch (IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.myAgent.send(reply);

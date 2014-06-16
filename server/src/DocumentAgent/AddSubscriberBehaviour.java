@@ -17,9 +17,9 @@ public class AddSubscriberBehaviour extends OneShotBehaviour {
 	private HashMap<String, String> request;
 	private ACLMessage message;
 	private DocumentAgent docAgent;
-	
+
 	AddSubscriberBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		docAgent = (DocumentAgent)myAgent;
+		docAgent = (DocumentAgent) myAgent;
 		message = msg;
 		request = req;
 	}
@@ -36,7 +36,8 @@ public class AddSubscriberBehaviour extends OneShotBehaviour {
 			if (res.next()) {
 				docAgent.addSubscriber(proj, subscriber);
 			} else {
-				System.out.println("[SUBSCRIPTION FAIL] The project " + proj + " does not exist.");
+				System.out.println("[SUBSCRIPTION FAIL] The project " + proj
+						+ " does not exist.");
 			}
 			s.close();
 			conn.close();
@@ -44,7 +45,7 @@ public class AddSubscriberBehaviour extends OneShotBehaviour {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Connection createConnection() throws SQLException {
 		Connection conn = null;
 		conn = DriverManager.getConnection(

@@ -18,11 +18,9 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import Constants.DataBaseConstants;
 import Constants.RequestConstants;
-import Requests.DownloadRequest;
 
 public class UploadBehaviour extends OneShotBehaviour {
 	private DocumentAgent docAgent;
@@ -32,7 +30,7 @@ public class UploadBehaviour extends OneShotBehaviour {
 	public UploadBehaviour(HashMap<String, String> request, ACLMessage message) {
 		this.request = request;
 		this.message = message;
-		docAgent = (DocumentAgent)myAgent;
+		docAgent = (DocumentAgent) myAgent;
 	}
 
 	@Override
