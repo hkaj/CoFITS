@@ -76,6 +76,9 @@ Profitons-en pour creer la DB :
 \q
 ```
 
+**Ces scripts font appel a plusieurs fichiers contenant des instructions de creation et de peuplage de tables. Sous Windows il est possible d'executer ces scripts un par un a travers PgAdmin :**
+
+
 Verifions ensuite que documentagent fonctionne egalement :
 
 ```
@@ -100,11 +103,10 @@ Un diagramme des tables est disponible dans le dossier **about**.
 
 ## TODO:
 
-- Retourner des messages d'erreurs au lieu de rien en cas d'erreur serveur.
-- Ameliorer le stockage des documents dans le file system du serveur.
+- Ameliorer la remontee des erreurs serveur au client (toutes les behaviours ne le font pas).
+- ~~Ameliorer le stockage des documents dans le file system du serveur.~~
 - Dans la DownloadBehaviour, verifier la legitimite de l'utilitsateur qui demande le fichier.
-- Fragmenter les fichiers a envoyer en plusieurs messages si necessaire.
+- Fragmenter les fichiers a envoyer en plusieurs messages si necessaire (possibilite deja implementee mais on ne fragmente jamais).
 - ~~Mettre l'extension des documents dans name et une meta donnée dans type.~~
 - Implementer un UNSUBSCRIBE pour que les agents puissent cesser de suivre un projet.
-- Repondre par un CONFIRM ou REFUSE a un upload de fichier.
-- Gerer la mise a jour d'un document et l'envoi du CONFIRM/REFUSE
+- Gerer la mise a jour d'un document et l'envoi d'un CONFIRM/REFUSE a la reception du fichier.
