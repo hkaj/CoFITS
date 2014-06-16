@@ -129,6 +129,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	 */
 	private HashSet<ChoiceListener> listeners;
 	private PApplet applet;
+	protected boolean m_destroyed = false;
+	
+	public boolean isDestroyed(){return m_destroyed;}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
 			IMenuModel model) {
@@ -136,7 +139,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		float height = calcHeight(nbItem);
 		Theme.getTheme().applyStyle(StyleID.DEFAULT, this);
 		this.setAnchor(PositionAnchor.UPPER_LEFT);
-
+		
 		this.menuModel = model;
 		this.mustBeDestroy = false;
 
@@ -158,6 +161,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 								ChoiceEvent choiceEvent = new ChoiceEvent(ListMenu.this, null);
 								for (ChoiceListener listener : ListMenu.this.listeners)
 									listener.choiceCancelled(choiceEvent);
+									m_destroyed = true;
 									ListMenu.this.destroy();
 							}
 						}

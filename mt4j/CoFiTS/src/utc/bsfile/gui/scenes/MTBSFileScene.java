@@ -130,7 +130,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 					break;
 				case TapAndHoldEvent.GESTURE_ENDED:
 					if (th.isHoldComplete()){
-						playPickFileChooser(orb.getCenterPointGlobal());
+						playPickFileChooser(orb);
 					}
 					break;
 				default:
@@ -173,44 +173,47 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	
 	/**
-	 * @param location - coordinate where the FileChooser will be drawn
+	 * @param orb - coordinate where the FileChooser will be drawn
 	 * @brief Draw a FileChooser on the Canvas at the given location
 	 */
-	public void playPickFileChooser(Vector3D location) {
-		//TODO pass project node chosen by user as last argument
-		final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), getSessionOnOpeningFileChooser(), ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
-		pick.addStringToPathArea(m_projectOnChooserOpening);
-		pick.reformatPathArea();
-		pick.addStringToPathArea(m_sessionOnChooserOpening);
-		pick.reformatPathArea();
-		//location.translate(new Vector3D(-100,0));
-		pick.translate(location, TransformSpace.GLOBAL);
-		((PickFileChooser)pick).updateOrientation(location.x, location.y);
-		getCanvas().addChild(pick);
-		m_pickFileChoosers.add(pick);
-		
-		//Manage connection button
-		boolean isConnected = m_model.isConnected();
-		pick.getLaunchAgentsButtonOff().setEnabled(!isConnected);
-		pick.getLaunchAgentsButtonOff().setVisible(!isConnected);
-		pick.getLaunchAgentsButtonOn().setVisible(isConnected);
-		pick.getLaunchAgentsButtonOn().setEnabled(false);
-		
-		pick.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
-			@Override
-			public boolean processGestureEvent(MTGestureEvent evt) {
-				switch (evt.getId()) {
-				case TapEvent.GESTURE_ENDED :
-					m_model.launchAgentContainer();
-					break;
-				default:
-					break;
+	public void playPickFileChooser(ControlOrb orb) {
+		if (!m_pickFileChoosers.containsKey(orb) || m_pickFileChoosers.get(orb).isDestroyed()){
+			Vector3D location = orb.getCenterPointGlobal();
+			//TODO pass project node chosen by user as last argument
+			final PickFileChooser pick = new PickFileChooser(getMTApplication(), new ProjectArchitectureModel(m_model.getProjectsArchitectureRootNode(), getSessionOnOpeningFileChooser(), ProjectArchitectureModel.FILE_LEVEL, ProjectArchitectureModel.FILE_LEVEL),m_model.getProjectsArchitectureRootNode());
+			pick.addStringToPathArea(m_projectOnChooserOpening);
+			pick.reformatPathArea();
+			pick.addStringToPathArea(m_sessionOnChooserOpening);
+			pick.reformatPathArea();
+			//location.translate(new Vector3D(-100,0));
+			pick.translate(location, TransformSpace.GLOBAL);
+			((PickFileChooser)pick).updateOrientation(location.x, location.y);
+			getCanvas().addChild(pick);
+			m_pickFileChoosers.put(orb,pick);
+			
+			//Manage connection button
+			boolean isConnected = m_model.isConnected();
+			pick.getLaunchAgentsButtonOff().setEnabled(!isConnected);
+			pick.getLaunchAgentsButtonOff().setVisible(!isConnected);
+			pick.getLaunchAgentsButtonOn().setVisible(isConnected);
+			pick.getLaunchAgentsButtonOn().setEnabled(false);
+			
+			pick.getLaunchAgentsButtonOff().addGestureListener(TapProcessor.class, new IGestureEventListener() {
+				@Override
+				public boolean processGestureEvent(MTGestureEvent evt) {
+					switch (evt.getId()) {
+					case TapEvent.GESTURE_ENDED :
+						m_model.launchAgentContainer();
+						break;
+					default:
+						break;
+					}
+					return false;
 				}
-				return false;
-			}
-		});
-		
-		pick.addChoiceListener(this);
+			});
+			
+			pick.addChoiceListener(this);
+		}
 	}
 
 	
@@ -219,16 +222,19 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	public void propertyChange(PropertyChangeEvent evt) {
 		super.propertyChange(evt);
 		if (evt.getPropertyName().equals("Project changed")){
-			for (PickFileChooser pick : m_pickFileChoosers){
+			for (ControlOrb orb : m_pickFileChoosers.keySet()){
+				PickFileChooser pick = m_pickFileChoosers.get(orb);
 				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue(), getSessionOnOpeningFileChooser());
 			}
 		} else if (evt.getPropertyName().equals("Architecture changed")) {
-			for (PickFileChooser pick : m_pickFileChoosers){
+			for (ControlOrb orb : m_pickFileChoosers.keySet()){
+				PickFileChooser pick = m_pickFileChoosers.get(orb);
 				pick.projectHasToBeRefresh((TwoLinkedJsonNode) evt.getNewValue(), getSessionOnOpeningFileChooser());
 			}
 		} else if (evt.getPropertyName().equals("Agent created")) {
 			downloadSessionFiles();
-			for(PickFileChooser pick : m_pickFileChoosers){
+			for(ControlOrb orb : m_pickFileChoosers.keySet()){
+				PickFileChooser pick = m_pickFileChoosers.get(orb);
 				if (pick != null){
 					pick.getLaunchAgentsButtonOff().setEnabled(false);
 					pick.getLaunchAgentsButtonOff().setVisible(false);
@@ -237,7 +243,8 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 				}
 			}
 		} else if (evt.getPropertyName().equals("Agent died")){
-			for(PickFileChooser pick : m_pickFileChoosers){
+			for(ControlOrb orb : m_pickFileChoosers.keySet()){
+				PickFileChooser pick = m_pickFileChoosers.get(orb);
 				if (pick != null){
 					pick.getLaunchAgentsButtonOff().setEnabled(true);
 					pick.getLaunchAgentsButtonOff().setVisible(true);
@@ -320,7 +327,7 @@ public class MTBSFileScene extends CofitsDesignScene implements ChoiceListener{
 	
 	
 	//Members
-	protected List<PickFileChooser> m_pickFileChoosers = new ArrayList<PickFileChooser>();
+	protected Map<ControlOrb,PickFileChooser> m_pickFileChoosers = new HashMap<ControlOrb,PickFileChooser>();
 	protected Map<String, PickFileChooser> m_filesToOpen = new HashMap<String, PickFileChooser>();
 	protected String m_projectOnChooserOpening;
 	protected String m_sessionOnChooserOpening;
