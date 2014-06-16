@@ -10,8 +10,12 @@ import java.io.StringWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 
+import Constants.DataBaseConstants;
 import Constants.RequestConstants;
 import ModelObjects.BinaryContent;
 import ModelObjects.Document;
@@ -36,10 +40,12 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 
 	@Override
 	public void action() {
-		Document document = new Document(Integer.parseInt(this.request
-				.get("file_id")));
-		Path path = Paths.get(RequestConstants.documentAgentDirectory
-				+ document.getName());
+		int fileId = Integer.parseInt(this.request.get("file_id"));
+		String project_id = this.request.get("project_id");
+		String session_id = this.request.get("session_id");
+		Document document = new Document(fileId);
+		Path path = Paths.get(RequestConstants.documentAgentDirectory,
+				project_id, session_id, document.getName());
 
 		// Send a confirmation message
 		ACLMessage reply = this.message.createReply();
@@ -76,5 +82,14 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected Connection createConnection() throws SQLException {
+		Connection conn = null;
+		conn = DriverManager.getConnection(
+				"jdbc:postgresql://" + DataBaseConstants.host + "/"
+						+ DataBaseConstants.databaseName,
+				DataBaseConstants.userName, DataBaseConstants.password);
+		return conn;
 	}
 }

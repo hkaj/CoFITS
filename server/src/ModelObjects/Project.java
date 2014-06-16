@@ -3,7 +3,6 @@ package ModelObjects;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import utils.projectNameEncoder;
 import DatabaseScheme.ReferenceTable;
 import DatabaseScheme.TableProjects;
 
@@ -14,7 +13,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Project extends ModelObject
 {
 	final String id,name,description,creator;
-	final static private String[] validProperties = {"id","name","description","creator"};
 	
 	@JsonCreator
 	public Project(@JsonProperty("id")String id, @JsonProperty("name")String name, @JsonProperty("description")String description, @JsonProperty("creator")String creator)

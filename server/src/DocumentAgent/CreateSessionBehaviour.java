@@ -10,9 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-aimport com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CreateSessionBehaviour extends AbstractServerBehaviour {
 

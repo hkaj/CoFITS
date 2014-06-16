@@ -20,7 +20,6 @@ public class Session extends ModelObject
 	final Integer id;
 	final private String project;
 	final private String date;
-	final static private String[] validProperties = {"project","date"};
 	
 	public Session(@JsonProperty("id")Integer id) {
 		super();
@@ -138,5 +137,4 @@ public class Session extends ModelObject
 		);
 	    return conn;
 	}
-	
 }
