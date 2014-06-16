@@ -4,19 +4,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import DatabaseScheme.ReferenceTable;
+import DatabaseScheme.TableSessions;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import DatabaseScheme.ReferenceTable;
-import DatabaseScheme.TableSessions;
-import Requests.Predicate;
 
 public class Session extends ModelObject
 {
 	final private String project;
 	final private String date;
-//	final static private String[] validProperties = {"Date","Project","Member"};
+	final static private String[] validProperties = {"project","date"};
 	
 
 	public Session(String project, Timestamp date)
@@ -37,7 +36,7 @@ public class Session extends ModelObject
 	public Session(ResultSet r) throws SQLException
 	{
 		super();
-		this.project = r.getString("name");
+		this.project = r.getString("project");
 		this.date = r.getTimestamp("date").toString();
 	}
 	public String getProject()
@@ -54,7 +53,7 @@ public class Session extends ModelObject
 	@Override @JsonIgnore
 	public String[] getKeyConditions()
 	{
-		final String[] res = {"name='"+this.project+"'","date='"+this.date.toString()+"'"};
+		final String[] res = {"project='"+this.project+"'","date='"+this.date.toString()+"'"};
 		return res ;
 	}
 

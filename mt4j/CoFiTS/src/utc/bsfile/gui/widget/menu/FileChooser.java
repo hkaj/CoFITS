@@ -7,14 +7,12 @@ import java.io.IOException;
 import org.mt4j.components.MTComponent;
 import org.mt4j.components.visibleComponents.shapes.MTRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
-import org.mt4j.components.visibleComponents.widgets.MTTextField;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
-import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -24,8 +22,8 @@ import utc.bsfile.gui.Theme.StyleID;
 import utc.bsfile.model.menu.FileChooserModel;
 import utc.bsfile.util.FileExtensionIconManager;
 import utc.bsfile.util.PositionSequencer;
-import utc.bsfile.util.PropertyManager;
 import utc.bsfile.util.PositionSequencer.Orientation;
+import utc.bsfile.util.PropertyManager;
 
 
 
@@ -114,11 +112,13 @@ public class FileChooser extends ListMenu
 		root = path.getAbsoluteFile();
 				
 		//---------------------------------------------------------------------------
-		IFont font = FontManager.getInstance().createFont(applet, "century-gothic", 17);
-		this.pathField = new MTTextField(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight(), font);
+		this.pathField = new MTTextArea(applet,  x + getSpacing() , y + getSpacing() + getSpacedIconHeight(),(int) width, getPathFieldHeight());
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 30) + "...";
 		}
+		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
+		pathField.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
+		pathField.setFontColor(new MTColor(255, 255, 255, 255));
 		pathField.setText(pathString);
 		pathField.setNoFill(true);
 		pathField.setNoStroke(true);
@@ -129,7 +129,8 @@ public class FileChooser extends ListMenu
 		
 		PositionSequencer position = new PositionSequencer(new Vector3D(x + getSpacing(), y + getSpacing()), getSpacing(), Orientation.HORIZONTAL);
 		ButtonListener listener = new ButtonListener();
-		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener); 
+		parentButton = createIconButton(position.getPosition(), "parent-icon.png", listener);
+		parentButton.setSizeXYGlobal(40, 40);
 		position.nextPosition(parentButton);
 		Vector3D savedPosition = position.getPosition();
 		actionButton = createIconButton(savedPosition, "action-icon-on.png", listener);
@@ -226,7 +227,7 @@ public class FileChooser extends ListMenu
 				getWidthXYGlobal() - iconWidth - getSpacingX2(),
 				choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), "century-gothic", 16, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(), sfont, 16, MTColor.BLACK, true));
 		
 		if ( file.getName().length() <= 20 ){
 			textArea.setText(file.getName());

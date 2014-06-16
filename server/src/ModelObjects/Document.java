@@ -18,7 +18,11 @@ public class Document extends ModelObject
 {
 	final Integer id;
 	final String name,type;
+<<<<<<< HEAD
 	final static private String[] validProperties = {"name","usedDuring","UsedIn","ownedBy", "lastModified"};
+=======
+	final static private String[] validProperties = {"name","usedDuring","UsedIn","ownedBy"};
+>>>>>>> agentAndroid
 
 	@JsonCreator
 	public Document(@JsonProperty("id")Integer id, @JsonProperty("name")String name, @JsonProperty("type")String type)

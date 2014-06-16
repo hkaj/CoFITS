@@ -19,7 +19,7 @@ public class StartBSFile extends MTApplication {
 	
 	@Override
 	public void startUp() {
-		//Launching the Scene
+		//Launching the first Scene
 		LoginScene logScene = new LoginScene(this, "Logging scene");
 		
 		//Launching the Agent

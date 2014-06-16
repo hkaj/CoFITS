@@ -56,6 +56,10 @@ Et enfin redemarrer le serveur :
 /etc/init.d/postgresql restart
 ```
 
+(ou sous Windows) :
+```
+"C:\...\9.3\bin\pg_ctl.exe" restart -D "C:\...9.3\data" -m fast
+```
 Une fois que le serveur a redemarre, essayons de se connecter avec l'utilisateur postgres :
 
 ```
@@ -71,6 +75,9 @@ Profitons-en pour creer la DB :
 \i populate_db.sql
 \q
 ```
+
+**Ces scripts font appel a plusieurs fichiers contenant des instructions de creation et de peuplage de tables. Sous Windows il est possible d'executer ces scripts un par un a travers PgAdmin :**
+
 
 Verifions ensuite que documentagent fonctionne egalement :
 
@@ -93,3 +100,13 @@ Pour obtenir l'IP du serveur, executer __ifconfig__ depuis le serveur et copier 
 ```
 
 Un diagramme des tables est disponible dans le dossier **about**.
+
+## TODO:
+
+- Ameliorer la remontee des erreurs serveur au client (toutes les behaviours ne le font pas).
+- ~~Ameliorer le stockage des documents dans le file system du serveur.~~
+- Dans la DownloadBehaviour, verifier la legitimite de l'utilitsateur qui demande le fichier.
+- Fragmenter les fichiers a envoyer en plusieurs messages si necessaire (possibilite deja implementee mais on ne fragmente jamais).
+- ~~Mettre l'extension des documents dans name et une meta donnée dans type.~~
+- Implementer un UNSUBSCRIBE pour que les agents puissent cesser de suivre un projet.
+- Gerer la mise a jour d'un document et l'envoi d'un CONFIRM/REFUSE a la reception du fichier.

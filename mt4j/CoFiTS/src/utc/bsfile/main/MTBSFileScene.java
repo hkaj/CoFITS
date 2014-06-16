@@ -2,6 +2,7 @@ package utc.bsfile.main;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
@@ -22,6 +23,7 @@ import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
 import org.mt4j.util.math.Vector3D;
+import utc.bsfile.gui.widget.controlorb.ControlOrb;
 
 import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.model.Constants;
@@ -29,13 +31,27 @@ import utc.bsfile.util.PropertyManager;
 
 public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeListener {
 	
-	public MTBSFileScene(AbstractMTApplication mtApplication, String name) {
-		super(mtApplication, name);
-
-		//this.setClearColor(new MTColor(126, 130, 168, 255));
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs) {
+		this(mtApplication, name, orbs, false);
+	}
+	
+	public MTBSFileScene(AbstractMTApplication mtApplication, String name, List<ControlOrb> orbs, boolean doCleanGestures) {
+		super(mtApplication, name, orbs, doCleanGestures);
 		this.setClearColor(new MTColor(120, 120, 120, 255));
-		this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
+		//this.registerGlobalInputProcessor(new CursorTracer(getMTApplication(), this));
 
+
+		// set orbs orientables for the present scene
+		for (ControlOrb orb : orbs) {
+			orb.setApplication(mtApplication);
+			orb.addOrientationListener(orb);
+		}
+		
+		//Display the orbs
+		for (ControlOrb orb : m_orbs){
+			orb.setVisible(true);
+		}		
+		
 		float verticalPad = 53;
 
 		MTColor white = new MTColor(255, 255, 255);
@@ -52,6 +68,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		backgroundPan.setNoStroke(true);
 
 		backgroundPan.setText("CoFiTS");
+
 		backgroundPan.setPickable(false);
 		this.getCanvas().addChild(backgroundPan);
 		backgroundPan.setPositionGlobal(new Vector3D(getMTApplication().width / 2f, getMTApplication().height / 2f + 1 * verticalPad, 0));
@@ -74,18 +91,18 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 		dragOnly.addGestureListener(DragProcessor.class, new InertiaDragAction()); // Add inertia to dragging
 		//this.getCanvas().addChild(dragOnly);
 		
-		addPickFileChooser();
+		for (ControlOrb cOrb : orbs ) {
+			processInputForOrb(cOrb);
+		}
+		
+		//addPickFileChooser();
 	}
 	
-	
-	/**
-	 * Defines the process in order to create a FileChooser on the screen
-	 */
-	private void addPickFileChooser() {
-		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
-	
-		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+	protected void processInputForOrb(final ControlOrb orb) {
+		//Tap long on the orb
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),500));
+		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
+		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
 				TapAndHoldEvent th = (TapAndHoldEvent)ge;
 				switch (th.getId()) {
@@ -95,7 +112,7 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 					break;
 				case TapAndHoldEvent.GESTURE_ENDED:
 					if (th.isHoldComplete()){
-						playPickFileChooser(th.getLocationOnScreen());
+						playPickFileChooser(orb.getCenterPointGlobal());
 					}
 					break;
 				default:
@@ -103,9 +120,37 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 				}
 				return false;
 			}
-		});
-		
+		});		
 	}
+	
+	
+	/**
+	 * Defines the process in order to create a FileChooser on the screen
+	 */
+//	private void addPickFileChooser() {
+//		getCanvas().registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 1000));
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), getCanvas()));
+//	
+//		getCanvas().addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
+//			public boolean processGestureEvent(MTGestureEvent ge) {
+//				TapAndHoldEvent th = (TapAndHoldEvent)ge;
+//				switch (th.getId()) {
+//				case TapAndHoldEvent.GESTURE_STARTED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_UPDATED:
+//					break;
+//				case TapAndHoldEvent.GESTURE_ENDED:
+//					if (th.isHoldComplete()){
+//						playPickFileChooser(th.getLocationOnScreen());
+//					}
+//					break;
+//				default:
+//					break;
+//				}
+//				return false;
+//			}
+//		});
+//	}
 	
 	
 	
@@ -115,8 +160,9 @@ public class MTBSFileScene extends CofitsDesignScene implements PropertyChangeLi
 	 */
 	public void playPickFileChooser(Vector3D location) {
 		m_pick = new PickFileChooser(getMTApplication());
-		location.translate(new Vector3D(-100,0));
+		//location.translate(new Vector3D(-100,0));
 		m_pick.translate(location, TransformSpace.GLOBAL);
+		((PickFileChooser)m_pick).updateOrientation(location.x, location.y);
 		getCanvas().addChild(m_pick);
 	}
 

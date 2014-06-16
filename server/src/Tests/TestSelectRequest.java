@@ -4,13 +4,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import Constants.RequestConstants;
-import ModelObjects.Document;
 import ModelObjects.Session;
 import Requests.Filter;
 import Requests.Predicate;
-import Requests.Relation;
 import Requests.SelectRequest;
-import SpecialisedRelations.FollowedBy;
 import SpecialisedRelations.MobilizedIn;
 
 public class TestSelectRequest

@@ -10,20 +10,24 @@ import java.util.List;
 import java.util.Locale;
 
 import org.mt4j.IMTApplication;
+import org.mt4j.components.MTComponent;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.bounds.BoundsArbitraryPlanarPolygon;
 import org.mt4j.components.interfaces.IMTComponent3D;
 import org.mt4j.components.visibleComponents.font.VectorFontCharacter;
 import org.mt4j.components.visibleComponents.shapes.AbstractShape;
+import org.mt4j.components.visibleComponents.shapes.MTEllipse;
 import org.mt4j.components.visibleComponents.shapes.MTRoundRectangle;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.components.visibleComponents.widgets.keyboard.ITextInputListener;
 import org.mt4j.components.visibleComponents.widgets.keyboard.MTKey;
 import org.mt4j.input.IKeyListener;
+import org.mt4j.input.gestureAction.DefaultDragAction;
 import org.mt4j.input.inputData.InputCursor;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
+import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.rotateProcessor.RotateProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.scaleProcessor.ScaleProcessor;
@@ -42,8 +46,10 @@ import org.mt4j.util.math.Vector3D;
 import org.mt4j.util.math.Vertex;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.KeyInfoFactory.KeyInfo;
+import utc.bsfile.util.PropertyManager;
 
 /**
  * @author Claude Moulin
@@ -57,6 +63,9 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
 	private MTSvgButton keybCloseSvg;
+	
+	private MTSvgButton anchorButton;
+	private MTSvgButton anchorButtonON;
 
 	/**
 	 * The pa.
@@ -145,6 +154,9 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 	public DefaultKeyboard(PApplet pApplet,float x, float y, float z, float width, float height, float arcWidth, float arcHeight)
 	{
 		super(pApplet, x, y, z, width, height, arcWidth, arcHeight);
+		
+		setWidth(width);
+		
 		this.pa = pApplet;
 		// Set drawing mode
 		this.setDrawSmooth(true);
@@ -175,22 +187,13 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		shiftPressed = false;
 		keyClickAction = new KeyClickAction();
 
-		// /*
-		// TODO load button only once!
-		keybCloseSvg = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "keybClose.svg");
-		// Transform
-		//this.addChild(keybCloseSvg);
-		keybCloseSvg.scale(0.8f*(width/700), 0.8f*(width/700), 1, new Vector3D(0, 0, 0));
-		keybCloseSvg.translate(new Vector3D(640*(width/700), 5*(width/700), 0));
+		// new close button modifications
+		keybCloseSvg = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybClose-on.svg");
+		int closeButtonSize = 40;
+		int spacing = 10;
+		keybCloseSvg.setSizeXYGlobal(closeButtonSize, closeButtonSize);
+		keybCloseSvg.setPositionGlobal(new Vector3D(x + width - (closeButtonSize/2 + spacing), y + closeButtonSize/2 + spacing ));
 		keybCloseSvg.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
-		
-		/* Problem with close button:
-		 * on tap down, the button shrinks in size
-		 * on tap up, the finger can possible by off target now, because the button is smaller
-		 * therefor no "tapped" event is triggered
-		 * Don't know this is all of a sudden happening... -AJ
-		 */
-		keybCloseSvg.removeAllGestureEventListeners();
 		keybCloseSvg.addGestureListener(TapProcessor.class, new IGestureEventListener()
 		{
 			@Override
@@ -205,11 +208,55 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 			}
 		});
 		this.addChild(keybCloseSvg);
-		// */
 
-		/*
-		 * We get the key's shapes from the keys.svg svg font. To save memory, we share the font's characters geometryinfo with the MTKey shapes.
-		 */
+		anchorButton = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "anchored.svg");
+		anchorButton.setSizeXYGlobal(closeButtonSize, closeButtonSize);
+		anchorButton.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 ));
+		anchorButton.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
+		anchorButton.removeAllGestureEventListeners(TapProcessor.class);
+		anchorButton.addGestureListener(TapProcessor.class, new IGestureEventListener()
+		{
+			@Override
+			public boolean processGestureEvent(MTGestureEvent ge)
+			{
+				TapEvent te = (TapEvent) ge;
+				if (te.isTapped())
+				{
+					if (!isAnchored()) {
+						setAnchored(true);
+						anchorButton.setVisible(false);
+						anchorButtonON.setVisible(true);
+					}
+				}
+				return false;
+			}
+		});
+		this.addChild(anchorButton);
+		
+		anchorButtonON = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "anchored-on.svg");
+		anchorButtonON.setSizeXYGlobal(closeButtonSize, closeButtonSize);
+		anchorButtonON.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 ));
+		anchorButtonON.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
+		anchorButtonON.removeAllGestureEventListeners(TapProcessor.class);
+		anchorButtonON.addGestureListener(TapProcessor.class, new IGestureEventListener()
+		{
+			@Override
+			public boolean processGestureEvent(MTGestureEvent ge)
+			{
+				TapEvent te = (TapEvent) ge;
+				if (te.isTapped())
+				{
+					if (isAnchored()) {
+						setAnchored(false);
+						anchorButtonON.setVisible(false);
+						anchorButton.setVisible(true);
+					}
+				}
+				return false;
+			}
+		});
+		anchorButtonON.setVisible(false);
+		this.addChild(anchorButtonON);
 
 		// INITIALIZE SPACE-Button "by hand"
 		VectorFontCharacter SpaceF = (VectorFontCharacter) keyFont.getFontCharacterByUnicode("k");
@@ -315,7 +362,40 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		// Draw this component and its children above
 		// everything previously drawn and avoid z-fighting
 		this.setDepthBufferDisabled(true);
+		this.setFillColor(Theme.ITEM_BACKGROUND_COLOR);
+		this.setNoStroke(true);
+		
+		// Orientation
+		addOrientationListener(this);
+		//updateOrientation(x, y);
+		
+		// Colored ellipse
+		int ellipseRadius = 30;
+		m_coloredEllipse = new MTEllipse(pApplet, new Vector3D(x + spacing + ellipseRadius, y + height - spacing - ellipseRadius), 25, 25);
+		m_coloredEllipse.setFillColor(Theme.ITEM_BACKGROUND_COLOR);
+		m_coloredEllipse.setNoStroke(true);
+		m_coloredEllipse.removeAllGestureEventListeners();
+		addChild(m_coloredEllipse);
 	}
+	
+	// ANCHORE -----------------------------------------
+	private boolean anchored = false;
+	public void setAnchored(boolean a){
+		anchored = a;
+		if (isAnchored()) {
+			this.removeAllGestureEventListeners(DragProcessor.class);
+		} else {
+			//this.registerInputProcessor(new DragProcessor(pa));
+			this.addGestureListener(DragProcessor.class, new DefaultDragAction());
+		}
+	}
+	
+	public boolean isAnchored() {
+		return anchored;
+	}
+	
+	
+	//--------------------------------------------------
 
 	private KeyInfo[] getKeysLayout(float width, float height)
 	{
@@ -370,7 +450,106 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 			return false;
 	}
 
+	// ORIENTATION -------------------------------------------------------
 	
+	float angle = 0;
+	PropertyManager.Orientation orientation;
+	public PropertyManager.Orientation getOrientation() {
+		return orientation;
+	}
+	
+	void setOrientation(PropertyManager.Orientation o){
+		orientation = o;
+	}
+	
+	public void updateOrientation(float x, float y) {
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = pa.width;
+			float height = pa.height;
+			
+			float leftDistance =  x;
+			float rightDistance = width - x;
+			float topDistance = y;
+			float bottomDistance = height - y;	
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 90);
+				setOrientation(PropertyManager.Orientation.LEFT);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 180);
+				setOrientation(PropertyManager.Orientation.TOP);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(new Vector3D(x, y), 270);
+				setOrientation(PropertyManager.Orientation.RIGHT);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(new Vector3D(x, y), 0);
+				setOrientation(PropertyManager.Orientation.BOTTOM);
+			}
+		}
+	}
+	
+	public void updateOrientation() {
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			float width = pa.width;
+			float height = pa.height;
+			
+			float leftDistance =  getCenterPointGlobal().x;
+			float rightDistance = width - getCenterPointGlobal().x;
+			float topDistance = getCenterPointGlobal().y;
+			float bottomDistance = height - getCenterPointGlobal().y;	
+			
+			if(leftDistance <= rightDistance && leftDistance <= topDistance && leftDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 90);
+			}
+			else if(topDistance <= rightDistance && topDistance <= leftDistance && topDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 180);
+			}
+			else if(rightDistance <= leftDistance && rightDistance <= topDistance && rightDistance <= bottomDistance) {
+				setAngle(getCenterPointGlobal(), 270);
+			}
+			else if(bottomDistance <= leftDistance && bottomDistance <= topDistance && bottomDistance <= rightDistance) {
+				setAngle(getCenterPointGlobal(), 0);
+			}
+		}
+	}
+	
+	protected void setAngle(Vector3D centerPoint, float newAngle) {
+		rotateZGlobal(centerPoint, -angle);
+		rotateZGlobal(centerPoint, newAngle);
+		angle = newAngle;
+	}
+
+	public void addOrientationListener(MTComponent component) {
+		
+		component.addGestureListener(DragProcessor.class, new IGestureEventListener() {
+		
+		@Override
+		public boolean processGestureEvent(MTGestureEvent ge) {
+			String device = PropertyManager.getInstance().getProperty(PropertyManager.DEVICE);
+			if (device.equals("table")){
+				
+				 DragEvent th = (DragEvent) ge;
+                 switch (th.getId()) {
+                 case DragEvent.GESTURE_STARTED:
+                               break;
+                 case DragEvent.GESTURE_UPDATED:
+		     					updateOrientation(th.getDragCursor().getPosition().x, th.getDragCursor().getPosition().y);
+                               break;
+                 case DragEvent.GESTURE_ENDED:
+                               break;
+                 default:
+                               break;
+                 }
+			}
+			return false;
+		}
+		});
+	}
+	
+	//--------------------------------------------------------------------
 	
 	/**
 	 * The Class KeyClickAction.
@@ -845,10 +1024,15 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 	//Getters & Setters
 	public ControlOrb getControlOrb() {return m_controlOrb;}
 	public long getLastPressed() {return lastPressed;}
+	public MTEllipse getColoredEllipse() {return m_coloredEllipse;}
+	public float getWidth() {return m_width;}
 	
 	public void setControlOrb(ControlOrb orb) {this.m_controlOrb = orb;}
+	public void setWidth(float w) {m_width = w;}
 	
 	//Members
+	private float m_width;
 	private ControlOrb m_controlOrb;
+	private MTEllipse m_coloredEllipse;
 
 }

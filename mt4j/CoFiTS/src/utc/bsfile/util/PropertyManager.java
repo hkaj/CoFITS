@@ -20,9 +20,16 @@ public class PropertyManager {
 	public static String MAIN_FONT = "main-font";
 	public static String PDF_FONT = "pdf-font";
 	public static String PICK_FONT = "pick-font";
+	public static String DEVICE = "device";
 	private static Properties props;
 	private static PropertyManager propertymanager;
 	
+	public enum Orientation {
+		BOTTOM,
+		LEFT,
+		TOP,
+		RIGHT
+	}
 
 	public static PropertyManager getInstance() {
 		if (propertymanager == null) {

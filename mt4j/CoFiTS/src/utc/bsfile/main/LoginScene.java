@@ -6,16 +6,18 @@ import java.util.List;
 import org.mt4j.AbstractMTApplication;
 import org.mt4j.components.TransformSpace;
 import org.mt4j.components.visibleComponents.widgets.MTTextField;
-import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
-import org.mt4j.input.gestureAction.InertiaDragAction;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.gestureAction.TapAndHoldVisualizer;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
-import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.rotateProcessor.RotateProcessor;
+import org.mt4j.input.inputProcessors.componentProcessors.scaleProcessor.ScaleProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapAndHoldProcessor.TapAndHoldProcessor;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
+import org.mt4j.sceneManagement.transition.FadeTransition;
+import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.font.IFont;
@@ -28,14 +30,18 @@ import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBEvent;
 import utc.bsfile.gui.widget.keyboard.ValidateKeyboard.ValidateKBListener;
 import utc.bsfile.gui.widget.menu.ListMenu;
 import utc.bsfile.model.menu.DefaultMenuModel;
-import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
 public class LoginScene extends CofitsDesignScene implements ValidateKBListener {
 
+	//Constants
+	private static final boolean DO_CLEAN_GESTURES = true;
+	AbstractMTApplication applet;
+	
+	//Constructors
 	public LoginScene(AbstractMTApplication mtApplication, String name) {
 		super(mtApplication, name);
-		
+		applet = mtApplication;
 		m_listOfUsers.setCellsEnabled(false);
 		
 		addLoginMenuProcess();
@@ -75,7 +81,8 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		if (m_orbs.isEmpty()){
 			playListOfUsers(new Vector3D());
-			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));			
+			m_listOfUsers.setPositionRelativeToOther(keyboard, new Vector3D(10 + keyboard.getWidthXY(TransformSpace.LOCAL) + m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, keyboard.getHeightXY(TransformSpace.LOCAL) / 2));
+			m_listOfUsers.updateOrientation();
 		}
 		
 		//Process the keyboard/orb relation
@@ -83,12 +90,15 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			
 			//Create a new orb
 			orb = playOrb(new Vector3D(), keyboard);
-			orb.setPositionRelativeToOther(keyboard, new Vector3D(0,-10));
+			orb.setPositionRelativeToOther(keyboard, new Vector3D( 40, keyboard.getHeightXY(TransformSpace.LOCAL) - 40));
+			keyboard.getColoredEllipse().setFillColor(orb.getFillColor());
+			orb.updateOrientation();
 			
 		} else {
 			
 			//Update the login in the orb
 			orb.setLogin(keyboard.getText());
+			orb.centerLoginString();
 			
 		}
 		
@@ -141,19 +151,42 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		//Visibility and location
 		keyboard.translate(locationOnScreen, TransformSpace.GLOBAL);
+		keyboard.updateOrientation(locationOnScreen.x, locationOnScreen.y);
+		
+		if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+			switch (keyboard.getOrientation()) { // for right handed
+				case BOTTOM :
+					keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+					break;
+				case LEFT :
+					keyboard.translate(new Vector3D(0, - keyboard.getWidth()), TransformSpace.GLOBAL);
+					break;
+				case TOP :
+					keyboard.translate(new Vector3D(keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+					break;
+				case RIGHT :
+					keyboard.translate(new Vector3D(0, keyboard.getWidth()), TransformSpace.GLOBAL);
+					break;
+				default :
+					System.out.println("NO KEYBOARD ORIENTATION");
+					break;
+			}
+		} else {
+			keyboard.translate(new Vector3D(- keyboard.getWidth(), 0), TransformSpace.GLOBAL);
+		}
+		
 		keyboard.setVisible(true);
 		
 		//Listeners
-		keyboard.addValidateKBListener(LoginScene.this);		
+		keyboard.addValidateKBListener(LoginScene.this);
 		
+		//keyboard.updateOrientation(locationOnScreen.x, locationOnScreen.y);
 		getCanvas().addChild(keyboard);
 		
 		//Improve the presentation
 		if (orb != null){
 			orb.sendToFront();
 		}
-			
-		
 		return keyboard;
 	}
 	
@@ -174,10 +207,11 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		addOrb(orb);
 		getCanvas().addChild(orb);
 		
-		//Add Events Listening Process
-		orb.addGestureListener(DragProcessor.class, new InertiaDragAction());
 		//Tap long on the orb
-		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(),1000));
+		orb.registerInputProcessor(new TapAndHoldProcessor(getMTApplication(), 500));
+		orb.removeAllGestureEventListeners(ScaleProcessor.class);
+		orb.removeAllGestureEventListeners(RotateProcessor.class);
+		
 		orb.addGestureListener(TapAndHoldProcessor.class, new TapAndHoldVisualizer(getMTApplication(), orb));
 		orb.addGestureListener(TapAndHoldProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge) {
@@ -224,13 +258,12 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 	protected void playListOfUsers(Vector3D location){		
 		m_listOfUsers.setPositionGlobal(location);
 		
-		m_listOfUsers.setVisible(true);
 		m_listOfUsers.setCloseVisible(false);
 		
 		//Add a title to the list Menu
 		String textFontStr = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
 		IFont textFont = FontManager.getInstance().createFont(getMTApplication(), textFontStr, 15, MTColor.WHITE);
-		MTTextField title = new MTTextField(getMTApplication(), 0, 0, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
+		MTTextField title = new MTTextField(getMTApplication(), 2, 8, m_listOfUsers.getWidthXY(TransformSpace.LOCAL), 20, textFont);
 		
 		title.setNoStroke(true);
 		title.setNoFill(true);
@@ -240,13 +273,17 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		m_listOfUsers.addChild(title);
 		
 		//Add a confirmation button
-		MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
+		//MTImageButton button = new MTImageButton(getMTApplication(), ImageManager.getInstance().load("confirm-button.png"));
+		MTSvgButton validateButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
+		int buttonSize = 40;
+		validateButton.setSizeXYGlobal(buttonSize, buttonSize);
+		validateButton.setPositionGlobal(new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 30));
 		
-		button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
-		button.setPickable(true);
+		//button.setPositionRelativeToOther(m_listOfUsers, new Vector3D(m_listOfUsers.getWidthXY(TransformSpace.LOCAL) / 2, m_listOfUsers.getHeightXY(TransformSpace.LOCAL) - 25));
+		validateButton.setPickable(true);
 		
 		
-		button.addGestureListener(TapProcessor.class, new IGestureEventListener() {
+		validateButton.addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			@Override
 			public boolean processGestureEvent(MTGestureEvent evt) {
 				switch (evt.getId()) {
@@ -260,30 +297,55 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 			}
 		});
 		
-		m_listOfUsers.addChild(button);
+		m_listOfUsers.addChild(validateButton);
 		
+		m_listOfUsers.setVisible(true);
 		getCanvas().addChild(m_listOfUsers);
 	}
 	
 	
 	
+	/**
+	 * Switch to the Project Choice Scene and Close the current one
+	 */
 	protected void launchProjectChoiceScene() {
-		// TODO
-		System.out.println("GO TO THE NEXT SCENE");
+		setTransition(new FadeTransition(getMTApplication(), 1500));	//Set a fade transition between the two scenes
+		//Save the current scene on the scene stack before changing
+		ProjectChoiceScene projectChoiceScene = new ProjectChoiceScene(getMTApplication(), "Project Choice Scene", m_orbs, DO_CLEAN_GESTURES);
+		//Add the scene to the mt application
+		getMTApplication().addScene(projectChoiceScene);
+		
+		//Do the scene change
+		getMTApplication().changeScene(projectChoiceScene);
+		
+		//Close the scene
+		close();
 	}
 
 	
+	@Override
 	protected void addOrb(ControlOrb orb){
-		m_orbs.add(orb);
+		super.addOrb(orb);
 		m_orbsStrings.add(orb.getLogin());
 	}
 	
 	
+	@Override
+	protected void close() {
+		for (TextEntryValidateKeyboard keyboard : m_keyboards){
+			if (keyboard != null){
+				keyboard.destroy();
+			}
+		}
+		
+		super.close();
+	}
+	
+	
 	//Members
-	List<ControlOrb> m_orbs = new ArrayList<ControlOrb>();
-	List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
-	List<Object> m_orbsStrings = new ArrayList<Object>();
-	ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
+	protected List<TextEntryValidateKeyboard> m_keyboards = new ArrayList<TextEntryValidateKeyboard>();
+	protected List<Object> m_orbsStrings = new ArrayList<Object>();
+	protected ListMenu m_listOfUsers = new ListMenu(getMTApplication(), 0, 0, 200, 5, m_orbsStrings);
 
 }
 

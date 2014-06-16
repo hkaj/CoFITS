@@ -12,11 +12,11 @@ import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
 import utc.bsfile.gui.widget.image.MTIMAGE;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
 import utc.bsfile.gui.widget.menu.FileChooser;
 import utc.bsfile.util.PositionSequencer;
 import utc.bsfile.util.PositionSequencer.Orientation;
 import utc.bsfile.util.PropertyManager;
-import utc.bsfile.gui.widget.menu.ListMenu.ChoiceListener;
 import utc.bsfile.gui.widget.metadata.MTMetadata;
 import utc.bsfile.gui.widget.movie.MTMOVIE;
 import utc.bsfile.gui.widget.pdf.MTPDF;
@@ -46,7 +46,7 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 		this(applet, 0, 0, 300, 7);
 	}
 
-	private PickFileChooser(PApplet applet, int x, int y, float width,
+	public PickFileChooser(PApplet applet, int x, int y, float width,
 			int nbItem) {
 		super(applet, x, y, width, nbItem, PropertyManager.getInstance()
 				.getDirProperty(PropertyManager.FILE_PATH), FileExtensionFilter.NO_FILTER);
@@ -134,6 +134,9 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			image.setWidthXYGlobal(200);
 			image.setAnchor(PositionAnchor.CENTER);
 			image.setPositionGlobal(getCenterPointGlobal());
+			if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+				image.updateOrientation();
+			}
 			getParent().addChild(image);
 			
 		} else if (FileExtensionFilter.PDF_FILTER.accept(file)) {
@@ -141,6 +144,9 @@ public class PickFileChooser extends FileChooser implements ChoiceListener {
 			MTPDF pdfWidget = new MTPDF(getRenderer(), pdf);
 			pdfWidget.setAnchor(PositionAnchor.CENTER);
 			pdfWidget.setPositionGlobal(getCenterPointGlobal());
+			if (PropertyManager.getInstance().getProperty(PropertyManager.DEVICE).equals("table")) {
+				pdfWidget.updateOrientation();
+			}
 			getParent().addChild(pdfWidget);
 	 		pdf.addPDFListener(pdfWidget);
 			

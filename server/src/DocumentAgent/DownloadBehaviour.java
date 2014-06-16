@@ -9,13 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import Constants.RequestConstants;
 import ModelObjects.BinaryContent;
 import ModelObjects.Document;
-import ModelObjects.ModelObject;
 import Requests.DownloadRequest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public final class DownloadBehaviour extends OneShotBehaviour
 {

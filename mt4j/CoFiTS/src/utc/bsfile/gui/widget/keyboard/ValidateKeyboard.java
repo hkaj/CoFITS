@@ -4,10 +4,12 @@ import java.util.HashSet;
 
 import org.mt4j.components.visibleComponents.shapes.MTRectangle.PositionAnchor;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
+import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.tapProcessor.TapProcessor;
+import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
@@ -17,10 +19,10 @@ import utc.bsfile.util.ImageManager;
 public class ValidateKeyboard extends AttachmentKeyboard {
 	public static String NAME = "Validate mt-keyboard";
 	public static int choiceViewHeight = 40;
-	private  int iconWidth = 40;
-	private  int iconHeight = 40;
+	private  int iconSize = 40;
 	private  int spacing = 10;
-	private MTImageButton validateButton;
+	private int validateButtonWidth = 70;
+	private MTSvgButton validateButton;
 	private HashSet<ValidateKBListener> vlisteners;
 	
 	public ValidateKeyboard(PApplet pApplet, String login) {
@@ -31,8 +33,13 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 		super(pApplet, x, y, z, width, height, arcWidth, arcHeight);
 		this.setName(login);
 		vlisteners = new HashSet<ValidateKBListener>();
-		Vector3D validateButtonPosition = new Vector3D(x + width - (iconWidth + spacing), y + iconHeight + 2 * spacing);
-		this.validateButton = createIconButton(validateButtonPosition, "checked-icon.png", new IGestureEventListener() {
+		
+		// new validate button (SVG format)
+		Vector3D validateButtonPosition = new Vector3D(x + width - (validateButtonWidth/2 + spacing*2), y + height - ( validateButtonWidth/2 + 2 * spacing));
+		this.validateButton = new MTSvgButton(pApplet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
+		this.validateButton.setPositionGlobal(validateButtonPosition);
+		this.validateButton.setSizeXYGlobal(validateButtonWidth, validateButtonWidth);
+		this.validateButton.addGestureListener(TapProcessor.class, new IGestureEventListener() {
 			public boolean processGestureEvent(MTGestureEvent ge)
 			{
 				if (ge instanceof TapEvent)
@@ -50,7 +57,6 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 			}
 		});
 		
-		this.validateButton.setNoStroke(true);
 		addChild(this.validateButton);
 		setVisible(false);
 	}
@@ -59,7 +65,7 @@ public class ValidateKeyboard extends AttachmentKeyboard {
 	{
 		MTImageButton imageButton = new MTImageButton(this.getRenderer(), ImageManager.getInstance().load(imageFilename));
 		imageButton.setAnchor(PositionAnchor.UPPER_LEFT);
-		imageButton.setWidthXYGlobal(iconWidth);
+		imageButton.setWidthXYGlobal(iconSize);
 		imageButton.setHeightXYGlobal(choiceViewHeight);
 		imageButton.setPositionGlobal(new Vector3D(position.x, position.y));
 		Theme.getTheme().applyStyle("TRANSPARENT_IMAGE_BUTTON", imageButton);

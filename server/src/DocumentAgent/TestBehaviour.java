@@ -6,10 +6,10 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import Constants.RequestConstants;
-import ModelObjects.User;
+import ModelObjects.Project;
 import Requests.Predicate;
 import Requests.SelectRequest;
-import SpecialisedRelations.FollowedBy;
+import SpecialisedRelations.InvolvedIn;
 
 public class TestBehaviour extends OneShotBehaviour
 {
@@ -23,7 +23,7 @@ public class TestBehaviour extends OneShotBehaviour
 	public void action()
 	{
 		ArrayList<Predicate> p = new ArrayList<Predicate>();
-		p.add(new FollowedBy(new User("narichar","Richard","Nathan")));
+		p.add(new InvolvedIn(new Project("projet de test", "a project to test selectBehaviour.", "kajhaiss")));
 		SelectRequest sr = new SelectRequest(RequestConstants.objectTypes.document, p.toArray(new Predicate[0]));
 		this.myAgent.addBehaviour(new SelectBehaviour(sr, null));
 	}
