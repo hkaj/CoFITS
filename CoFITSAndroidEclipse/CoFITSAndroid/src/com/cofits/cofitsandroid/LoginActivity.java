@@ -63,13 +63,13 @@ public class LoginActivity extends ActionBarActivity {
         loginButton.setOnClickListener(loginListener);
 
 
-        Button goToProjects = (Button) findViewById(R.id.button2);
+       /* Button goToProjects = (Button) findViewById(R.id.button2);
         goToProjects.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

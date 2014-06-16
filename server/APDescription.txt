@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-( ap-description  :name "cofits" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://ssqualli-ruche-0.etu.utc:7778/acc))))
-=======
-( ap-description  :name "cofits" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://Xada:7778/acc))))
->>>>>>> FETCH_HEAD
+( ap-description  :name "cofits" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://ssqualli-hz-1.etu.utc:7778/acc))))

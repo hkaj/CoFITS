@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-http://ssqualli-ruche-0.etu.utc:7778/acc
-=======
-http://Xada:7778/acc
->>>>>>> FETCH_HEAD
+http://ssqualli-hz-1.etu.utc:7778/acc
