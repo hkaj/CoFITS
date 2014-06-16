@@ -143,6 +143,7 @@ public class LoginScene extends CofitsDesignScene implements ValidateKBListener 
 		
 		if (orb != null){
 			keyboard = new TextEntryValidateKeyboard(getMTApplication(), orb.getLogin());
+			keyboard.getColoredEllipse().setFillColor(orb.getFillColor());
 			orb.setKeyboard(keyboard);
 			orb.sendToFront();
 		} else {

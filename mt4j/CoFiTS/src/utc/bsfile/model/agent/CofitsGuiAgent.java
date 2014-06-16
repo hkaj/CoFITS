@@ -44,7 +44,10 @@ public class CofitsGuiAgent extends GuiAgent {
 	protected void onGuiEvent(GuiEvent evt) {
 		if (evt.getType() == DOWNLOAD_FILE){
 			int fileId = (Integer) evt.getParameter(0);
-			addBehaviour(new RequestDownloadFile(this, fileId));
+			int sessionId = (Integer) evt.getParameter(1);
+			String projectId = (String) evt.getParameter(2);
+			System.out.println("IDDDDDDD" + fileId);
+			addBehaviour(new RequestDownloadFile(this, projectId, sessionId, fileId));
 		}
 	}
 
@@ -59,7 +62,10 @@ public class CofitsGuiAgent extends GuiAgent {
 			LinkedBlockingQueue<ACLMessage> newQueue = new LinkedBlockingQueue<ACLMessage>();
 			ManageReceiveFile newManageReceiveFileBehav = new ManageReceiveFile(this, message, newQueue);
 			
-			Behaviour b = m_threadedBehaviourFactory.wrap(newManageReceiveFileBehav); 
+			m_manageReceiveFileBehaviours.put(conversationId, newManageReceiveFileBehav);
+			
+			Behaviour b = m_threadedBehaviourFactory.wrap(newManageReceiveFileBehav);
+			System.out.println(b);
 			addBehaviour(b);
 		} else {
 			System.err.println("Behaviour with the conversation id : " + conversationId + " already exists");

@@ -21,7 +21,9 @@ public class AgentTestBoot {
 	
 	private static void downloadFileTest(CofitsGuiAgent agent) {
 		int id = 6;	//File id
-		agent.addBehaviour(new RequestDownloadFile(agent, id));
+		int sessionId = 0;
+		String projectId = "test";
+		agent.addBehaviour(new RequestDownloadFile(agent, projectId, sessionId, id));
 	}
 
 	private static void downloadProjectsArchitectureTest(CofitsGuiAgent agent) {
