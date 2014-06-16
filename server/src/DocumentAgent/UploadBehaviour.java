@@ -1,7 +1,6 @@
 package DocumentAgent;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.FileOutputStream;
@@ -10,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -18,21 +16,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import Constants.DataBaseConstants;
 import Constants.RequestConstants;
-import Requests.DownloadRequest;
+oimport Constants.RequestConstants;
 
-public class UploadBehaviour extends OneShotBehaviour {
-	private DocumentAgent docAgent;
-	final private HashMap<String, String> request;
-	final private ACLMessage message;
-
+public class UploadBehaviour extends AbstractServerBehaviour {
 	public UploadBehaviour(HashMap<String, String> request, ACLMessage message) {
-		this.request = request;
-		this.message = message;
-		docAgent = (DocumentAgent)myAgent;
+		super(request, message);
 	}
 
 	@Override
@@ -112,14 +102,5 @@ public class UploadBehaviour extends OneShotBehaviour {
 				}
 			}
 		}
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

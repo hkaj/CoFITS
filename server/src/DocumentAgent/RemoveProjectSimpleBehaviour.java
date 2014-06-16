@@ -1,36 +1,25 @@
 package DocumentAgent;
 
+import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import Constants.DataBaseConstants;
-import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
-import jade.lang.acl.ACLMessage;
-
-public class RemoveProjectSimpleBehaviour extends OneShotBehaviour {
-	private DocumentAgent docAgent;
-	final private HashMap<String, String> request;
-	final private ACLMessage message;
-
+public class RemoveProjectSimpleBehaviour extends AbstractServerBehaviour {
 	public RemoveProjectSimpleBehaviour(HashMap<String, String> request,
 			ACLMessage message) {
-		this.request = request;
-		this.message = message;
-		docAgent = (DocumentAgent) myAgent;
+		super(request, message);
 	}
 
 	@Override
 	public void action() {
-		ObjectMapper mapper = new ObjectMapper();
 		HashMap<String, String> content = null;
 		String login = request.get("login");
 		String proj = request.get("project_id");
@@ -72,33 +61,24 @@ public class RemoveProjectSimpleBehaviour extends OneShotBehaviour {
 		}
 		notifySubscribers(proj);
 	}
-	
-	// Notify the project subscribers that the project has been deleted.
-		private void notifySubscribers(String proj) {
-			ObjectMapper mapper = new ObjectMapper();
-			ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-			for (AID dest : docAgent.getSubscribers(proj)) {
-				msg.addReplyTo(dest);
-			}
-			HashMap<String, String> projStruct = new HashMap<String, String>();
-			projStruct.put(proj, "");
-			HashMap<String, Object> req = new HashMap<String, Object>();
-			req.put("action", "LIST_PROJECT");
-			req.put("list", projStruct);
-			try {
-				msg.setContent(mapper.writeValueAsString(req));
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-			myAgent.send(msg);
-		}
 
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
+	// Notify the project subscribers that the project has been deleted.
+	private void notifySubscribers(String proj) {
+		ObjectMapper mapper = new ObjectMapper();
+		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+		for (AID dest : docAgent.getSubscribers(proj)) {
+			msg.addReplyTo(dest);
+		}
+		HashMap<String, String> projStruct = new HashMap<String, String>();
+		projStruct.put(proj, "");
+		HashMap<String, Object> req = new HashMap<String, Object>();
+		req.put("action", "LIST_PROJECT");
+		req.put("list", projStruct);
+		try {
+			msg.setContent(mapper.writeValueAsString(req));
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		myAgent.send(msg);
 	}
 }

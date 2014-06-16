@@ -40,9 +40,10 @@ public final class DownloadBehaviour extends OneShotBehaviour {
 				.get("file_id")));
 		Path path = Paths.get(RequestConstants.documentAgentDirectory
 				+ document.getName());
-		
+
 		// Send a confirmation message
 		ACLMessage reply = this.message.createReply();
+		reply.setConversationId(this.message.getConversationId());
 		reply.setPerformative(ACLMessage.AGREE);
 
 		ObjectMapper mapper = new ObjectMapper();

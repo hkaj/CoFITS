@@ -1,33 +1,23 @@
 package DocumentAgent;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.List;
 
-import Constants.DataBaseConstants;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+aimport com.fasterxml.jackson.databind.ObjectMapper;
 
-public class CreateSessionBehaviour extends OneShotBehaviour {
-
-	private ACLMessage message;
-	private HashMap<String, String> request;
-	private DocumentAgent docAgent;
+public class CreateSessionBehaviour extends AbstractServerBehaviour {
 
 	public CreateSessionBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		message = msg;
-		request = req;
-		DocumentAgent docAgent = (DocumentAgent) myAgent;
+		super(req, msg);
 	}
 
 	@Override
@@ -67,9 +57,9 @@ public class CreateSessionBehaviour extends OneShotBehaviour {
 					content.put("session_id", Integer.toString(sessionId));
 					content.put("reason", "");
 					content.put("state", "CREATED");
-					try{
-					reply.setContent(mapper.writeValueAsString(content));
-					} catch (IOException e){
+					try {
+						reply.setContent(mapper.writeValueAsString(content));
+					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {
@@ -116,14 +106,5 @@ public class CreateSessionBehaviour extends OneShotBehaviour {
 		req.put("project_id", proj);
 		req.put("login", "TATIN");
 		docAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, msg));
-	}
-
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

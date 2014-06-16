@@ -1,27 +1,17 @@
 package DocumentAgent;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 
-import Constants.DataBaseConstants;
-
-public class AddSubscriberBehaviour extends OneShotBehaviour {
-	private HashMap<String, String> request;
-	private ACLMessage message;
-	private DocumentAgent docAgent;
-	
+public class AddSubscriberBehaviour extends AbstractServerBehaviour {
 	AddSubscriberBehaviour(HashMap<String, String> req, ACLMessage msg) {
-		docAgent = (DocumentAgent)myAgent;
-		message = msg;
-		request = req;
+		super(req, msg);
 	}
 
 	@Override
@@ -36,21 +26,13 @@ public class AddSubscriberBehaviour extends OneShotBehaviour {
 			if (res.next()) {
 				docAgent.addSubscriber(proj, subscriber);
 			} else {
-				System.out.println("[SUBSCRIPTION FAIL] The project " + proj + " does not exist.");
+				System.out.println("[SUBSCRIPTION FAIL] The project " + proj
+						+ " does not exist.");
 			}
 			s.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	private Connection createConnection() throws SQLException {
-		Connection conn = null;
-		conn = DriverManager.getConnection(
-				"jdbc:postgresql://" + DataBaseConstants.host + "/"
-						+ DataBaseConstants.databaseName,
-				DataBaseConstants.userName, DataBaseConstants.password);
-		return conn;
 	}
 }

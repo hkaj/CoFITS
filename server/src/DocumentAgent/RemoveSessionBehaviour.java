@@ -24,7 +24,7 @@ public class RemoveSessionBehaviour extends OneShotBehaviour {
 		this.request = req;
 		this.message = msg;
 	}
-	
+
 	@Override
 	public void action() {
 		ArrayList<Integer> files = null;
