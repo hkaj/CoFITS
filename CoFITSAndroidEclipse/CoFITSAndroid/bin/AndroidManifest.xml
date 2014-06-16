@@ -19,9 +19,8 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
+            android:label="@string/app_name">
+                        <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -29,47 +28,39 @@
         </activity>
         <activity
             android:name=".ProjectsFragment"
-            android:label="@string/title_activity_project"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_project">
         </activity>
         <activity
             android:name=".SessionsFragment"
-            android:label="@string/title_activity_session"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_session">
         </activity>
         <activity
             android:name=".FilesFragment"
-            android:label="@string/title_activity_files" 
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_files">
 
         </activity>
         <activity
             android:name=".AddFileActivity"
-            android:label="@string/title_activity_add_file"
-            android:screenOrientation="portrait" >
+            android:label="@string/title_activity_add_file">
         </activity>
         <activity
             android:name=".FileViewActivity"
-            android:label="@string/title_activity_file_view" 
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_file_view" >
         </activity>
         <activity
             android:name=".ListFileActivity"
-            android:label="@string/title_activity_list_file"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_list_file">
         </activity>
         <activity
             android:name=".FileExplore"
-            android:label="@string/title_activity_file_explore"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_file_explore">
         </activity>
 
         <service android:name="jade.android.MicroRuntimeService" />
 
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main"
-            android:screenOrientation="portrait">
+            android:label="@string/title_activity_main">
         </activity>
     </application>
 

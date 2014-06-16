@@ -19,8 +19,8 @@
     <string name="title_activity_files">FilesActivity</string>
     <string name="tab_file">Files</string>
     <string name="action_add">Add File</string>
-    <string name="title_activity_add_file">AddFileActivity</string>
-    <string name="title_activity_file_view">FileViewActivity</string>
+    <string name="title_activity_add_file">Add File</string>
+    <string name="title_activity_file_view">File View Activity</string>
     <string name="download_button">Download</string>
     <string name="title_activity_list_file">ListFileActivity</string>
     <string name="title_activity_file_explore">FileExplore</string>

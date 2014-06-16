@@ -58,14 +58,12 @@ public class FilesFragment extends Fragment {
         String file3 = "File_3.txt";
         String file4 = "File_4.jpg";
         String file5 = "File_5.pdf";
-        String file6 = "File_6.xml";
 
         addRow(listItem, file1);
         addRow(listItem, file2);
         addRow(listItem, file3);
         addRow(listItem, file4);
         addRow(listItem, file5);
-        addRow(listItem, file6);
 
         SpecialAdapter mSchedule = new SpecialAdapter(getActivity(), listItem, R.layout.item_file,
                 new String[]{"filename","file_icon","delete_icon","download_icon"}, new int[]{R.id.item_filename,R.id.icon,R.id.fileDeleteButton,R.id.fileDownloadButton});
