@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CoFITSAndroid</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Main Activity -->
+    <string name="loginCAS">Login with CAS</string>
+
+    <!-- Projects Activity -->
+    <string name="title_activity_project">ProjectActivity</string>
+    <string name="tab_project">Projects</string>
+
+    <!-- Sessions Activity -->
+    <string name="title_activity_session">SessionActivity</string>
+    <string name="tab_session">Sessions</string>
+
+    <!-- Files Activity -->
+    <string name="title_activity_files">FilesActivity</string>
+    <string name="tab_file">Files</string>
+    <string name="action_add">Add File</string>
+    <string name="title_activity_add_file">Add File</string>
+    <string name="title_activity_file_view">File View Activity</string>
+    <string name="download_button">Download</string>
+    <string name="title_activity_list_file">ListFileActivity</string>
+    <string name="title_activity_file_explore">FileExplore</string>
+    <string name="upload_button">Upload</string>
+    <string name="browse_button">Browse</string>
+    <string name="choose_file">Choose your file</string>
+    <string name="visualize_button">Visualize</string>
+    <string name="add_file">Add a new local file:</string>
+    <string name="cancel_add_file">Cancel</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_login">Log in</string>
+    <string name="title_activity_main">CoFITS</string>
+    <string name="hello_world">Hello world!</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Projects</item>
+        <item>Sessions</item>
+        <item>Files</item>
+    </string-array>
+
+    <string name="drawer_open">Slider Menu Opened</string>
+    <string name="drawer_close">Slider Menu Closed</string>
+    <string name="your_projects">Here is the list of your projects:</string>
+    <string name="your_sessions">Here is the list of your sessions:</string>
+    <string name="your_files">Here is the list of your files:</string>
+    <string name="file_name">File Name:</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    
+	<string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+</resources>

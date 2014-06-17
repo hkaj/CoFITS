@@ -12,6 +12,7 @@ import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTImageButton;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+//import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.input.inputProcessors.componentProcessors.dragProcessor.DragEvent;
@@ -26,9 +27,13 @@ import org.mt4j.util.math.Vector3D;
 import processing.core.PApplet;
 import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.Theme.StyleID;
+import utc.bsfile.gui.widget.pick.PickFileChooser;
 import utc.bsfile.gui.widget.pick.PickMTList;
+import utc.bsfile.model.CofitsFile;
 import utc.bsfile.model.menu.DefaultMenuModel;
 import utc.bsfile.model.menu.IMenuModel;
+import utc.bsfile.model.menu.ProjectArchitectureModel;
+import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.ImageManager;
 import utc.bsfile.util.PropertyManager;
 
@@ -124,6 +129,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	 */
 	private HashSet<ChoiceListener> listeners;
 	private PApplet applet;
+	protected boolean m_destroyed = false;
+	
+	public boolean isDestroyed(){return m_destroyed;}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
 			IMenuModel model) {
@@ -131,9 +139,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		float height = calcHeight(nbItem);
 		Theme.getTheme().applyStyle(StyleID.DEFAULT, this);
 		this.setAnchor(PositionAnchor.UPPER_LEFT);
-
+		
 		this.menuModel = model;
-		this.mustBeDestroy = true;
+		this.mustBeDestroy = false;
 
 		this.applet = applet;
 
@@ -153,6 +161,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 								ChoiceEvent choiceEvent = new ChoiceEvent(ListMenu.this, null);
 								for (ChoiceListener listener : ListMenu.this.listeners)
 									listener.choiceCancelled(choiceEvent);
+									m_destroyed = true;
 									ListMenu.this.destroy();
 							}
 						}
@@ -176,7 +185,9 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 										.getParentMenu(menuModel
 												.getCurrentMenu());
 								if (parent != null) {
+									setPathToParent();
 									menuModel.setCurrentMenu(parent);
+									
 									updateList();
 								}
 							}
@@ -203,7 +214,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		this.listeners = new HashSet<ChoiceListener>();
 		
 		addOrientationListener(this);
-		//updateOrientation(x, y);
 	}
 
 	public ListMenu(PApplet applet, int x, int y, float width, int nbItem,
@@ -322,6 +332,17 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 
 		return imageButton;
 	}
+	
+	public MTSvgButton createSvgIconButton(Vector3D position, String imageFilename, IGestureEventListener listener) {
+		MTSvgButton svgButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + imageFilename);
+		svgButton.setWidthXYGlobal(iconWidth);
+		svgButton.setHeightXYGlobal(choiceViewHeight);
+		svgButton.setPositionGlobal(new Vector3D(position.x, position.y));
+		svgButton.removeAllGestureEventListeners();
+		svgButton.addGestureListener(TapProcessor.class, listener);
+
+		return svgButton;
+	}
 
 	public void updateList() {
 		emptyList();
@@ -329,12 +350,13 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
-				closeButton.setVisible(closeButton.isEnabled());
-				backButton.setVisible(false);
-			} else {
-				//closeButton.setVisible(false);
-				backButton.setVisible(true);
+			if (menuModel instanceof ProjectArchitectureModel) {
+				if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
+					closeButton.setVisible(closeButton.isEnabled());
+					backButton.setVisible(false);
+				} else {
+					backButton.setVisible(true);
+				}
 			}
 		}
 
@@ -352,8 +374,27 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				
 				cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // list element stroke color
 				cell.setStrokeWeight(2);
-
-				list.addListElement(cell);
+				
+				if (this instanceof PickFileChooser){
+					// apply filter
+					if(getModel() instanceof ProjectArchitectureModel) {
+						String[] filter = ((ProjectArchitectureModel)getModel()).getFilter();
+						String name = "";
+						if ( filter != null ) {
+							for ( String ext : filter ) {
+								name = ((TwoLinkedJsonNode)choice).getName();
+								if ( name.substring(name.length()-3, name.length()).equals(ext) ){
+									list.addListElement(cell);
+									break;
+								}
+							}
+						} else {
+							list.addListElement(cell);
+						}
+					}
+				} else {
+					list.addListElement(cell);
+				}
 			}
 		}
 		if (nbItems > 5) {
@@ -367,6 +408,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		emptyListCells();
 	}
 
+	
 	protected void setSelectionList(final FileChooser fc) {
 		list.removeAllListElements();
 		list.removeScrollBar();
@@ -374,11 +416,11 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		Object[] choices = menuModel.getChoices(menuModel.getCurrentMenu());
 
 		if (menuModel.onlyStartMenuCanCancel()) {
-			if (menuModel.getCurrentMenu() == menuModel.getStartMenu()) {
+			System.out.println(((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).getName());
+			if (((TwoLinkedJsonNode)((ProjectArchitectureModel)menuModel).getCurrentMenu()).isRoot()  ){	
 				closeButton.setVisible(closeButton.isEnabled());
 				backButton.setVisible(false);
 			} else {
-				//closeButton.setVisible(false);
 				backButton.setVisible(true);
 			}
 		}
@@ -391,8 +433,6 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 					final MTListCell cell = new MTListCell(getRenderer(), getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 					final MTImageButton checkedIcon = new MTImageButton(this.getRenderer(), ImageManager.getInstance().load("checked-icon.png"));
 					checkedIcon.setNoStroke(true);
-					// Theme.getTheme().applyStyle("LIST_CHOICE", cell);
-					//cell.setFillColor(new MTColor(140, 210, 210, 240));
 					cell.setFillColor(Theme.ITEM_LIGHT_COLOR); // cell color after action-button pushed
 					cell.setStrokeColor(Theme.ITEM_BACKGROUND_COLOR); // the same that the filechooser background
 					cell.setStrokeWeight(2);
@@ -403,7 +443,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 								public boolean processGestureEvent(MTGestureEvent ge) {
 									if (ge instanceof TapEvent) {
 										TapEvent tapEvent = (TapEvent) ge;
-										
+
 										if (tapEvent.isTapped()) {
 											if (listCells
 													.contains((File) choice)) {
@@ -455,7 +495,7 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	protected MTComponent makeChoiceView(Object choice) {
 		MTTextArea textArea = new MTTextArea(getRenderer(), 0, 0,getWidthXYGlobal() - getSpacingX2(), choiceViewHeight);
 		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 18, MTColor.BLACK, true));
+		textArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 15, MTColor.BLACK, true));
 		textArea.setText(choice.toString());
 		textArea.setNoFill(true);
 		textArea.setNoStroke(true);
@@ -512,46 +552,99 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 	}
 	
 	//-----------------------------------------------------------
-	protected String pathString = "\\server";
-	public  MTTextArea pathField;
+	protected String pathString = java.nio.file.FileSystems.getDefault().getSeparator();
+	protected String projectString = "";
+	protected String sessionString = "";
+	protected  MTTextArea pathField;
 	//-----------------------------------------------------------
 	
-	protected void setPath(File choice) {
-		//-------------------------------------------------------------------------
-		// Max : update of the current path
-		if ( ((File)choice).getPath().equals(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH) )) {
-			pathString = "\\server\\";
+	public void setProjectString(String pro){projectString = pro;}
+	public void setSessionString(String sess){sessionString = sess;}
+	
+	
+	protected void setPath(TwoLinkedJsonNode choice) {
+		String name = choice.getName();
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
+		if ( choice == getModel().getStartMenu() ) {
+			pathString = separator;
 		} else {
-			System.out.println(((File)choice).getAbsolutePath());
-			pathString = "\\server" + ((File)choice).getAbsolutePath().substring(PropertyManager.getInstance().getProperty(PropertyManager.FILE_PATH).length()); // cut the beginning of the path
+			addStringToPathArea(name);
 		}
+		
+		reformatPathArea();
+	}
+
+	/**
+	 * 
+	 */
+	public void reformatPathArea() {
 		if ( pathString.length() > 30 ) {
 			pathString = pathString.substring(0, 28) + "...";
 		}
 		if ( pathField != null ) pathField.setText( pathString );
-		//-------------------------------------------------------------------------
+	}
+
+	/**
+	 * @param name
+	 * @param separator
+	 */
+	public void addStringToPathArea(String name) {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
+		if ( projectString.equals("")){
+			projectString = separator + name;
+		} else if ( sessionString.equals("")) {
+			sessionString = separator + name;
+		}
+		pathString = projectString + sessionString;
 	}
 	
+	protected void setPathToParent() {
+		String separator = java.nio.file.FileSystems.getDefault().getSeparator();
+		if ( !sessionString.equals("") ) {
+			sessionString = "";
+			pathString = projectString;
+		} else if ( !projectString.equals("") ) {
+			projectString = "";
+			pathString = separator;
+		}
+		if ( pathField != null ) pathField.setText( pathString );
+	}
+	
+	@SuppressWarnings("unused")
 	public boolean processGestureEvent(MTGestureEvent ge) {
 		super.processGestureEvent(ge);
-		
+
 		if (m_areCellsEnabled){
 			if (ge instanceof TapEvent) {
 				if (((TapEvent) ge).isTapped()) {
 					MTListCell listCell = (MTListCell) ge.getTarget();
 					Object choice = listCell.getUserData(CHOICE);
+					File fileChoice = null;
 					
-					// update the path string
-					if (pathField != null) setPath((File)choice);
+					if (choice instanceof TwoLinkedJsonNode){
+						TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
+						fileChoice = new File(node.getName());
+						if (pathField != null && node.getNotLeafChildCount() > 0) setPath(node); System.out.println("children : "+node.getChildCount());;
+					} else {
+						fileChoice = (File) choice;
+					}
 	
+					System.out.println("MAX : " + ((ProjectArchitectureModel)menuModel).getMaxLevel() + " CURRENT : " + ((ProjectArchitectureModel)menuModel).getCurrentLevel());
+					
 					if (this.menuModel.hasChoices(choice)) {
 						//A folder had been tapped
 						this.menuModel.setCurrentMenu(choice);
 						updateList();
-					} else {
+					} else if (((ProjectArchitectureModel)menuModel).getCurrentLevel() == ((ProjectArchitectureModel)menuModel).getMaxLevel()) {
 						//A file had been tapped
 						for (ChoiceListener listener : ListMenu.this.listeners)
 							listener.choiceSelected(new ChoiceEvent(ListMenu.this, choice));
+						
+						// Is the file locally present ?
+						CofitsFile cFile = new CofitsFile((TwoLinkedJsonNode)choice);
+						if (!cFile.isLocal()) {
+							selectedCell(ge);
+						}
 						
 						//Destroy the list after opening a file
 						if (ListMenu.this.mustBeDestroy()){
@@ -564,6 +657,8 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 		
 		return false;
 	}
+	
+	public void selectedCell(MTGestureEvent ge) {System.out.println("LISTMENU");}
 
 	/**
 	 * @author claude
@@ -605,6 +700,11 @@ public class ListMenu extends MTRectangle implements IGestureEventListener {
 				ret = ((DefaultMenuModel) choice).getUserObject();
 			return ret;
 		}
+	}
+
+	public void selectedCell() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

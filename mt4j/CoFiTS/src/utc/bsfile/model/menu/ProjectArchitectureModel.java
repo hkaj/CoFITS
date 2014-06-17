@@ -1,12 +1,9 @@
 package utc.bsfile.model.menu;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Enumeration;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import utc.bsfile.util.JsonManager;
 
 public class ProjectArchitectureModel implements IMenuModel {
 	
@@ -15,6 +12,11 @@ public class ProjectArchitectureModel implements IMenuModel {
 	public static final int PROJECT_LEVEL = 0;
 	public static final int SESSION_LEVEL = 1;
 	public static final int FILE_LEVEL = 2;
+	
+	public static final String[] IMG_FILTER = new String[]{"bmp", "png", "jpg", "jpeg"};
+	public static final String[] VIDEO_FILTER = new String[]{"mov", "mpeg", "mpg", "m4v", "wmv", "mp4","avi"};
+	public static final String[] PDF_FILTER = new String[]{"pdf"};
+	public static final String[] HTML_FILTER = new String[]{"html", "htm"};
 
 	//Constructors
 	public ProjectArchitectureModel(File jsonFile){
@@ -29,39 +31,38 @@ public class ProjectArchitectureModel implements IMenuModel {
 		m_currentLevel = 0;
 		m_maxLevel = maxLevel;
 		
-		//Parse the Json file and transform it to a TwoLinkedJsonNode tree
-		ObjectMapper mapper = new ObjectMapper();
-		JsonParser jp;
-		
-		try {
-			jp = mapper.getFactory().createParser(jsonFile);
-			m_start = TwoLinkedJsonNode.getTwoLinkedTreeFromJsonNode((JsonNode) mapper.readTree(jp), "");
-			m_current = m_start;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
+		//Parse the Json file and transform it to a TwoLinkedJsonNode tree		
+		m_start = new TwoLinkedJsonNode(JsonManager.getInstance().createJsonNode(jsonFile), "", true);
+		m_current = m_start;
 	}
 	
+	public ProjectArchitectureModel(TwoLinkedJsonNode root, TwoLinkedJsonNode current, int maxLevel, int currentLevel) {
+		m_currentLevel = currentLevel;
+		m_filter = null;
+		m_maxLevel = maxLevel;	
+		m_start = root;
+		m_current = current;
+	}
+	
+	public ProjectArchitectureModel(File jsonFile, TwoLinkedJsonNode current, int currentLevel, int maxLevel, String[] filter) {
+		m_currentLevel = currentLevel;
+		m_maxLevel = maxLevel;
+		m_filter = filter;
+		
+		//Parse the Json file and transform it to a TwoLinkedJsonNode tree		
+		m_start = new TwoLinkedJsonNode(JsonManager.getInstance().createJsonNode(jsonFile), "", true);
+		m_current = current;
+	}
 	
 	public ProjectArchitectureModel(String json, int maxLevel){
 		m_currentLevel = 0;
 		m_maxLevel = maxLevel;
 		
 		//Parse the Json content and transform it to a TwoLinkedJsonNode tree
-		ObjectMapper mapper = new ObjectMapper();
-		JsonParser jp;
-		
-		try {
-			jp = mapper.getFactory().createParser(json);
-			m_start = TwoLinkedJsonNode.getTwoLinkedTreeFromJsonNode((JsonNode) mapper.readTree(jp), "");
-			m_current = m_start;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		m_start = new TwoLinkedJsonNode(JsonManager.getInstance().createJsonNode(json), "", true);
+		m_current = m_start;
 	}
 	
-
 	//Implements IMenuModel interface
 	@Override
 	public Object getStartMenu() {
@@ -103,7 +104,7 @@ public class ProjectArchitectureModel implements IMenuModel {
 			if (m_currentLevel == m_maxLevel)
 				return false;
 			
-			return node.getChildCount() > 0;
+			return node.getNotLeafChildCount() > 0;
 		}
 		
 		return false;
@@ -114,17 +115,20 @@ public class ProjectArchitectureModel implements IMenuModel {
 		Object[] choices = null;
 
 		if (choice instanceof TwoLinkedJsonNode){
-			if (((TwoLinkedJsonNode)choice).getChildCount() > 0)
+			if (((TwoLinkedJsonNode)choice).getNotLeafChildCount() > 0)
 			{
 				TwoLinkedJsonNode node = (TwoLinkedJsonNode) choice;
-				choices = new Object[node.getChildCount()];
+				choices = new Object[node.getNotLeafChildCount()];
 	
 				int index = 0;
 				Enumeration<TwoLinkedJsonNode> enumeration = node.children();
 				while (enumeration.hasMoreElements())
 				{
-					choices[index] = enumeration.nextElement();
-					++index;
+					TwoLinkedJsonNode child = enumeration.nextElement(); 
+					if (!child.isLeaf()){
+						choices[index] = child;
+						++index;
+					}
 				}
 			}
 		}
@@ -142,10 +146,20 @@ public class ProjectArchitectureModel implements IMenuModel {
 		return true;
 	}
 	
+	public int getCurrentLevel() {
+		return m_currentLevel;
+	}
+	
+	public String[] getFilter() {
+		return m_filter;
+	}
+	
+	public int getMaxLevel(){return m_maxLevel;}
 	
 	//Members
 	protected TwoLinkedJsonNode m_current;
 	protected TwoLinkedJsonNode m_start;
+	protected String[] m_filter;
 	protected int m_currentLevel;
 	protected int m_maxLevel;
 	

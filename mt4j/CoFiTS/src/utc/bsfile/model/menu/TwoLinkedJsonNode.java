@@ -10,70 +10,110 @@ import java.util.List;
 import javax.swing.tree.TreeNode;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class TwoLinkedJsonNode implements TreeNode {
+	
+	/**
+	 * Construct the tree from JsonNode encapsulated using its children to construct the TwoLinked children nodes
+	 */
+	public void constructTree(){
+		releaseTree();
 
-	//Static methods
-	
-	
-	/**
-	 * @param jsonNode - The root jsonNode encapsulated
-	 * @param name - The name of the root node
-	 * @return The root of a new double linked tree with JsonNode encapsulated
-	 * Creates a new double linked tree from a JsonNode.
-	 */
-	public static TwoLinkedJsonNode getTwoLinkedTreeFromJsonNode(JsonNode jsonNode, String name){
-		return getTwoLinkedTreeFromJsonNode(jsonNode, null, name);
-	}
-	
-	
-	/**
-	 * @param jsonNode - A jsonNode
-	 * @param parent - The jsonNode parent in the tree
-	 * @param name - The name of the node
-	 * @return A node of a double linked tree with JsonNode encapsulated
-	 * Creates a new node for a double linked tree encapsulating JsonNode. Attach children of jsonNode recursively
-	 */
-	protected static TwoLinkedJsonNode getTwoLinkedTreeFromJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name){
-		TwoLinkedJsonNode node = new TwoLinkedJsonNode(jsonNode, parent, name);
-		
-		if (jsonNode.isObject()) {
-			Iterator<String> it = jsonNode.fieldNames();
+		if (m_current.isObject()) {
+			Iterator<String> it = m_current.fieldNames();
+			
 			while (it.hasNext()){
 				String field = it.next();
+				
 				if (field != null){
-					TwoLinkedJsonNode child = getTwoLinkedTreeFromJsonNode(jsonNode.get(field), node,  field);
-					node.addChild(child);
+					TwoLinkedJsonNode child = new TwoLinkedJsonNode(m_current.get(field), this, field, true);
+					if (child.getCurrent().has("name")){
+						child.setName(child.getCurrent().get("name").asText());
+					} else if (child.getCurrent().has("date")) {
+						child.setName(child.getCurrent().get("date").asText());
+					}
+					
+					if (child.getCurrent().isArray())
+						addChildren(child.getChildren(), false);
+					else
+						addChild(child, false);
 				}
 			}
+			
+		} else if (m_current.isArray()){
+			Iterator<JsonNode> itNode = m_current.iterator();
+			while(itNode.hasNext()){
+				JsonNode listNode = itNode.next();
+				
+				if (listNode != null){
+					//The parent is this parent, because we don't want the array node in our tree 
+					TwoLinkedJsonNode child = new TwoLinkedJsonNode(listNode, this, m_name, true);
+					
+					if (child.getCurrent().has("name")){
+						child.setName(child.getCurrent().get("name").asText());
+					} else if (child.getCurrent().has("date")) {
+						child.setName(child.getCurrent().get("date").asText());
+					}
+					
+					//Working only if arrays are not directly nested in another array
+//					if (child.getCurrent().isArray())
+//						addChildren(child.getChildren(), false);
+//					else
+						addChild(child, false);
+				}
+				
+			}
 		}
-		
-		return node;
 	}
+	
 	
 	//Constructors
 	public TwoLinkedJsonNode(JsonNode jsonNode, String name){
-		this(jsonNode, null, name);
+		this(jsonNode, name, false);
 	}
 	
-	public TwoLinkedJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name) {
-		
+	public TwoLinkedJsonNode(JsonNode jsonNode, String name, boolean doConstructTree){
+		this(jsonNode, null, name, doConstructTree);
+	}
+	
+	public TwoLinkedJsonNode(JsonNode jsonNode, TwoLinkedJsonNode parent, String name, boolean doConstructTree) {
 		m_parent = parent;
 		m_current = jsonNode;
 		m_name = name;
 		
+		if (doConstructTree)
+			constructTree();
 	}
 	
 	
-	//Methods
-	public void addChild(TwoLinkedJsonNode node){
+	//Methods	
+	public void addChild(TwoLinkedJsonNode node, boolean doAddInJsonNodeTree){
 		m_children.add(node);
-	}
-	
-	public void addChildren(Collection<TwoLinkedJsonNode> nodes){
-		m_children.addAll(nodes);
+		if (doAddInJsonNodeTree) {
+			ObjectNode objectNode = (ObjectNode) m_current;
+			objectNode.put(node.getName(), node.getCurrent());
+		}
+		node.setParent(this);
 	}
 
+
+	public void addChildren(Collection<TwoLinkedJsonNode> nodes, boolean doAddInJsonNodeTree){
+		for (TwoLinkedJsonNode node : nodes){
+			addChild(node, doAddInJsonNodeTree);
+		}
+	}
+	
+	
+	public void removeChild(String name){
+		for (int i = 0; i < m_children.size(); ++i){
+			if (m_children.get(i).getName().equals(name)){
+				m_children.remove(i);
+			}
+		}
+	}
+
+	
 	//Implements TreeNode interface
 	@Override
 	public TreeNode getChildAt(int childIndex) {
@@ -81,19 +121,30 @@ public class TwoLinkedJsonNode implements TreeNode {
 			return m_children.get(childIndex);
 		return null;
 	}
+	
+	public TwoLinkedJsonNode getChild(String name){
+		for (TwoLinkedJsonNode child : m_children){
+			if (child.getName().equals(name)) {
+				return child;
+			}
+		}
+		
+		return null;
+	}
 
 	@Override
 	public int getChildCount() {
 		return m_children.size();
 	}
-
-	@Override
-	public TreeNode getParent() {
-		return m_parent;
-	}
 	
-	public JsonNode getParentJsonNode() {
-		return m_parent.getCurrent();
+	public int getNotLeafChildCount(){
+		int nb = 0;
+		for (TwoLinkedJsonNode child : m_children){
+			if (!child.isLeaf()){
+				++nb;
+			}
+		}
+		return nb;
 	}
 
 	@Override
@@ -115,6 +166,18 @@ public class TwoLinkedJsonNode implements TreeNode {
 	public boolean isRoot(){
 		return m_parent == null;
 	}
+	
+	/**
+	 * 
+	 * @param another TwoLinkedJsonNode
+	 * @return true if the local, parent and children names are the same for the 2 nodes
+	 */
+	public boolean compare(TwoLinkedJsonNode node) {
+		if ( m_name.equals(node.getName()) ) {
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public Enumeration<TwoLinkedJsonNode> children() {
@@ -134,6 +197,67 @@ public class TwoLinkedJsonNode implements TreeNode {
 	@Override
 	public String toString() {
 		return m_name;
+	}	
+	
+	/**
+	 * @return A Json string representing the JsonNode Tree
+	 * WARNING : You should not have used a addChild method with doErase to false unless you managed JsonNode child before
+	 * Otherwise, the json file might not be what you're expecting 
+	 */
+	public String treeToJsonNodeString(){
+		return m_current.toString();
+	}
+	
+	
+	/**
+	 * While TwoLinkedJsonNode is double linked, we need to free the references
+	 * in order to allow the Garbage Collector to destroy the JsonNodes
+	 */
+	public void releaseTree() {
+		
+		for (TwoLinkedJsonNode child : m_children){
+			child.releaseTree();
+		}
+		
+		m_children.clear();		
+	}
+	
+	
+	public void displayConsole(int currentLevel){
+		String toDisplay = "";
+		for (int i = 0; i < currentLevel; i++)
+			toDisplay += "____";
+		System.out.println(toDisplay + m_name);
+		for (TwoLinkedJsonNode child : m_children){
+			child.displayConsole(currentLevel + 1);
+		}
+	}
+	
+	//Getters & Setters
+	public String getName(){
+		return m_name;
+	}
+	
+	@Override
+	public TreeNode getParent() {
+		return m_parent;
+	}
+	
+	public void setParent(TwoLinkedJsonNode twoLinkedJsonNode) {
+		m_parent = twoLinkedJsonNode;		
+	}
+	
+	public JsonNode getParentJsonNode() {
+		return m_parent.getCurrent();
+	}
+	
+	public void setName(String name) {
+		m_name = name;		
+	}
+	
+
+public TwoLinkedJsonNode getParentTwoLinkedJsonNode() {
+		return m_parent;
 	}
 
 	//Members

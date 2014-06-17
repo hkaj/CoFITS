@@ -5,6 +5,5 @@ CREATE TABLE Documents
 	type VARCHAR(255) NOT NULL,
 	owner VARCHAR(10),
 	last_modified timestamp(0),
-	PRIMARY KEY(id),
-	FOREIGN KEY(owner) REFERENCES Users(login)
+	PRIMARY KEY(id)
 );
