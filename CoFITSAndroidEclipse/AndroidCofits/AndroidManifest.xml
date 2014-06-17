@@ -26,6 +26,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+ 		<activity
+ 		    android:name="com.cofits.cofitsandroid.project.AddAProject"
+ 		    android:label="@string/title_activity_addProject"
+ 		    android:screenOrientation="portrait">
+ 		</activity>
         <activity
             android:name=".ProjectsFragment"
             android:label="@string/title_activity_project">
