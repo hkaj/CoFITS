@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 from lxml import html
 import requests
 import sys
@@ -41,17 +40,14 @@ except:
     print 'No ticket found in the response, login or password incorrect. Exiting.'
     sys.exit()
 
-# PROBLEM: we won't be able to validate the ticket this way. When we get redirected to webapplis
-# the ent validates the ticket first so we can't do it after.
-# SOLUTIONS: either we don't follow the redirection, or we use our server as a service.
-# SOLUTIION IMPLEMENTED: allow_redirects=False L33
+# PROBLEM: When we get redirected to webapplis the ent consume the ticket before we do.
+# SOLUTIION IMPLEMENTED: allow_redirects=False
 user_validation = requests.get(
     'https://cas.utc.fr/cas/validate?ticket='+tick+'&service=http%3A%2F%2Fwebapplis.utc.fr%2Fent%2F'
 )
-import ipdb;ipdb.set_trace()
 result = user_validation.text.split('\n')
 if len(result) == 3:
     user = result[1]
     print 'The server authenticated the user: ' + user
 else:
-    print 'Erreur'
+    print 'Error'
