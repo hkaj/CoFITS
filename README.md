@@ -25,7 +25,7 @@ $ java -cp lib/jade.jar jade.Boot -local-host 127.0.0.1 -local-port 1098 -platfo
 
 ### OR
 
-__Running the agents:__
+__Running the server agent:__
 ```
 $ java -cp "lib/*:bin/" jade.Boot -local-host 127.0.0.1 -local-port 1098 -platform-id cofits -agents documentAgent:DocumentAgent.DocumentAgent
 ```
