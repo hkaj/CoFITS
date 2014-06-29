@@ -24,6 +24,7 @@ import org.mt4j.components.visibleComponents.widgets.keyboard.ITextInputListener
 import org.mt4j.components.visibleComponents.widgets.keyboard.MTKey;
 import org.mt4j.input.IKeyListener;
 import org.mt4j.input.gestureAction.DefaultDragAction;
+import org.mt4j.input.gestureAction.DefaultScaleAction;
 import org.mt4j.input.inputData.InputCursor;
 import org.mt4j.input.inputProcessors.IGestureEventListener;
 import org.mt4j.input.inputProcessors.MTGestureEvent;
@@ -50,6 +51,7 @@ import utc.bsfile.gui.Theme;
 import utc.bsfile.gui.widget.controlorb.ControlOrb;
 import utc.bsfile.gui.widget.keyboard.KeyInfoFactory.KeyInfo;
 import utc.bsfile.util.PropertyManager;
+//import org.mt4j.components.visibleComponents.widgets.keyboard.MTKey;
 
 /**
  * @author Claude Moulin
@@ -211,9 +213,9 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 
 		anchorButton = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "anchored.svg");
 		anchorButton.setSizeXYGlobal(closeButtonSize, closeButtonSize);
-		anchorButton.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 ));
+		anchorButton.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 -1 ));
 		anchorButton.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
-		anchorButton.removeAllGestureEventListeners(TapProcessor.class);
+		//anchorButton.removeAllGestureEventListeners(TapProcessor.class);
 		anchorButton.addGestureListener(TapProcessor.class, new IGestureEventListener()
 		{
 			@Override
@@ -235,9 +237,9 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		
 		anchorButtonON = new MTSvgButton(pa, MT4jSettings.getInstance().getDefaultSVGPath() + "anchored-on.svg");
 		anchorButtonON.setSizeXYGlobal(closeButtonSize, closeButtonSize);
-		anchorButtonON.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 ));
+		anchorButtonON.setPositionGlobal(new Vector3D(x + spacing + closeButtonSize/2, y + spacing + closeButtonSize/2 -1 ));
 		anchorButtonON.setBoundsPickingBehaviour(AbstractShape.BOUNDS_ONLY_CHECK);
-		anchorButtonON.removeAllGestureEventListeners(TapProcessor.class);
+		//anchorButtonON.removeAllGestureEventListeners(TapProcessor.class);
 		anchorButtonON.addGestureListener(TapProcessor.class, new IGestureEventListener()
 		{
 			@Override
@@ -384,9 +386,11 @@ public class DefaultKeyboard extends MTRoundRectangle implements IKeyListener
 		anchored = a;
 		if (isAnchored()) {
 			this.removeAllGestureEventListeners(DragProcessor.class);
+			this.removeAllGestureEventListeners(ScaleProcessor.class);
 		} else {
 			//this.registerInputProcessor(new DragProcessor(pa));
 			this.addGestureListener(DragProcessor.class, new DefaultDragAction());
+			this.addGestureListener(DragProcessor.class, new DefaultScaleAction());
 		}
 	}
 	

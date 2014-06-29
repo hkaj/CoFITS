@@ -46,13 +46,12 @@ public class FileExtensionIconManager {
 	}
 
 	public PImage getIcon(String extension) throws IOException {
+		
 		PImage icon = fileExtensionIcons.get(extension);
-
+		
 		if (icon == null) {
-			File extDirectory = new File(PropertyManager.getInstance()
-					.getDirProperty(PropertyManager.ICONE_DIR));
-			File[] files = extDirectory
-					.listFiles(FileExtensionFilter.IMG_FILTER);
+			File extDirectory = new File(PropertyManager.getInstance().getDirProperty(PropertyManager.ICONE_DIR));
+			File[] files = extDirectory.listFiles(FileExtensionFilter.IMG_FILTER);
 
 			for (File file : files)
 				if (file.getName().indexOf(extension) == 0) {

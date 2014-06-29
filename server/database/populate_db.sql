@@ -1,4 +1,3 @@
-\i ./populateTables/PopulateUsers.sql
 \i ./populateTables/PopulateProjects.sql
 \i ./populateTables/PopulateDocuments.sql
 \i ./populateTables/PopulateSessions.sql

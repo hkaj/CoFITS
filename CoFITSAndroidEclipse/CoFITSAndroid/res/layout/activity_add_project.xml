@@ -1,0 +1,98 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/scrollView"
+    tools:context="com.android.cofits.LoginActivity"
+    android:background="#CEECF5">
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="MergeRootFrame" >
+        <!--  Header  Starts-->
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            android:orientation="horizontal"></LinearLayout>
+        <!--  Header Ends -->
+        <!-- Footer Start -->
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="fill_parent"
+            android:layout_height="90dip"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"></LinearLayout>
+        <!-- Footer Ends -->
+        <!-- Login Form -->
+
+        <LinearLayout
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header"
+            android:orientation="vertical"
+            android:padding="10dip" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_launcher"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="50dp"
+            android:paddingTop="50dp" />
+
+
+        <!--  Email Label -->
+
+        <EditText
+            android:id="@+id/project_name"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="@string/new_project_name"
+            android:inputType="textEmailAddress" />
+
+        <!--  Password Label -->
+
+        <EditText
+            android:id="@+id/project_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:hint="@string/new_project_description"
+            android:inputType="textPassword"
+            android:paddingBottom="10dp" />
+
+        <!-- Login button -->
+
+        <Button
+            android:id="@+id/create_project_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="45dp"
+            android:background="@drawable/button_normal"
+            android:paddingTop="4dp"
+            android:text="@string/create"
+            android:textColor="@android:color/white" />
+
+        </LinearLayout>
+        <!-- Login Form Ends -->
+        <LinearLayout 
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:layout_below="@id/login">
+        </LinearLayout>
+</RelativeLayout>
+</ScrollView>

@@ -1,4 +1,3 @@
-\i ./createTables/Users.sql
 \i ./createTables/Projects.sql
 \i ./createTables/Documents.sql
 \i ./createTables/Sessions.sql

@@ -1,14 +1,19 @@
 package utc.bsfile.gui.widget.menu;
 
 import org.mt4j.components.TransformSpace;
+import org.mt4j.components.visibleComponents.widgets.MTListCell;
 import org.mt4j.components.visibleComponents.widgets.MTTextArea;
 import org.mt4j.components.visibleComponents.widgets.buttons.MTSvgButton;
+import org.mt4j.input.inputProcessors.MTGestureEvent;
 import org.mt4j.util.MT4jSettings;
 import org.mt4j.util.MTColor;
 import org.mt4j.util.font.FontManager;
 import org.mt4j.util.math.Vector3D;
 
 import processing.core.PApplet;
+import utc.bsfile.gui.widget.menu.ChoiceListener;
+import utc.bsfile.gui.widget.menu.ListMenu;
+import utc.bsfile.gui.Theme;
 import utc.bsfile.model.menu.IMenuModel;
 import utc.bsfile.model.menu.TwoLinkedJsonNode;
 import utc.bsfile.util.PropertyManager;
@@ -22,7 +27,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		addChoiceListener(this);
 		
 		m_menuModel = model;
-		
+
 		//Add a confirmation button
 		m_confirmButton = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "KeybValidate-green.svg");
 		int buttonSize = 40;
@@ -32,11 +37,11 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_confirmButton.setPickable(true);
 		m_confirmButton.setVisible(false);
 		
+
 		m_pathArea = new MTTextArea(applet);
 		Vector3D pathAreaPosition = new Vector3D(x + getSpacing() + 3, y + getSpacingX2() + getSpacedIconHeight() );
 		m_pathArea.setPositionGlobal(pathAreaPosition);
-		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.PICK_FONT);
-		System.out.println("LA POLISSE : "+sfont);
+		String sfont = PropertyManager.getInstance().getProperty(PropertyManager.MAIN_FONT);
 		m_pathArea.setFont(FontManager.getInstance().createFont(getRenderer(),sfont, 16, MTColor.BLACK, true));
 		m_pathArea.setText("Projects and sessions");
 		m_pathArea.removeAllGestureEventListeners();
@@ -45,7 +50,40 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_pathArea.setFontColor(new MTColor(255, 255, 255, 255));
 		
 		addChild(m_pathArea);
+
+		//Add a connexion button
+		launchButtonAgentCreation(applet, x, y);
+		
 		addChild(m_confirmButton);
+	}
+
+	/**
+	 * @param applet
+	 * @param x
+	 * @param y
+	 */
+	public void launchButtonAgentCreation(PApplet applet, float x, float y) {
+		//Off button
+		m_launchAgentsButtonOff = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect.svg");
+		m_launchAgentsButtonOff.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOff.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOff);
+		
+		m_launchAgentsButtonOn = new MTSvgButton(applet, MT4jSettings.getInstance().getDefaultSVGPath() + "connect-on.svg");
+		m_launchAgentsButtonOn.setPositionGlobal(new Vector3D(x + getSpacing() + 45 + getSpacing()+5 + iconWidth/2, y + getSpacing() + iconHeight/2));
+		m_launchAgentsButtonOn.setSizeXYGlobal(iconWidth,  iconHeight);
+		
+		addChild(m_launchAgentsButtonOn);
+	}
+	
+	@Override
+	public void selectedCell(MTGestureEvent ge) { // ne t�l�charge pas le fichier... (ne pas toucher au nom anyway)
+		// change the color of the selected cell
+		for (MTListCell cell : list.getListCellContainer().getCells()) {
+			cell.setFillColor(Theme.ITEM_LIGHT_COLOR);
+//			if (cell.equals(ge.getTarget())) ((MTListCell)ge.getTarget()).setFillColor(Theme.ACTIVE_COLOR);
+		}
 	}
 
 	@Override
@@ -60,6 +98,7 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 		m_confirmButton.setVisible(false);		
 	}
 	
+	//Getters
 	public final TwoLinkedJsonNode getSelectedNode(){
 		return m_selectedNode;
 	}
@@ -76,9 +115,31 @@ public class ProjectChoiceListMenu extends ListMenu implements ChoiceListener {
 	public final MTTextArea getPathArea(){
 		return m_pathArea;
 	}
+	
+	public final MTSvgButton getLaunchAgentsButtonOff(){
+		return m_launchAgentsButtonOff;
+	}
+	
+	public final MTSvgButton getLaunchAgentsButtonOn(){
+		return m_launchAgentsButtonOn;
+	}
+	
+	public void changeModel(IMenuModel model) {
+		setModel(model);
+		m_selectedNode = null;
+	}
+	
+	public Object getCurrentNode() {
+		return getModel().getCurrentMenu();
+	}
 
+
+	//Members
 	protected TwoLinkedJsonNode m_selectedNode;
 	protected MTSvgButton m_confirmButton;
 	protected IMenuModel m_menuModel;
 	protected MTTextArea m_pathArea;
+	private MTSvgButton m_launchAgentsButtonOn;
+	private MTSvgButton m_launchAgentsButtonOff;
+	
 }

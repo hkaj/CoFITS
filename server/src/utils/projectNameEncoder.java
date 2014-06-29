@@ -24,12 +24,14 @@ public class projectNameEncoder {
 	
 	public String encode(String projectName) {
 		String projectId = projectName.replace(" ", "_");
-		String requestStr = "SELECT count(*) as c FROM Projects p where p.name = " + projectName + ";"; 
+		String requestStr = "SELECT count(*) as c FROM projects p where p.name = " + projectName + ";"; 
 		int count  = 0;
 		try {
 			Statement s = this.createConnection().createStatement();
 			final ResultSet res = s.executeQuery(requestStr);
-			count = res.getInt("c");
+			if (res.next()) {
+				count = res.getInt("c");
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

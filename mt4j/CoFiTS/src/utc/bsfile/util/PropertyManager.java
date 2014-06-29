@@ -15,6 +15,7 @@ import java.util.Set;
 public class PropertyManager {
 	
 	public static String CONF_FILENAME = "rsc/config/cofits.properties";
+	public static String JSON_STRUCTURE_FILENAME = "rsc/config/structure.json";
 	public static String FILE_PATH = "file-path";
 	public static String ICONE_DIR = "icone-dir";
 	public static String MAIN_FONT = "main-font";
