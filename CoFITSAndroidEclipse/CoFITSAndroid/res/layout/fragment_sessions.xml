@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_sessions_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CEECF5">
+
+     <ListView
+         android:layout_marginTop="20dp"
+         android:layout_marginRight="20dp"
+         android:layout_marginLeft="20dp"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:id="@+id/listView_sessions"
+         android:choiceMode="singleChoice"
+         android:background="@android:color/transparent"
+         android:divider="@android:color/transparent"
+		 android:dividerHeight="10.0sp"/>
+
+</RelativeLayout>
