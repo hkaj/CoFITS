@@ -1,0 +1,4 @@
+main=true
+gui=true
+port=12000
+local-host=localhost
