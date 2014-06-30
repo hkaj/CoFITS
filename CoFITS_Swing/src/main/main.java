@@ -22,8 +22,8 @@ public class main {
 		        ac = mc.createNewAgent("TheOne", "agent.MainAgent", null);
 		        ac.start();		
 
-			 MyFrame test = new MyFrame(null);
-			 test.setVisible(true);
+//			 MyFrame test = new MyFrame(null);
+//			 test.setVisible(true);
 		        
 		 } catch (Exception e) {
 				e.printStackTrace();

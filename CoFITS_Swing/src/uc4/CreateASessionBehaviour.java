@@ -37,7 +37,7 @@ public class CreateASessionBehaviour extends OneShotBehaviour{
             	AID name =  result[0].getName();
     			req.addReceiver(name);
     			String content = "";
-    			content = "{ \"action\": \"CREATE_SESSION\", \"login\" : \"" + "aLogin" + " \", \"project_id\" : \""+ pID +"\", \"date\" :"+ String.valueOf(System.currentTimeMillis()) + "\"}";
+    			content = "{ \"action\": \"CREATE_SESSION\", \"login\" : \"" + "aLogin" + "\", \"project_id\" : \""+ pID +"\", \"date\" : \""+ String.valueOf(System.currentTimeMillis()) + "\"}";
     			req.setContent(content);
     			
     			myAgent.send(req);
