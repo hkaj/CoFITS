@@ -49,7 +49,6 @@ public class DocumentAgent extends Agent {
 		if (this.subscribedAgents.containsKey(project)) {
 			subscribers = this.subscribedAgents.get(project);
 		}
-//		System.out.println("HERE "+subscribers);
 		return subscribers;
 	}
 

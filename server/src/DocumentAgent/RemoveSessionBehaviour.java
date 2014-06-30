@@ -25,8 +25,9 @@ public class RemoveSessionBehaviour extends AbstractLightBehaviour {
 		String login = request.get("login");
 		String proj = request.get("project_id");
 		String session = request.get("session_id");
-		String getFilesReq = "SELECT document FROM mobilizedin WHERE session='"
-				+ session + "';";
+		System.out.println("session = " + session);
+		String getFilesReq = "SELECT document FROM mobilizedin WHERE session="
+				+ session + ";";
 		Connection conn = null;
 		Statement s = null;
 		ResultSet res = null;
@@ -76,7 +77,7 @@ public class RemoveSessionBehaviour extends AbstractLightBehaviour {
 			e.printStackTrace();
 		}
 		RemoveSessionSimpleBehaviour removeSessionSimple = new RemoveSessionSimpleBehaviour(
-				content, msg);
+				myAgent, content, msg);
 		removeSessionSeq.addSubBehaviour(removeSessionSimple);
 		myAgent.addBehaviour(removeSessionSeq);
 	}

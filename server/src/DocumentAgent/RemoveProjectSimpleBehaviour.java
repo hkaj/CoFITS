@@ -22,7 +22,6 @@ public class RemoveProjectSimpleBehaviour extends AbstractServerBehaviour {
 			ACLMessage message) {
 		super(request, message);
 		this.docAgent = (DocumentAgent)a;
-		System.out.println("docAgent: " + docAgent);
 	}
 
 	@Override

@@ -67,7 +67,7 @@ public class AddAUserBehaviour extends OneShotBehaviour{
     			req.setContent(stringWriter.toString());
     			
     			String content = "";
-    			content = "{ \"action\": \"CREATE_PROJECT\", \"my_login\" : \"" + "myLogin" + " \", \"login_to_add\" : \""+"theUser" + "\", \"admin\" : \""+ IsAdmin+ "\", \"project_id\" : \""+ pID+"\"}";
+    			content = "{ \"action\": \"CREATE_PROJECT\", \"my_login\" : \"" + "myLogin" + " \", \"login_to_add\" : \""+ pLogin + "\", \"admin\" : \""+ IsAdmin+ "\", \"project_id\" : \""+ pID+"\"}";
     			req.setContent(content);
     			
     			myAgent.send(req);

@@ -1,6 +1,7 @@
 package DocumentAgent;
 
 import jade.core.AID;
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
 import java.sql.Connection;
@@ -8,13 +9,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RemoveSessionSimpleBehaviour extends AbstractServerBehaviour {
+	protected DocumentAgent docAgent;
 
-	public RemoveSessionSimpleBehaviour(HashMap<String, String> req, ACLMessage msg) {
+	public RemoveSessionSimpleBehaviour(Agent a, HashMap<String, String> req, ACLMessage msg) {
 		super(req, msg);
+		docAgent = (DocumentAgent) a;
 	}
 
 	@Override
