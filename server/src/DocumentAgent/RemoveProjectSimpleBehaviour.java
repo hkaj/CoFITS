@@ -1,21 +1,28 @@
 package DocumentAgent;
 
 import jade.core.AID;
+import jade.core.Agent;
 import jade.lang.acl.ACLMessage;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RemoveProjectSimpleBehaviour extends AbstractServerBehaviour {
-	public RemoveProjectSimpleBehaviour(HashMap<String, String> request,
+	protected DocumentAgent docAgent;
+
+	public RemoveProjectSimpleBehaviour(Agent a, HashMap<String, String> request,
 			ACLMessage message) {
 		super(request, message);
+		this.docAgent = (DocumentAgent)a;
+		System.out.println("docAgent: " + docAgent);
 	}
 
 	@Override
@@ -25,9 +32,9 @@ public class RemoveProjectSimpleBehaviour extends AbstractServerBehaviour {
 		String proj = request.get("project_id");
 		String checkLoginReq = "SELECT admin FROM involvedIn WHERE login = '"
 				+ login + "' and project = '" + proj + "';";
-		String removeProjReq = "DELETE * FROM projects WHERE id='" + proj
+		String removeProjReq = "DELETE FROM projects WHERE id='" + proj
 				+ "';";
-		String removeInvolvedReq = "DELETE * FROM involvedIn WHERE project='"
+		String removeInvolvedReq = "DELETE FROM involvedIn WHERE project='"
 				+ proj + "';";
 		Connection conn = null;
 		Statement s = null;
@@ -66,7 +73,9 @@ public class RemoveProjectSimpleBehaviour extends AbstractServerBehaviour {
 	private void notifySubscribers(String proj) {
 		ObjectMapper mapper = new ObjectMapper();
 		ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-		for (AID dest : docAgent.getSubscribers(proj)) {
+		List<AID> subscrbrs = new ArrayList<AID>();
+		subscrbrs = docAgent.getSubscribers(proj);
+		for (AID dest : subscrbrs) {
 			msg.addReplyTo(dest);
 		}
 		HashMap<String, String> projStruct = new HashMap<String, String>();
