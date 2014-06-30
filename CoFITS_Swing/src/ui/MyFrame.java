@@ -248,8 +248,12 @@ public class MyFrame extends JFrame implements ActionListener{
 			System.out.println("projet");
 			if(liste.getSelectedIndex()==0){
 				System.out.println("ajouter ");
+				try{
 				CreateAProjectBehaviour b1 = new CreateAProjectBehaviour(first.getText(), second.getText());
-				myAgent.addBehaviour(b1);				
+				myAgent.addBehaviour(b1);
+				} catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			else if(liste.getSelectedIndex()==1){
 				System.out.println("remove");
