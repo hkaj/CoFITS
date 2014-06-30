@@ -168,6 +168,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	}
 
 	public void CreateAProjectUI(){
+		liste.setVisible(true);
 		ans.setText(" un projet");
 		
 		first.setVisible(true);
@@ -182,6 +183,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	}
 	
 	public void RemoveAProjectUI(){
+		liste.setVisible(true);
 		ans.setText(" un projet");
 
 		first.setVisible(true);
@@ -210,6 +212,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	
 	public void CreateASessionUI(){
 		ans.setText(" une session");
+		liste.setVisible(true);
 		
 		first.setVisible(true);
 		first.setText("ID du projet");
@@ -222,6 +225,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	
 	public void RemoveASessionUI() {
 		ans.setText(" une session");
+		liste.setVisible(true);
 
 		first.setVisible(true);
 		first.setText("ID du projet");
