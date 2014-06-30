@@ -69,7 +69,7 @@ public class RemoveProjectBehaviour extends AbstractLightBehaviour {
 			e.printStackTrace();
 		}
 		removeProjectSeq.addSubBehaviour(new RemoveProjectSimpleBehaviour(
-				content, msg));
+				myAgent, content, msg));
 		myAgent.addBehaviour(removeProjectSeq);
 	}
 }

@@ -26,7 +26,7 @@ public class RemoveSessionSimpleBehaviour extends AbstractServerBehaviour {
 		String session = request.get("session_id");
 		String checkLoginReq = "SELECT admin FROM involvedIn WHERE login = '"
 				+ login + "' and project = '" + proj + "';";
-		String removeSessionReq = "DELETE * FROM sessions WHERE id='" + session
+		String removeSessionReq = "DELETE FROM sessions WHERE id='" + session
 				+ "';";
 
 		Connection conn = null;

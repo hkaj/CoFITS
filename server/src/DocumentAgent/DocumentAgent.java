@@ -45,10 +45,11 @@ public class DocumentAgent extends Agent {
 	}
 
 	public List<AID> getSubscribers(String project) {
-		List<AID> subscribers = null;
+		List<AID> subscribers = new ArrayList<AID>();;
 		if (this.subscribedAgents.containsKey(project)) {
 			subscribers = this.subscribedAgents.get(project);
 		}
+//		System.out.println("HERE "+subscribers);
 		return subscribers;
 	}
 
