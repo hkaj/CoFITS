@@ -51,10 +51,10 @@ public class AddAUserBehaviour extends OneShotBehaviour{
     			HashMap<String, String> jsonMap = new HashMap<String, String>();
     			StringWriter stringWriter = new StringWriter();
 
-    			jsonMap.put("action", "CREATE_PROJECT");
-    			jsonMap.put("login", "aLogin");
+    			jsonMap.put("action", "ADD_USER");
+    			jsonMap.put("my_login", "aLogin");
     			jsonMap.put("login_to_add", pLogin);
-    			jsonMap.put("login_to_add", IsAdmin);
+    			jsonMap.put("admin", IsAdmin);
     			jsonMap.put("project_id", pID);
     			
 
@@ -66,8 +66,7 @@ public class AddAUserBehaviour extends OneShotBehaviour{
 
     			req.setContent(stringWriter.toString());
     			
-    			String content = "";
-    			content = "{ \"action\": \"CREATE_PROJECT\", \"my_login\" : \"" + "myLogin" + " \", \"login_to_add\" : \""+ pLogin + "\", \"admin\" : \""+ IsAdmin+ "\", \"project_id\" : \""+ pID+"\"}";
+    			String content = stringWriter.toString();
     			req.setContent(content);
     			
     			myAgent.send(req);
