@@ -1,0 +1,6 @@
+main=false
+gui=false
+port=1098
+local-host=127.0.0.1
+host=127.0.0.1
+local-port=1099

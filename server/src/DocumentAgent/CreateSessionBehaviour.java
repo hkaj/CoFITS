@@ -8,8 +8,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class CreateSessionBehaviour extends AbstractServerBehaviour {
@@ -22,13 +24,17 @@ public class CreateSessionBehaviour extends AbstractServerBehaviour {
 	public void action() {
 		String login = request.get("login");
 		String proj = request.get("project_id");
-		String date = request.get("date");
+		
+		String millisecondsDate = request.get("date");
+		Date sessionDate = new Date(Long.parseLong(millisecondsDate));
+		String date = sessionDate.toString();
+		
 		String checkUsrReq = "SELECT * FROM involvedIn WHERE login='" + login
-				+ "' AND project='" + "';";
+				+ "' AND project='" + proj + "';";
 		String insertSessionReq = "INSERT INTO sessions (project, date) VALUES ('"
 				+ proj + "', '" + date + "');";
 		String sessionIdReq = "SELECT id FROM sessions WHERE project = '"
-				+ proj + "' AND date = '" + "';";
+				+ proj + "' AND date = '" + date + "';";
 		ACLMessage reply = this.message.createReply();
 
 		Connection conn = null;
@@ -95,14 +101,18 @@ public class CreateSessionBehaviour extends AbstractServerBehaviour {
 		myAgent.send(reply);
 		ACLMessage msg = message.createReply();
 		msg.setPerformative(ACLMessage.REQUEST);
-		List<AID> subscribers = docAgent.getSubscribers(proj);
-		for (AID dest : subscribers) {
-			msg.addReplyTo(dest);
+		List<AID> subscribers = ((DocumentAgent)myAgent).getSubscribers(proj);
+		
+		if (subscribers != null){
+			for (AID dest : subscribers) {
+				msg.addReplyTo(dest);
+			}
 		}
+		
 		HashMap<String, String> req = new HashMap<String, String>();
 		req.put("action", "LIST_PROJECT");
 		req.put("project_id", proj);
 		req.put("login", "TATIN");
-		docAgent.addBehaviour(new DownloadProjectOverviewBehaviour(req, msg));
+		((DocumentAgent)myAgent).addBehaviour(new DownloadProjectOverviewBehaviour(req, msg));
 	}
 }
